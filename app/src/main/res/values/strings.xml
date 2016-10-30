@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Дайджест новостей</string>
+
+    <string name="navigation_drawer_open">Открыть</string>
+    <string name="navigation_drawer_close">Закрыть</string>
+
+    <string name="search_validation_message">Строка поиска должна содержать не менее 5 символов.</string>
+    <string name="search_nofound_message">Ничего не найдено, попробуйте изменить строку поиска.</string>
+
+    <string name="news_all">Все новости</string>
+    <string name="news_rbc">РБК</string>
+    <string name="news_lenta">Лента</string>
+    <string name="wot">WoT</string>
+    <string name="news_topwar">Военное обозрение</string>
+    <string name="news_interfax">Интерфакс</string>
+    <string name="news_vesti">Вести</string>
+    <string name="news_rt">РТ</string>
+    <string name="news_inosmi">Иносми</string>
+    <string name="news_rianovosti">РИА Новости</string>
+    <string name="news_mixednews">MixedNews</string>
+    <string name="news_rg">Российская газета</string>
+    <string name="news_ng">Независимая газета</string>
+    <string name="news_kp">Комсомольская правда</string>
+    <string name="news_km">Кирилл и Мефодий</string>
+    <string name="news_odnako">Однако</string>
+    <string name="news_yaplakal">ЯПлакал</string>
+    <string name="news_aif">Аргументы и Факты</string>
+    <string name="news_bbc_russian">BBC Russian</string>
+    <string name="news_tass">ТАСС</string>
+    <string name="news_nauka">Наука и Жизнь</string>
+    <string name="news_politikaru">Политика.Ру</string>
+    <string name="news_mk">Московский комсомолец</string>
+    <string name="news_cnews">CNews</string>
+    <string name="news_aftershock">Aftershock</string>
+
+</resources>

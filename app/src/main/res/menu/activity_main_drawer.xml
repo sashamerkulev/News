@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_all" />
+        <item
+            android:id="@+id/nav_rbc"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_rbc" />
+        <item
+            android:id="@+id/nav_lenta"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_lenta" />
+        <item
+            android:id="@+id/nav_wot"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/wot" />
+        <item
+            android:id="@+id/nav_topwar"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_topwar" />
+        <item
+            android:id="@+id/nav_interfax"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_interfax" />
+        <item
+            android:id="@+id/nav_vesti"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_vesti" />
+        <item
+            android:id="@+id/nav_rt"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_rt" />
+        <item
+            android:id="@+id/nav_inosmi"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_inosmi" />
+        <item
+            android:id="@+id/nav_ria"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_rianovosti" />
+        <item
+            android:id="@+id/nav_mixednews"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_mixednews" />
+        <item
+            android:id="@+id/nav_rg"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_rg" />
+        <item
+            android:id="@+id/nav_ng"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_ng" />
+        <item
+            android:id="@+id/nav_kp"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_kp" />
+        <item
+            android:id="@+id/nav_km"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_km" />
+        <item
+            android:id="@+id/nav_aftershock"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_aftershock" />
+        <item
+            android:id="@+id/nav_odnako"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_odnako" />
+        <item
+            android:id="@+id/nav_yaplakal"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_yaplakal" />
+        <item
+            android:id="@+id/nav_aif"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_aif" />
+        <item
+            android:id="@+id/nav_bbcrusshian"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_bbc_russian" />
+        <item
+            android:id="@+id/nav_tass"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_tass" />
+        <item
+            android:id="@+id/nav_nauka"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_nauka" />
+        <item
+            android:id="@+id/nav_politikaru"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_politikaru" />
+        <item
+            android:id="@+id/nav_mk"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_mk" />
+        <item
+            android:id="@+id/nav_cnews"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_cnews" />
+    </group>
+
+</menu>
