@@ -16,7 +16,7 @@
 
 ### SQLiteDatabase (транзакции)
 А вот как надо работать с транзакциями:
-```
+```java
 try {
   mSqlite = SQLiteDatabase.openOrCreateDatabase();
   mSqlite.beginTransaction();
@@ -34,7 +34,7 @@ try {
   
 ### Удобный Binding
 А еще используется вот такая штука:
-```
+```java
     @Bind(R.id.fab)
     public FloatingActionButton mFab;
 ```  
