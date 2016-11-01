@@ -13,3 +13,43 @@
 
 Данные кешируются в БД Sqlite (используется класс SQLiteDatabase).
 
+##SQLiteDatabase (транзакции)
+А вот как надо работать с транзакциями:
+  
+  try {
+  
+    mSqlite = SQLiteDatabase.openOrCreateDatabase();
+    
+    mSqlite.beginTransaction();
+    
+    for (ItemNews item : items) {
+    
+      mSqlite.insert(TABLE_NAME, null, values);
+      
+    }
+    
+    mSqlite.setTransactionSuccessful();
+    
+  } finally {
+  
+    if (mSqlite != null && mSqlite.inTransaction())
+    
+      mSqlite.endTransaction();
+      
+    if (mSqlite != null && mSqlite.isOpen())
+    
+      mSqlite.close();
+      
+  }
+  
+  
+##Удобный Binding
+А еще используется вот такая штука:
+
+    @Bind(R.id.fab)
+    
+    public FloatingActionButton mFab;
+  
+  хотя, пожалуй в этом проекте, она применяется даже там где не нужно.
+  
+  подключить ее можно так: compile 'com.jakewharton:butterknife:7.0.1'
