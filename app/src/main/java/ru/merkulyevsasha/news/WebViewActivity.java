@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -17,9 +18,6 @@ public class WebViewActivity extends AppCompatActivity {
 
     @Bind(R.id.webView)
     public WebView mWebView;
-
-    @Bind(R.id.back_button)
-    public ImageButton mBackButton;
 
     @Bind(R.id.fab)
     public FloatingActionButton mFab;
@@ -34,19 +32,13 @@ public class WebViewActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         final String url = intent.getStringExtra("link");
 
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.loadUrl(url);
-
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +50,18 @@ public class WebViewActivity extends AppCompatActivity {
                 startActivity(sendIntent);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
