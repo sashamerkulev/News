@@ -33,4 +33,6 @@
     <string name="news_cnews">CNews</string>
     <string name="news_aftershock">Aftershock</string>
 
+    <string name="share_using">Отправить куда</string>
+
 </resources>
