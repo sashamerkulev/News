@@ -11,12 +11,9 @@
     <string name="news_rbc">РБК</string>
     <string name="news_lenta">Лента</string>
     <string name="wot">WoT</string>
-    <string name="news_topwar">Военное обозрение</string>
     <string name="news_interfax">Интерфакс</string>
     <string name="news_vesti">Вести</string>
     <string name="news_rt">РТ</string>
-    <string name="news_inosmi">Иносми</string>
-    <string name="news_rianovosti">РИА Новости</string>
     <string name="news_mixednews">MixedNews</string>
     <string name="news_rg">Российская газета</string>
     <string name="news_ng">Независимая газета</string>

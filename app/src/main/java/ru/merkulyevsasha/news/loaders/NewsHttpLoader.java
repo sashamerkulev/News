@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
 import ru.merkulyevsasha.news.models.ItemNews;
@@ -53,13 +57,13 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
         mLinks.put(R.id.nav_lenta, "http://lenta.ru/rss");
         mLinks.put(R.id.nav_rbc, "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/mainnews.rss");
         mLinks.put(R.id.nav_wot, "http://worldoftanks.ru/ru/rss/news/");
-        mLinks.put(R.id.nav_topwar, "http://topwar.ru/rss.xml");
+        //mLinks.put(R.id.nav_topwar, "http://topwar.ru/rss.xml");
         mLinks.put(R.id.nav_interfax, "http://www.interfax.ru/rss.asp");
 
         mLinks.put(R.id.nav_vesti, "http://www.vesti.ru/vesti.rss");
         mLinks.put(R.id.nav_rt, "http://russian.rt.com/rss/");
-        mLinks.put(R.id.nav_inosmi, "http://inosmi.ru/export/rss2/index.xml");
-        mLinks.put(R.id.nav_ria, "http://ria.ru/export/rss2/world/index.xml");
+//        mLinks.put(R.id.nav_inosmi, "http://inosmi.ru/export/rss2/index.xml");
+//        mLinks.put(R.id.nav_ria, "http://ria.ru/export/rss2/world/index.xml");
         mLinks.put(R.id.nav_mixednews, "http://mixednews.ru/feed/");
 
         mLinks.put(R.id.nav_rg, "http://rg.ru/xml/index.xml");
@@ -172,9 +176,6 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
                     result=  parseXML(parser, navId);
                 }
             }
-        } catch (IOException | XmlPullParserException e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
@@ -193,6 +194,12 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
 
         HttpClient httpclient = new DefaultHttpClient();
         List<ItemNews> result = new ArrayList<ItemNews>();
+
+        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){
+            public boolean verify(String string,SSLSession ssls) {
+                return true;
+            }
+        });
 
         if (mNavId == R.id.nav_all){
             for (Map.Entry<Integer, String> entry : mLinks.entrySet()) {

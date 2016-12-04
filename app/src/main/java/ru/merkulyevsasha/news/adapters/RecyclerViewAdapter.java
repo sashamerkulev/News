@@ -32,13 +32,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mSources.put(R.id.nav_lenta, R.string.news_lenta);
         mSources.put(R.id.nav_rbc, R.string.news_rbc);
         mSources.put(R.id.nav_wot, R.string.wot);
-        mSources.put(R.id.nav_topwar, R.string.news_topwar);
+        //mSources.put(R.id.nav_topwar, R.string.news_topwar);
         mSources.put(R.id.nav_interfax, R.string.news_interfax);
 
         mSources.put(R.id.nav_vesti, R.string.news_vesti);
         mSources.put(R.id.nav_rt, R.string.news_rt);
-        mSources.put(R.id.nav_inosmi, R.string.news_inosmi);
-        mSources.put(R.id.nav_ria, R.string.news_rianovosti);
+//        mSources.put(R.id.nav_inosmi, R.string.news_inosmi);
+//        mSources.put(R.id.nav_ria, R.string.news_rianovosti);
         mSources.put(R.id.nav_mixednews, R.string.news_mixednews);
 
         mSources.put(R.id.nav_rg, R.string.news_rg);

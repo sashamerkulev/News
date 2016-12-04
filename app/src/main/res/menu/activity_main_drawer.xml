@@ -18,10 +18,10 @@
             android:id="@+id/nav_wot"
             android:icon="@drawable/ic_rss_feed_black_18dp"
             android:title="@string/wot" />
-        <item
-            android:id="@+id/nav_topwar"
-            android:icon="@drawable/ic_rss_feed_black_18dp"
-            android:title="@string/news_topwar" />
+        <!--<item-->
+            <!--android:id="@+id/nav_topwar"-->
+            <!--android:icon="@drawable/ic_rss_feed_black_18dp"-->
+            <!--android:title="@string/news_topwar" />-->
         <item
             android:id="@+id/nav_interfax"
             android:icon="@drawable/ic_rss_feed_black_18dp"
@@ -34,14 +34,14 @@
             android:id="@+id/nav_rt"
             android:icon="@drawable/ic_rss_feed_black_18dp"
             android:title="@string/news_rt" />
-        <item
-            android:id="@+id/nav_inosmi"
-            android:icon="@drawable/ic_rss_feed_black_18dp"
-            android:title="@string/news_inosmi" />
-        <item
-            android:id="@+id/nav_ria"
-            android:icon="@drawable/ic_rss_feed_black_18dp"
-            android:title="@string/news_rianovosti" />
+        <!--<item-->
+            <!--android:id="@+id/nav_inosmi"-->
+            <!--android:icon="@drawable/ic_rss_feed_black_18dp"-->
+            <!--android:title="@string/news_inosmi" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_ria"-->
+            <!--android:icon="@drawable/ic_rss_feed_black_18dp"-->
+            <!--android:title="@string/news_rianovosti" />-->
         <item
             android:id="@+id/nav_mixednews"
             android:icon="@drawable/ic_rss_feed_black_18dp"
