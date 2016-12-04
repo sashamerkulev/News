@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.news;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        //recyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
         mAdapter = new RecyclerViewAdapter(this, new ArrayList<ItemNews>());
         mRecyclerView.setAdapter(mAdapter);
 
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mHelper = DatabaseHelper.getInstance();
+        mHelper = DatabaseHelper.getInstance(this);
         List<ItemNews> items = mHelper.selectAll();
         if (items.size() > 0) {
             mAdapter.Items = items;
@@ -120,7 +121,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         if (query.length() < 5) {
             Snackbar.make(this.findViewById(R.id.content_main), R.string.search_validation_message, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
                     .show();
             return false;
         }
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity
             mAdapter.notifyDataSetChanged();
         } else{
             Snackbar.make(this.findViewById(R.id.content_main), R.string.search_nofound_message, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
                     .show();
         }
         return false;
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         mDrawer.closeDrawer(GravityCompat.START);
 
         setTitle(item.getTitle());
@@ -152,6 +151,7 @@ public class MainActivity extends AppCompatActivity
         if (items.size() > 0) {
             mAdapter.Items = items;
             mAdapter.notifyDataSetChanged();
+            mRecyclerView.scrollToPosition(0);
         }
 
         return true;

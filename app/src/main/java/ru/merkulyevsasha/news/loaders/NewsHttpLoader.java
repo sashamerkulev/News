@@ -3,7 +3,10 @@ package ru.merkulyevsasha.news.loaders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.Html;
 import android.util.Xml;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,6 +24,8 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,18 +35,18 @@ import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
 import ru.merkulyevsasha.news.models.ItemNews;
 
-public class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
+class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
 
-    private int mNavId;
-    private DatabaseHelper mHelper;
+    private final int mNavId;
+    private final DatabaseHelper mHelper;
 
-    private Map<Integer, String> mLinks = new HashMap<Integer, String>();
+    private final Map<Integer, String> mLinks = new HashMap<Integer, String>();
 
     public NewsHttpLoader(Context context, Bundle args)
     {
         super(context);
 
-        mHelper = DatabaseHelper.getInstance();
+        mHelper = DatabaseHelper.getInstance(context);
 
         mNavId = args.getInt("navId");
 
@@ -81,13 +86,14 @@ public class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
             return true;
         }
         catch(ParseException e){
+            FirebaseCrash.report(e);
             e.printStackTrace();
             return false;
         }
     }
 
-    private ArrayList<ItemNews> parseXML(XmlPullParser parser, int navId) throws XmlPullParserException, IOException {
-        ArrayList<ItemNews> items = new ArrayList();
+    private List<ItemNews> parseXML(XmlPullParser parser, int navId) throws XmlPullParserException, IOException {
+        List<ItemNews> items = new ArrayList<ItemNews>();
         int eventType = parser.getEventType();
         ItemNews item = null;
 
@@ -102,22 +108,28 @@ public class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
                         item = new ItemNews();
                         item.SourceNavId = navId;
                     } else if (item != null){
-                        if (name.equals("title")){
-                            item.Title = parser.nextText();
-                        } else if (name.equals("description")){
-                            String description =parser.nextText();
-                            if (description != null){
-
-                            }
-                            item.Description =description;
-                        } else if (name.equals("link")){
-                            item.Link = parser.nextText();
-                        } else if (name.equals("pubDate")){
-                            String pubDate = parser.nextText();
-                            if (!tryParseDateFormat(pubDate, "E, dd MMM yyyy HH:mm:ss z", item))
-                                tryParseDateFormat(pubDate, "dd MMM yyyy HH:mm:ss z", item);
-                        } else if (name.equals("category")){
-                            item.Category = parser.nextText();
+                        switch (name) {
+                            case "title":
+                                item.Title = parser.nextText();
+                                break;
+                            case "description":
+                                String description = parser.nextText();
+                                if (description != null) {
+                                    description = Html.fromHtml(description).toString();
+                                }
+                                item.Description = description;
+                                break;
+                            case "link":
+                                item.Link = parser.nextText();
+                                break;
+                            case "pubDate":
+                                String pubDate = parser.nextText();
+                                if (!tryParseDateFormat(pubDate, "E, dd MMM yyyy HH:mm:ss z", item))
+                                    tryParseDateFormat(pubDate, "dd MMM yyyy HH:mm:ss z", item);
+                                break;
+                            case "category":
+                                item.Category = parser.nextText();
+                                break;
                         }
                     }
                     break;
@@ -160,11 +172,11 @@ public class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
                     result=  parseXML(parser, navId);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
+        } catch (IOException | XmlPullParserException e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         }
         return result;
@@ -197,6 +209,14 @@ public class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
             mHelper.delete(mNavId);
         }
         mHelper.addListNews(result);
+
+        Collections.sort(result, new Comparator<ItemNews>() {
+            @Override
+            public int compare(ItemNews itemNews, ItemNews t1) {
+                return itemNews.PubDate.compareTo(t1.PubDate);
+            }
+        });
+
         return result;
     }
 }

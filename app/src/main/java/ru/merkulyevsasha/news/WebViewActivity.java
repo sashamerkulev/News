@@ -3,13 +3,13 @@ package ru.merkulyevsasha.news;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,7 +32,10 @@ public class WebViewActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         final String url = intent.getStringExtra("link");
@@ -64,14 +67,14 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
+//    @Override
+//    public void onBackPressed() {
 //        if(mWebView.canGoBack()) {
 //            mWebView.goBack();
 //        } else {
-            super.onBackPressed();
+//            super.onBackPressed();
 //        }
-    }
+//    }
 
     private class MyWebViewClient extends WebViewClient
     {

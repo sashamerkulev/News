@@ -16,8 +16,8 @@ public class LoaderCallbacks implements LoaderManager.LoaderCallbacks<List<ItemN
 
     public static final int HTTP_LOADER_ID = 1;
 
-    private Activity mContext;
-    private RecyclerViewAdapter mAdapter;
+    private final Activity mContext;
+    private final RecyclerViewAdapter mAdapter;
 
     public LoaderCallbacks(Activity context, RecyclerViewAdapter adapter){
         mContext = context;

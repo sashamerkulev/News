@@ -1,10 +1,13 @@
 package ru.merkulyevsasha.news.db;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
+import com.google.firebase.crash.FirebaseCrash;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +29,8 @@ public class DatabaseHelper {
     private static final String CATEGORY = "category";
     private static final String SEARCH = "search";
 
+    private final WeakReference<Context> mContext;
+
     private static final String DATABASE_CREATE = "create table " + TABLE_NAME +" ( " +
             SOURCE_NAV_ID + " long, " +
             TITLE + " string, "+
@@ -37,29 +42,37 @@ public class DatabaseHelper {
             " );";
 
     private SQLiteDatabase mSqlite;
-    private File mFile;
 
     // https://habrahabr.ru/post/27108/
     private static volatile DatabaseHelper mInstance;
-    public static DatabaseHelper getInstance() {
+    public static DatabaseHelper getInstance(final Context context) {
         if (mInstance == null) {
             synchronized (DatabaseHelper.class) {
                 if (mInstance == null) {
-                    mInstance = new DatabaseHelper();
+                    mInstance = new DatabaseHelper(context);
                 }
             }
         }
         return mInstance;
     }
+
     private SQLiteDatabase openOrCreateDatabase() {
-        File folder = new File(Environment.getExternalStorageDirectory().getPath());
-        File subFolder = new File(folder, FOLDER_NAME);
-        mFile = new File(subFolder, DATABASE_NAME);
-        subFolder.mkdirs();
-        return SQLiteDatabase.openOrCreateDatabase(mFile.getPath(), null);
+
+        Context context = mContext.get();
+        if (context != null) {
+            File subFolder = new File(context.getFilesDir(), FOLDER_NAME);
+            //File folder = new File(Environment.getExternalStorageDirectory().getPath());
+            //File subFolder = new File(folder, FOLDER_NAME);
+            File mFile = new File(subFolder, DATABASE_NAME);
+            //noinspection ResultOfMethodCallIgnored
+            subFolder.mkdirs();
+            return SQLiteDatabase.openOrCreateDatabase(mFile.getPath(), null);
+        }
+        return null;
     }
 
-    private DatabaseHelper() {
+    private DatabaseHelper(final Context context) {
+        mContext = new WeakReference<Context>(context);
         mSqlite = openOrCreateDatabase();
         if (mSqlite.getVersion() == 0) {
             mSqlite.execSQL(DATABASE_CREATE);
@@ -87,6 +100,7 @@ public class DatabaseHelper {
             }
             mSqlite.setTransactionSuccessful();
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             if (mSqlite != null && mSqlite.inTransaction())
@@ -101,6 +115,7 @@ public class DatabaseHelper {
             mSqlite = openOrCreateDatabase();
             mSqlite.delete(TABLE_NAME, null, null);
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             if (mSqlite != null && mSqlite.isOpen())
@@ -113,6 +128,7 @@ public class DatabaseHelper {
             mSqlite = openOrCreateDatabase();
             mSqlite.delete(TABLE_NAME, SOURCE_NAV_ID+" = ?", new String[]{String.valueOf(navId)});
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             if (mSqlite != null && mSqlite.isOpen())
@@ -147,6 +163,7 @@ public class DatabaseHelper {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             if (mSqlite != null && mSqlite.isOpen())
@@ -170,6 +187,7 @@ public class DatabaseHelper {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             if (mSqlite != null && mSqlite.isOpen())
@@ -194,6 +212,7 @@ public class DatabaseHelper {
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
+            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             if (mSqlite != null && mSqlite.isOpen())
