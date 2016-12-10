@@ -81,6 +81,7 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
         mLinks.put(R.id.nav_politikaru, "http://polytika.ru/feed");
         mLinks.put(R.id.nav_mk, "http://www.mk.ru/rss/index.xml");
         mLinks.put(R.id.nav_cnews, "http://www.cnews.ru/inc/rss/news.xml");
+        mLinks.put(R.id.nav_mailru, "https://news.mail.ru/rss/91/");
     }
 
     private boolean tryParseDateFormat(String date, String formatDate, ItemNews item){
@@ -139,7 +140,7 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
                     break;
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
-                    if (name.equalsIgnoreCase("item") && item != null){
+                    if (name.equalsIgnoreCase("item") && item != null && item.PubDate != null){
                         String description = item.Description == null ? "" :item.Description.toLowerCase();
                         String title = item.Title == null ? "" :item.Title.toLowerCase();
                         String category = item.Category == null ? "" :item.Category.toLowerCase();
@@ -211,19 +212,14 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
                 }
             }
             mHelper.deleteAll();
+            mHelper.addListNews(result);
+            result = mHelper.selectAll();
         } else {
             result = GetHttpData(httpclient, mNavId, mLinks.get(mNavId));
             mHelper.delete(mNavId);
+            mHelper.addListNews(result);
+            result = mHelper.select(mNavId);
         }
-        mHelper.addListNews(result);
-
-        Collections.sort(result, new Comparator<ItemNews>() {
-            @Override
-            public int compare(ItemNews itemNews, ItemNews t1) {
-                return itemNews.PubDate.compareTo(t1.PubDate);
-            }
-        });
-
         return result;
     }
 }

@@ -56,6 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         mSources.put(R.id.nav_politikaru, R.string.news_politikaru);
         mSources.put(R.id.nav_mk, R.string.news_mk);
         mSources.put(R.id.nav_cnews, R.string.news_cnews);
+        mSources.put(R.id.nav_mailru, R.string.news_mailru);
     }
 
     @Override
