@@ -1,8 +1,6 @@
 package ru.merkulyevsasha.news.loaders;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.content.AsyncTaskLoader;
 import android.text.Html;
 import android.util.Xml;
 
@@ -24,8 +22,6 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,20 +35,20 @@ import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
 import ru.merkulyevsasha.news.models.ItemNews;
 
-class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
+
+public class HttpReader {
+
 
     private final int mNavId;
     private final DatabaseHelper mHelper;
 
     private final Map<Integer, String> mLinks = new HashMap<Integer, String>();
 
-    public NewsHttpLoader(Context context, Bundle args)
-    {
-        super(context);
+    public HttpReader(Context context, int navId) {
 
         mHelper = DatabaseHelper.getInstance(context);
 
-        mNavId = args.getInt("navId");
+        mNavId = navId;
 
         mLinks.put(R.id.nav_lenta, "http://lenta.ru/rss");
         mLinks.put(R.id.nav_rbc, "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/mainnews.rss");
@@ -82,6 +78,7 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
         mLinks.put(R.id.nav_mk, "http://www.mk.ru/rss/index.xml");
         mLinks.put(R.id.nav_cnews, "http://www.cnews.ru/inc/rss/news.xml");
         mLinks.put(R.id.nav_mailru, "https://news.mail.ru/rss/91/");
+
     }
 
     private boolean tryParseDateFormat(String date, String formatDate, ItemNews item){
@@ -184,8 +181,8 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
         return result;
     }
 
-    @Override
-    public List<ItemNews> loadInBackground() {
+
+    public void load(){
 
         HttpClient httpclient = new DefaultHttpClient();
         List<ItemNews> result = new ArrayList<ItemNews>();
@@ -207,13 +204,13 @@ class NewsHttpLoader extends AsyncTaskLoader<List<ItemNews>> {
             }
             mHelper.deleteAll();
             mHelper.addListNews(result);
-            result = mHelper.selectAll();
         } else {
             result = GetHttpData(httpclient, mNavId, mLinks.get(mNavId));
             mHelper.delete(mNavId);
             mHelper.addListNews(result);
-            result = mHelper.select(mNavId);
         }
-        return result;
+
     }
+
+
 }

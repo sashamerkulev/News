@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -25,6 +27,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ru.merkulyevsasha.news.adapters.RecyclerViewAdapter;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
+import ru.merkulyevsasha.news.loaders.HttpService;
 import ru.merkulyevsasha.news.loaders.LoaderCallbacks;
 import ru.merkulyevsasha.news.models.ItemNews;
 
@@ -32,6 +35,10 @@ import static ru.merkulyevsasha.news.loaders.LoaderCallbacks.HTTP_LOADER_ID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+
+    public static final String KEY_NAV_ID = "navId";
+    public static final String KEY_INTENT = "intent";
+    public static final int STATUS_FINISH = 1001;
 
     private Loader<List<ItemNews>> mHttpLoader;
     private LoaderCallbacks mLoaderCallbacks;
@@ -83,7 +90,13 @@ public class MainActivity extends AppCompatActivity
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-                startHttpLoader(mNavId, false);
+
+                //startHttpLoader(mNavId, false);
+
+                Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
+                PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
+                startService(new Intent(MainActivity.this, HttpService.class)
+                        .putExtra(KEY_NAV_ID, mNavId).putExtra(KEY_INTENT, pi));
             }
         });
 
@@ -155,6 +168,21 @@ public class MainActivity extends AppCompatActivity
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == STATUS_FINISH){
+
+            List<ItemNews> result = mNavId == R.id.nav_all
+                    ? mHelper.selectAll()
+                    : mHelper.select(mNavId);
+            mAdapter.Items = result;
+            mAdapter.notifyDataSetChanged();
+
+            mRefreshLayout.setRefreshing(false);
+        }
     }
 
     private void startHttpLoader(int navId, boolean forceLoad)
