@@ -28,10 +28,8 @@ import butterknife.ButterKnife;
 import ru.merkulyevsasha.news.adapters.RecyclerViewAdapter;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
 import ru.merkulyevsasha.news.loaders.HttpService;
-import ru.merkulyevsasha.news.loaders.LoaderCallbacks;
 import ru.merkulyevsasha.news.models.ItemNews;
 
-import static ru.merkulyevsasha.news.loaders.LoaderCallbacks.HTTP_LOADER_ID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
@@ -40,8 +38,6 @@ public class MainActivity extends AppCompatActivity
     public static final String KEY_INTENT = "intent";
     public static final int STATUS_FINISH = 1001;
 
-    private Loader<List<ItemNews>> mHttpLoader;
-    private LoaderCallbacks mLoaderCallbacks;
     private int mNavId;
     private DatabaseHelper mHelper;
     private RecyclerViewAdapter mAdapter;
@@ -60,7 +56,6 @@ public class MainActivity extends AppCompatActivity
 
     @Bind(R.id.toolbar)
     public Toolbar mToolbar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +81,9 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new RecyclerViewAdapter(this, new ArrayList<ItemNews>());
         mRecyclerView.setAdapter(mAdapter);
 
-        mLoaderCallbacks = new LoaderCallbacks(this, mAdapter);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-
-                //startHttpLoader(mNavId, false);
 
                 Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
                 PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
@@ -108,7 +100,12 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             mRefreshLayout.setRefreshing(true);
-            startHttpLoader(mNavId, true);
+
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
+            startService(new Intent(this, HttpService.class)
+                    .putExtra(KEY_NAV_ID, mNavId).putExtra(KEY_INTENT, pi));
+
         }
     }
 
@@ -185,19 +182,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void startHttpLoader(int navId, boolean forceLoad)
-    {
-        Bundle args = new Bundle();
-        args.putInt("navId", navId);
-        if (mHttpLoader == null) {
-            mHttpLoader = getSupportLoaderManager().initLoader(HTTP_LOADER_ID, args, mLoaderCallbacks);
-        } else {
-            mHttpLoader = getSupportLoaderManager().restartLoader(HTTP_LOADER_ID, args, mLoaderCallbacks);
-        }
-        if (forceLoad) {
-            mHttpLoader.forceLoad();
-        } else {
-            mHttpLoader.onContentChanged();
-        }
-    }
 }

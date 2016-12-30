@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Дайджест новостей</string>
+    <string name="app_name">Дайджест новости России</string>
 
     <string name="navigation_drawer_open">Открыть</string>
     <string name="navigation_drawer_close">Закрыть</string>

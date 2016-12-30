@@ -33,7 +33,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".HttpService"
+            android:name=".loaders.HttpService"
             android:enabled="true"
             android:exported="false"></service>
     </application>

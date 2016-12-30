@@ -28,6 +28,7 @@ public class HttpService extends Service {
 
     @Override
     public void onCreate() {
+
         Log.d(TAG, "onCreate");
     }
 
