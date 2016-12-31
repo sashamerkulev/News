@@ -49,6 +49,7 @@ public class HttpService extends Service {
                         reader.load();
 
                         pendingIntent.send(HttpService.this, MainActivity.STATUS_FINISH, intent);
+                        stopSelf(startId);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

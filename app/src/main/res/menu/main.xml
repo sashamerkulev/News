@@ -8,4 +8,12 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@drawable/ic_search_white_24dp"
         android:checkable="false" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:title="@string/menu_refresh"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        android:checkable="false" />
+
 </menu>

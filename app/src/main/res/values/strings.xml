@@ -32,4 +32,6 @@
 
     <string name="share_using">Отправить куда</string>
 
+    <string name="menu_refresh">Обновить</string>
+
 </resources>

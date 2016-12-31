@@ -84,11 +84,7 @@ public class MainActivity extends AppCompatActivity
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
             @Override
             public void onRefresh() {
-
-                Intent notificationIntent = new Intent(MainActivity.this, MainActivity.class);
-                PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
-                startService(new Intent(MainActivity.this, HttpService.class)
-                        .putExtra(KEY_NAV_ID, mNavId).putExtra(KEY_INTENT, pi));
+                refreshNews();
             }
         });
 
@@ -100,13 +96,15 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             mRefreshLayout.setRefreshing(true);
-
-            Intent notificationIntent = new Intent(this, MainActivity.class);
-            PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
-            startService(new Intent(this, HttpService.class)
-                    .putExtra(KEY_NAV_ID, mNavId).putExtra(KEY_INTENT, pi));
-
+            refreshNews();
         }
+    }
+
+    private void refreshNews(){
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
+        startService(new Intent(this, HttpService.class)
+                .putExtra(KEY_NAV_ID, mNavId).putExtra(KEY_INTENT, pi));
     }
 
     @Override
@@ -124,6 +122,16 @@ public class MainActivity extends AppCompatActivity
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
+
+        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                mRefreshLayout.setRefreshing(true);
+                refreshNews();
+                return false;
+            }
+        });
         return true;
     }
 
