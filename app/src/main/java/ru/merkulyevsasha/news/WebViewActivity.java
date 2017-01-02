@@ -16,6 +16,9 @@ import butterknife.ButterKnife;
 
 public class WebViewActivity extends AppCompatActivity {
 
+    public static final String KEY_LINK = "LINK";
+    public static final String KEY_TITLE = "TITLE";
+
     @Bind(R.id.webView)
     public WebView mWebView;
 
@@ -38,7 +41,9 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        final String url = intent.getStringExtra("link");
+        final String url = intent.getStringExtra(KEY_LINK);
+        final String title = intent.getStringExtra(KEY_TITLE);
+        setTitle(title);
 
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.loadUrl(url);
@@ -55,17 +60,17 @@ public class WebViewActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                onBackPressed();
+//                return true;
+//
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
 //    @Override
 //    public void onBackPressed() {

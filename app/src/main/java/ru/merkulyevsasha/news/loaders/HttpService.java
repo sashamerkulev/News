@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import ru.merkulyevsasha.news.MainActivity;
 
 import static ru.merkulyevsasha.news.MainActivity.KEY_INTENT;
@@ -15,7 +17,7 @@ public class HttpService extends Service {
 
     private final String TAG = "HttpService";
 
-    private PendingIntent pendingIntent;
+    private boolean isRunning = false;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -25,28 +27,35 @@ public class HttpService extends Service {
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
 
-        new Thread(new Runnable() {
-            public void run() {
-                Log.d(TAG, "onStartCommand");
-                try {
-                    pendingIntent = intent.getParcelableExtra(KEY_INTENT);
+        Log.d(TAG, "onStartCommand");
+        final PendingIntent pendingIntent = intent.getParcelableExtra(KEY_INTENT);
 
-                    final int navId = intent.getIntExtra(KEY_NAV_ID, -1);
-                    if (navId > 0){
-                        Log.d(TAG, String.valueOf(navId));
+        if (!isRunning) {
+            isRunning = true;
 
-                        HttpReader reader = new HttpReader(HttpService.this, navId);
-                        reader.load();
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        Log.d(TAG, "onStartCommand:startThread");
 
-                        pendingIntent.send(HttpService.this, MainActivity.STATUS_FINISH, intent);
+                        final int navId = intent.getIntExtra(KEY_NAV_ID, -1);
+                        if (navId > 0) {
+                            Log.d(TAG, String.valueOf(navId));
+
+                            HttpReader reader = new HttpReader(HttpService.this, navId);
+                            reader.load();
+
+                            pendingIntent.send(HttpService.this, MainActivity.STATUS_FINISH, intent);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        FirebaseCrash.report(e);
+                    } finally {
                         stopSelf(startId);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        }).start();
-
+            }).start();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

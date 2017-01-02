@@ -19,6 +19,9 @@ import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.WebViewActivity;
 import ru.merkulyevsasha.news.models.ItemNews;
 
+import static ru.merkulyevsasha.news.WebViewActivity.KEY_LINK;
+import static ru.merkulyevsasha.news.WebViewActivity.KEY_TITLE;
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder>{
 
     private final Activity mActivity;
@@ -67,20 +70,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onItemClick(int position) {
                 Intent link_intent = new Intent(mActivity, WebViewActivity.class);
                 ItemNews item = Items.get(position);
-                link_intent.putExtra("link", item.Link);
+                link_intent.putExtra(KEY_LINK, item.Link);
+
+                link_intent.putExtra(KEY_TITLE, getSourceNameTitle(item.SourceNavId));
                 mActivity.startActivity(link_intent);
             }
         });
     }
 
+    private String getSourceNameTitle(int navId){
+        String source= "";
+        if (mSources.containsKey(navId)) {
+            int stringId = mSources.get(navId);
+            source = mActivity.getResources().getString(stringId);
+        }
+        return source;
+    }
+
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         int sourceNavId = Items.get(position).SourceNavId;
-        String source= "";
-        if (mSources.containsKey(sourceNavId)) {
-            int stringId = mSources.get(sourceNavId);
-            source = mActivity.getResources().getString(stringId);
-        }
+        String source= getSourceNameTitle(sourceNavId);
         String title = Items.get(position).Title.trim();
         String description = Items.get(position).Description;
         Date pubDate = Items.get(position).PubDate;
