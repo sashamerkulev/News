@@ -102,6 +102,10 @@
             android:id="@+id/nav_mailru"
             android:icon="@drawable/ic_rss_feed_black_18dp"
             android:title="@string/news_mailru" />
+        <item
+            android:id="@+id/nav_sportexpress"
+            android:icon="@drawable/ic_rss_feed_black_18dp"
+            android:title="@string/news_sportexpress" />
     </group>
 
 </menu>

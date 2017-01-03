@@ -2,6 +2,7 @@ package ru.merkulyevsasha.news.loaders;
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.util.Xml;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -46,7 +47,7 @@ public class HttpReader {
 
     public HttpReader(Context context, int navId) {
 
-        mHelper = DatabaseHelper.getInstance(context);
+        mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(context));
 
         mNavId = navId;
 
@@ -78,6 +79,7 @@ public class HttpReader {
         mLinks.put(R.id.nav_mk, "http://www.mk.ru/rss/index.xml");
         mLinks.put(R.id.nav_cnews, "http://www.cnews.ru/inc/rss/news.xml");
         mLinks.put(R.id.nav_mailru, "https://news.mail.ru/rss/91/");
+        mLinks.put(R.id.nav_sportexpress, "http://www.sport-express.ru/services/materials/news/se/");
 
     }
 
@@ -88,7 +90,7 @@ public class HttpReader {
             return true;
         }
         catch(ParseException e){
-            FirebaseCrash.report(e);
+            //FirebaseCrash.report(e);
             e.printStackTrace();
             return false;
         }
@@ -127,7 +129,8 @@ public class HttpReader {
                             case "pubDate":
                                 String pubDate = parser.nextText();
                                 if (!tryParseDateFormat(pubDate, "E, dd MMM yyyy HH:mm:ss z", item))
-                                    tryParseDateFormat(pubDate, "dd MMM yyyy HH:mm:ss z", item);
+                                    if (!tryParseDateFormat(pubDate, "dd MMM yyyy HH:mm:ss z", item))
+                                        tryParseDateFormat(pubDate, "d MMM yyyy HH:mm:ss z", item);
                                 break;
                             case "category":
                                 item.Category = parser.nextText();
@@ -176,6 +179,7 @@ public class HttpReader {
             }
         } catch (Exception e) {
             FirebaseCrash.report(e);
+            Log.d("GetHttpData", url);
             e.printStackTrace();
         }
         return result;

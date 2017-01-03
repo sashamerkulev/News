@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,11 +35,16 @@ public class MainActivity extends AppCompatActivity
 
     public static final String KEY_NAV_ID = "navId";
     public static final String KEY_INTENT = "intent";
+
+    public static final String KEY_POSITION = "position";
+    public static final String KEY_REFRESHING = "refreshing";
+
     public static final int STATUS_FINISH = 1001;
 
     private int mNavId;
     private DatabaseHelper mHelper;
     private RecyclerViewAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     @Bind(R.id.refreshLayout)
     public SwipeRefreshLayout mRefreshLayout;
@@ -58,6 +62,16 @@ public class MainActivity extends AppCompatActivity
     public Toolbar mToolbar;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(KEY_NAV_ID, mNavId);
+        outState.putInt(KEY_POSITION, mLayoutManager.findFirstCompletelyVisibleItemPosition());
+        outState.putBoolean(KEY_REFRESHING, mRefreshLayout.isRefreshing());
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,8 +80,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         setTitle(R.string.news_all);
 
-        mNavId = R.id.nav_all;
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(toggle);
@@ -75,8 +87,8 @@ public class MainActivity extends AppCompatActivity
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new RecyclerViewAdapter(this, new ArrayList<ItemNews>());
         mRecyclerView.setAdapter(mAdapter);
@@ -88,16 +100,37 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mHelper = DatabaseHelper.getInstance(this);
-        List<ItemNews> items = mHelper.selectAll();
-        if (items.size() > 0) {
-            mAdapter.Items = items;
+        mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(this));
+
+        if (savedInstanceState == null) {
+            mNavId = R.id.nav_all;
+            List<ItemNews> items = mHelper.selectAll();
+            if (items.size() > 0) {
+                mAdapter.Items = items;
+                mAdapter.notifyDataSetChanged();
+            } else {
+                mRefreshLayout.setRefreshing(true);
+                refreshNews();
+            }
+        } else {
+            mNavId = savedInstanceState.getInt(KEY_NAV_ID, R.id.nav_all);
+            int position = savedInstanceState.getInt(KEY_POSITION, -1);
+            boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
+            mRefreshLayout.setRefreshing(isRefreshing);
+
+            mAdapter.Items = getItemNews(mNavId);
             mAdapter.notifyDataSetChanged();
+            if (position > 0) {
+                mLayoutManager.scrollToPosition(position);
+            }
+
         }
-        else {
-            mRefreshLayout.setRefreshing(true);
-            refreshNews();
-        }
+    }
+
+    private List<ItemNews> getItemNews(int navId){
+        return navId == R.id.nav_all
+                ? mHelper.selectAll()
+                : mHelper.select(navId);
     }
 
     private void refreshNews(){
@@ -127,8 +160,10 @@ public class MainActivity extends AppCompatActivity
         refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                mRefreshLayout.setRefreshing(true);
-                refreshNews();
+                if (!mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(true);
+                    refreshNews();
+                }
                 return false;
             }
         });
@@ -180,10 +215,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == STATUS_FINISH){
 
-            List<ItemNews> result = mNavId == R.id.nav_all
-                    ? mHelper.selectAll()
-                    : mHelper.select(mNavId);
-            mAdapter.Items = result;
+            mAdapter.Items = getItemNews(mNavId);
             mAdapter.notifyDataSetChanged();
 
             mRefreshLayout.setRefreshing(false);

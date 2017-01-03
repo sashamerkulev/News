@@ -27,7 +27,6 @@
             android:name=".WebViewActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity"
             />
         <activity
             android:name=".MainActivity"

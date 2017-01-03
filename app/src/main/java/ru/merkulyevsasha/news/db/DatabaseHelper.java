@@ -29,8 +29,6 @@ public class DatabaseHelper {
     private static final String CATEGORY = "category";
     private static final String SEARCH = "search";
 
-    private final WeakReference<Context> mContext;
-
     private static final String DATABASE_CREATE = "create table " + TABLE_NAME + " ( " +
             SOURCE_NAV_ID + " long, " +
             TITLE + " string, " +
@@ -42,38 +40,35 @@ public class DatabaseHelper {
             " ); create index search_index on " + TABLE_NAME + "(" + SEARCH + "); create index pubdate_index on" + TABLE_NAME + "(" + PUBDATE + ")";
 
     private SQLiteDatabase mSqlite;
+    private String mDbPath;
 
     // https://habrahabr.ru/post/27108/
     private static volatile DatabaseHelper mInstance;
 
-    public static DatabaseHelper getInstance(final Context context) {
+    public static DatabaseHelper getInstance(final String dbPath) {
         if (mInstance == null) {
             synchronized (DatabaseHelper.class) {
                 if (mInstance == null) {
-                    mInstance = new DatabaseHelper(context);
+                    mInstance = new DatabaseHelper(dbPath);
                 }
             }
         }
         return mInstance;
     }
 
-    private SQLiteDatabase openOrCreateDatabase() {
-
-        Context context = mContext.get();
-        if (context != null) {
-            File subFolder = new File(context.getFilesDir(), FOLDER_NAME);
-            //File folder = new File(Environment.getExternalStorageDirectory().getPath());
-            //File subFolder = new File(folder, FOLDER_NAME);
-            File mFile = new File(subFolder, DATABASE_NAME);
-            //noinspection ResultOfMethodCallIgnored
-            subFolder.mkdirs();
-            return SQLiteDatabase.openOrCreateDatabase(mFile.getPath(), null);
-        }
-        return null;
+    public static String getDbPath(Context context){
+        File subFolder = new File(context.getFilesDir(), FOLDER_NAME);
+        subFolder.mkdirs();
+        File mFile = new File(subFolder, DATABASE_NAME);
+        return mFile.getPath();
     }
 
-    private DatabaseHelper(final Context context) {
-        mContext = new WeakReference<Context>(context);
+    private SQLiteDatabase openOrCreateDatabase() {
+        return SQLiteDatabase.openOrCreateDatabase(mDbPath, null);
+    }
+
+    private DatabaseHelper(final String dbPath) {
+        mDbPath = dbPath;
         mSqlite = openOrCreateDatabase();
         if (mSqlite !=null && mSqlite.getVersion() == 0) {
             mSqlite.execSQL(DATABASE_CREATE);

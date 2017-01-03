@@ -29,6 +29,9 @@
     <string name="news_cnews">CNews</string>
     <string name="news_aftershock">Aftershock</string>
     <string name="news_mailru">Новости mail.ru</string>
+    <string name="news_sportexpress">СПОРТ-ЭКСПРЕСС</string>
+    <!--<string name="news_inosmi">Иносми</string>-->
+    <!--<string name="news_rianovosti">РИА Новости</string>-->
 
     <string name="share_using">Отправить куда</string>
 
