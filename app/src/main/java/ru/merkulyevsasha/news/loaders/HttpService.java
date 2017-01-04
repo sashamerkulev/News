@@ -44,13 +44,19 @@ public class HttpService extends Service {
 
                             HttpReader reader = new HttpReader(HttpService.this, navId);
                             reader.load();
-
-                            pendingIntent.send(HttpService.this, MainActivity.STATUS_FINISH, intent);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         FirebaseCrash.report(e);
                     } finally {
+
+                        try{
+                            pendingIntent.send(HttpService.this, MainActivity.STATUS_FINISH, intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            FirebaseCrash.report(e);
+                        }
+                        isRunning = false;
                         stopSelf(startId);
                     }
                 }

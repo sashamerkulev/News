@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +33,7 @@ import javax.net.ssl.SSLSession;
 
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
+import ru.merkulyevsasha.news.models.Const;
 import ru.merkulyevsasha.news.models.ItemNews;
 
 
@@ -42,45 +42,14 @@ public class HttpReader {
 
     private final int mNavId;
     private final DatabaseHelper mHelper;
-
-    private final Map<Integer, String> mLinks = new HashMap<Integer, String>();
+    private final Const mConst;
 
     public HttpReader(Context context, int navId) {
 
         mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(context));
+        mConst = new Const();
 
         mNavId = navId;
-
-        mLinks.put(R.id.nav_lenta, "http://lenta.ru/rss");
-        mLinks.put(R.id.nav_rbc, "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/mainnews.rss");
-        mLinks.put(R.id.nav_wot, "http://worldoftanks.ru/ru/rss/news/");
-        //mLinks.put(R.id.nav_topwar, "http://topwar.ru/rss.xml");
-        mLinks.put(R.id.nav_interfax, "http://www.interfax.ru/rss.asp");
-
-        mLinks.put(R.id.nav_vesti, "http://www.vesti.ru/vesti.rss");
-        mLinks.put(R.id.nav_rt, "http://russian.rt.com/rss/");
-//        mLinks.put(R.id.nav_inosmi, "http://inosmi.ru/export/rss2/index.xml");
-//        mLinks.put(R.id.nav_ria, "http://ria.ru/export/rss2/world/index.xml");
-        mLinks.put(R.id.nav_mixednews, "http://mixednews.ru/feed/");
-
-        mLinks.put(R.id.nav_rg, "http://rg.ru/xml/index.xml");
-        mLinks.put(R.id.nav_ng, "http://www.ng.ru/rss/");
-        mLinks.put(R.id.nav_kp, "http://www.kp.ru/rss/allsections.xml");
-        mLinks.put(R.id.nav_km, "http://www.km.ru/rss/main");
-        mLinks.put(R.id.nav_aftershock, "http://feeds.feedburner.com/aftershock/news");
-
-        mLinks.put(R.id.nav_odnako, "http://otredakcii.odnako.org/rss/");
-        mLinks.put(R.id.nav_aif, "http://www.aif.ru/rss/all.php");
-        mLinks.put(R.id.nav_bbcrusshian, "http://feeds.bbci.co.uk/russian/rss.xml");
-        mLinks.put(R.id.nav_tass, "http://tass.ru/rss/v2.xml");
-        mLinks.put(R.id.nav_nauka, "http://www.nkj.ru/rss/");
-
-        mLinks.put(R.id.nav_politikaru, "http://polytika.ru/feed");
-        mLinks.put(R.id.nav_mk, "http://www.mk.ru/rss/index.xml");
-        mLinks.put(R.id.nav_cnews, "http://www.cnews.ru/inc/rss/news.xml");
-        mLinks.put(R.id.nav_mailru, "https://news.mail.ru/rss/91/");
-        mLinks.put(R.id.nav_sportexpress, "http://www.sport-express.ru/services/materials/news/se/");
-
     }
 
     private boolean tryParseDateFormat(String date, String formatDate, ItemNews item){
@@ -185,7 +154,6 @@ public class HttpReader {
         return result;
     }
 
-
     public void load(){
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -198,7 +166,7 @@ public class HttpReader {
         });
 
         if (mNavId == R.id.nav_all){
-            for (Map.Entry<Integer, String> entry : mLinks.entrySet()) {
+            for (Map.Entry<Integer, String> entry : mConst.getLinks().entrySet()) {
                 Integer key = entry.getKey();
                 String url = entry.getValue();
                 List<ItemNews> items = GetHttpData(httpclient, key, url);
@@ -209,7 +177,7 @@ public class HttpReader {
             mHelper.deleteAll();
             mHelper.addListNews(result);
         } else {
-            result = GetHttpData(httpclient, mNavId, mLinks.get(mNavId));
+            result = GetHttpData(httpclient, mNavId, mConst.getLinkByNavId(mNavId));
             mHelper.delete(mNavId);
             mHelper.addListNews(result);
         }

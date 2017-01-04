@@ -11,12 +11,11 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.WebViewActivity;
+import ru.merkulyevsasha.news.models.Const;
 import ru.merkulyevsasha.news.models.ItemNews;
 
 import static ru.merkulyevsasha.news.WebViewActivity.KEY_LINK;
@@ -25,42 +24,13 @@ import static ru.merkulyevsasha.news.WebViewActivity.KEY_TITLE;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder>{
 
     private final Activity mActivity;
-    private final Map<Integer, Integer> mSources = new HashMap<Integer, Integer>();
+    private final Const mConst;
     public List<ItemNews> Items;
 
     public RecyclerViewAdapter(Activity activity, List<ItemNews> items){
         Items = items;
         mActivity = activity;
-
-        mSources.put(R.id.nav_lenta, R.string.news_lenta);
-        mSources.put(R.id.nav_rbc, R.string.news_rbc);
-        mSources.put(R.id.nav_wot, R.string.wot);
-        //mSources.put(R.id.nav_topwar, R.string.news_topwar);
-        mSources.put(R.id.nav_interfax, R.string.news_interfax);
-
-        mSources.put(R.id.nav_vesti, R.string.news_vesti);
-        mSources.put(R.id.nav_rt, R.string.news_rt);
-//        mSources.put(R.id.nav_inosmi, R.string.news_inosmi);
-//        mSources.put(R.id.nav_ria, R.string.news_rianovosti);
-        mSources.put(R.id.nav_mixednews, R.string.news_mixednews);
-
-        mSources.put(R.id.nav_rg, R.string.news_rg);
-        mSources.put(R.id.nav_ng, R.string.news_ng);
-        mSources.put(R.id.nav_kp, R.string.news_kp);
-        mSources.put(R.id.nav_km, R.string.news_km);
-        mSources.put(R.id.nav_aftershock, R.string.news_aftershock);
-
-        mSources.put(R.id.nav_odnako, R.string.news_odnako);
-        mSources.put(R.id.nav_aif, R.string.news_aif);
-        mSources.put(R.id.nav_bbcrusshian, R.string.news_bbc_russian);
-        mSources.put(R.id.nav_tass, R.string.news_tass);
-        mSources.put(R.id.nav_nauka, R.string.news_nauka);
-
-        mSources.put(R.id.nav_politikaru, R.string.news_politikaru);
-        mSources.put(R.id.nav_mk, R.string.news_mk);
-        mSources.put(R.id.nav_cnews, R.string.news_cnews);
-        mSources.put(R.id.nav_mailru, R.string.news_mailru);
-        mSources.put(R.id.nav_sportexpress, R.string.news_sportexpress);
+        mConst = new Const();
     }
 
     @Override
@@ -79,13 +49,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
-    private String getSourceNameTitle(int navId){
-        String source= "";
-        if (mSources.containsKey(navId)) {
-            int stringId = mSources.get(navId);
-            source = mActivity.getResources().getString(stringId);
-        }
-        return source;
+    private String getSourceNameTitle(int navId) {
+        int stringId = mConst.getTitleByNavId(navId);
+        return stringId > 0 ? mActivity.getResources().getString(stringId) : "";
     }
 
     @Override

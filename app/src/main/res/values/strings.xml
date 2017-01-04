@@ -32,6 +32,9 @@
     <string name="news_sportexpress">СПОРТ-ЭКСПРЕСС</string>
     <!--<string name="news_inosmi">Иносми</string>-->
     <!--<string name="news_rianovosti">РИА Новости</string>-->
+    <string name="news_planetanews">Планета Новости</string>
+    <string name="news_rambler">Новости Rambler.ru</string>
+    <string name="news_newsrucom">Новости Newsru.com</string>
 
     <string name="share_using">Отправить куда</string>
 
