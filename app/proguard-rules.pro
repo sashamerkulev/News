@@ -29,6 +29,7 @@
 }
 -keepnames class * { @icepick.State *;}
 
+
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
@@ -40,7 +41,6 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
--keepnames class * { @butterknife.Bind *;}
 
 
 -dontwarn com.squareup.okhttp.**

@@ -2,12 +2,14 @@ package ru.merkulyevsasha.news.loaders;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import ru.merkulyevsasha.news.db.DatabaseHelper;
 import ru.merkulyevsasha.news.models.ItemNews;
 
 import static ru.merkulyevsasha.news.MainActivity.KEY_NAV_ID;
+import static ru.merkulyevsasha.news.MainActivity.KEY_REFRESHING;
 
 public class HttpService extends Service {
 
@@ -26,10 +29,11 @@ public class HttpService extends Service {
     private final String TAG = "HttpService";
 
     private boolean isRunning = false;
+    private long mLastDownloadDate;
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new HttpServiceBinder();
     }
 
     private void sendBroadcast(boolean updated, boolean finished){
@@ -43,9 +47,15 @@ public class HttpService extends Service {
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
 
         Log.d(TAG, "onStartCommand");
+        final boolean refreshing = intent.getBooleanExtra(KEY_REFRESHING, false);
+        if (refreshing && !isRunning){
+            sendBroadcast(true, true);
+            return super.onStartCommand(intent, flags, startId);
+        }
 
         if (!isRunning) {
             isRunning = true;
+            mLastDownloadDate = new Date().getTime();
 
             new Thread(new Runnable() {
                 public void run() {
@@ -95,6 +105,12 @@ public class HttpService extends Service {
             }).start();
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public class HttpServiceBinder extends Binder {
+        HttpService getService() {
+            return HttpService.this;
+        }
     }
 
 }

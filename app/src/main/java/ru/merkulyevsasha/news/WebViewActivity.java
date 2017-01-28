@@ -11,7 +11,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class WebViewActivity extends AppCompatActivity {
@@ -19,14 +19,11 @@ public class WebViewActivity extends AppCompatActivity {
     public static final String KEY_LINK = "LINK";
     public static final String KEY_TITLE = "TITLE";
 
-    @Bind(R.id.webView)
-    public WebView mWebView;
+    @BindView(R.id.webView) public WebView mWebView;
 
-    @Bind(R.id.fab)
-    public FloatingActionButton mFab;
+    @BindView(R.id.fab) public FloatingActionButton mFab;
 
-    @Bind(R.id.toolbar)
-    public Toolbar mToolbar;
+    @BindView(R.id.toolbar) public Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +61,6 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
     }
 
     @Override

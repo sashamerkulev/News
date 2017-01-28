@@ -25,7 +25,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     public static final String KEY_NAV_ID = "navId";
-
     public static final String KEY_POSITION = "position";
     public static final String KEY_REFRESHING = "refreshing";
 
@@ -55,15 +54,15 @@ public class MainActivity extends AppCompatActivity
     private RecyclerViewAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    @Bind(R.id.refreshLayout) public SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.refreshLayout) public SwipeRefreshLayout mRefreshLayout;
 
-    @Bind(R.id.drawer_layout) public DrawerLayout mDrawer;
+    @BindView(R.id.drawer_layout) public DrawerLayout mDrawer;
 
-    @Bind(R.id.nav_view) public NavigationView mNavigationView;
+    @BindView(R.id.nav_view) public NavigationView mNavigationView;
 
-    @Bind(R.id.recyclerView) public RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerView) public RecyclerView mRecyclerView;
 
-    @Bind(R.id.toolbar) public Toolbar mToolbar;
+    @BindView(R.id.toolbar) public Toolbar mToolbar;
 
     private MenuItem mSearchItem;
     private SearchView mSearchView;
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshNews();
+                startService(mNavId, false);
             }
         });
 
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity
                 mAdapter.notifyDataSetChanged();
             } else {
                 mRefreshLayout.setRefreshing(true);
-                refreshNews();
+                startService(mNavId, false);
             }
         } else {
 
@@ -138,6 +137,9 @@ public class MainActivity extends AppCompatActivity
             int position = savedInstanceState.getInt(KEY_POSITION, -1);
             boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
             mRefreshLayout.setRefreshing(isRefreshing);
+            if (isRefreshing){
+                startService(mNavId, isRefreshing);
+            }
 
             if (mSearchText == null || mSearchText.isEmpty()) {
                 mAdapter.Items = getItemNews(mNavId);
@@ -157,7 +159,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
     }
 
     private void searchViewText() {
@@ -176,8 +177,10 @@ public class MainActivity extends AppCompatActivity
                 : mHelper.select(navId);
     }
 
-    private void refreshNews() {
-        startService(new Intent(this, HttpService.class).putExtra(KEY_NAV_ID, mNavId));
+    private void startService(int navId, boolean isRefreshing){
+        startService(new Intent(this, HttpService.class)
+            .putExtra(KEY_NAV_ID, navId)
+            .putExtra(KEY_REFRESHING, isRefreshing));
     }
 
     @Override
@@ -221,7 +224,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (!mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(true);
-                    refreshNews();
+                    startService(mNavId, false);;
                 }
                 return false;
             }
@@ -294,8 +297,6 @@ public class MainActivity extends AppCompatActivity
                 mAdapter.notifyDataSetChanged();
             }
             if (finished) {
-                mAdapter.Items = getItemNews(mNavId);
-                mAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);
             }
         }
