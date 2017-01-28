@@ -15,6 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keep class android.support.v7.app.** { *; }
+-keep interface android.support.v7.app.** { *; }
+-keep class android.support.v7.widget.** { *; }
+
 -dontwarn icepick.**
 -keep class icepick.** { *; }
 -keep class **$$Icepick { *; }
@@ -22,3 +28,22 @@
     @icepick.* <fields>;
 }
 -keepnames class * { @icepick.State *;}
+
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewInjector { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+-keepnames class * { @butterknife.Bind *;}
+
+
+-dontwarn com.squareup.okhttp.**
+
+-dontwarn okio.**
+

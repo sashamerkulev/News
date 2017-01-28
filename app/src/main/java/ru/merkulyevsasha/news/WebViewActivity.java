@@ -58,6 +58,13 @@ public class WebViewActivity extends AppCompatActivity {
                 startActivity(Intent.createChooser(sendIntent, getString(R.string.share_using)));
             }
         });
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -72,14 +79,15 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if(mWebView.canGoBack()) {
-//            mWebView.goBack();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        if(mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
+        }
+    }
 
     private class MyWebViewClient extends WebViewClient
     {

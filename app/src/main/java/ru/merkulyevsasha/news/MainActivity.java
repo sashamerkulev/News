@@ -1,7 +1,9 @@
 package ru.merkulyevsasha.news;
 
-import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,56 +35,46 @@ import ru.merkulyevsasha.news.loaders.HttpService;
 import ru.merkulyevsasha.news.models.Const;
 import ru.merkulyevsasha.news.models.ItemNews;
 
+import static ru.merkulyevsasha.news.loaders.HttpService.KEY_FINISH_NAME;
+import static ru.merkulyevsasha.news.loaders.HttpService.KEY_UPDATE_NAME;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     public static final String KEY_NAV_ID = "navId";
-    public static final String KEY_INTENT = "intent";
 
     public static final String KEY_POSITION = "position";
     public static final String KEY_REFRESHING = "refreshing";
-    public static final String KEY_SEARCHTEXT = "searchtext";
 
-    public static final int STATUS_FINISH = 1001;
 
-    @State
-    int mNavId;
-    @State
-    String mSearchText;
+    @State int mNavId;
+    @State String mSearchText;
 
     private DatabaseHelper mHelper;
     private RecyclerViewAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    @Bind(R.id.refreshLayout)
-    public SwipeRefreshLayout mRefreshLayout;
+    @Bind(R.id.refreshLayout) public SwipeRefreshLayout mRefreshLayout;
 
-    @Bind(R.id.drawer_layout)
-    public DrawerLayout mDrawer;
+    @Bind(R.id.drawer_layout) public DrawerLayout mDrawer;
 
-    @Bind(R.id.nav_view)
-    public NavigationView mNavigationView;
+    @Bind(R.id.nav_view) public NavigationView mNavigationView;
 
-    @Bind(R.id.recyclerView)
-    public RecyclerView mRecyclerView;
+    @Bind(R.id.recyclerView) public RecyclerView mRecyclerView;
 
-    @Bind(R.id.toolbar)
-    public Toolbar mToolbar;
-
+    @Bind(R.id.toolbar) public Toolbar mToolbar;
 
     private MenuItem mSearchItem;
     private SearchView mSearchView;
 
     private Const mConst;
-
+    private Receiver mReceiver;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-//        outState.putInt(KEY_NAV_ID, mNavId);
-//        outState.putString(KEY_SEARCHTEXT, mSearchText);
         Icepick.saveInstanceState(this, outState);
 
         outState.putInt(KEY_POSITION, mLayoutManager.findFirstCompletelyVisibleItemPosition());
@@ -100,7 +92,8 @@ public class MainActivity extends AppCompatActivity
         mToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchViewText();            }
+                searchViewText();
+            }
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -116,7 +109,7 @@ public class MainActivity extends AppCompatActivity
         mAdapter = new RecyclerViewAdapter(this, new ArrayList<ItemNews>());
         mRecyclerView.setAdapter(mAdapter);
 
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshNews();
@@ -125,6 +118,8 @@ public class MainActivity extends AppCompatActivity
 
         mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(this));
         mConst = new Const();
+
+        mReceiver = new Receiver();
 
         if (savedInstanceState == null) {
             mNavId = R.id.nav_all;
@@ -138,15 +133,13 @@ public class MainActivity extends AppCompatActivity
             }
         } else {
 
-//            mNavId = savedInstanceState.getInt(KEY_NAV_ID, R.id.nav_all);
-//            mSearchText = savedInstanceState.getString(KEY_SEARCHTEXT);
             Icepick.restoreInstanceState(this, savedInstanceState);
 
             int position = savedInstanceState.getInt(KEY_POSITION, -1);
             boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
             mRefreshLayout.setRefreshing(isRefreshing);
 
-            if (mSearchText == null || mSearchText.isEmpty()){
+            if (mSearchText == null || mSearchText.isEmpty()) {
                 mAdapter.Items = getItemNews(mNavId);
                 mAdapter.notifyDataSetChanged();
             } else {
@@ -158,6 +151,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
         setActivityTitle(mNavId);
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     private void searchViewText() {
@@ -165,23 +165,33 @@ public class MainActivity extends AppCompatActivity
         mSearchView.setQuery(mSearchText, false);
     }
 
-
-    private void setActivityTitle(int navId){
+    private void setActivityTitle(int navId) {
         int stringId = mConst.getTitleByNavId(navId);
         setTitle(stringId > 0 ? getResources().getString(stringId) : "");
     }
 
-    private List<ItemNews> getItemNews(int navId){
+    private List<ItemNews> getItemNews(int navId) {
         return navId == R.id.nav_all
                 ? mHelper.selectAll()
                 : mHelper.select(navId);
     }
 
-    private void refreshNews(){
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pi = createPendingResult(mNavId, notificationIntent, 0);
-        startService(new Intent(this, HttpService.class)
-                .putExtra(KEY_NAV_ID, mNavId).putExtra(KEY_INTENT, pi));
+    private void refreshNews() {
+        startService(new Intent(this, HttpService.class).putExtra(KEY_NAV_ID, mNavId));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(HttpService.ACTION_NAME);
+        registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -219,12 +229,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void search(String searchText){
+    private void search(String searchText) {
         List<ItemNews> items = mHelper.query(searchText);
         if (items.size() > 0) {
             mAdapter.Items = items;
             mAdapter.notifyDataSetChanged();
-        } else{
+        } else {
             Snackbar.make(this.findViewById(R.id.content_main), R.string.search_nofound_message, Snackbar.LENGTH_LONG)
                     .show();
         }
@@ -245,6 +255,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String newText) {
         if (newText.isEmpty()) {
+            mSearchText = "";
             mAdapter.Items = getItemNews(mNavId);
             mAdapter.notifyDataSetChanged();
         }
@@ -268,16 +279,28 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == STATUS_FINISH){
+    public class Receiver extends BroadcastReceiver {
 
-            mAdapter.Items = getItemNews(mNavId);
-            mAdapter.notifyDataSetChanged();
+        public Receiver() {
+        }
 
-            mRefreshLayout.setRefreshing(false);
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final boolean finished = intent.getBooleanExtra(KEY_FINISH_NAME, false);
+            final boolean updated = intent.getBooleanExtra(KEY_UPDATE_NAME, false);
+
+            if (updated) {
+                mAdapter.Items = getItemNews(mNavId);
+                mAdapter.notifyDataSetChanged();
+            }
+            if (finished) {
+                mAdapter.Items = getItemNews(mNavId);
+                mAdapter.notifyDataSetChanged();
+                mRefreshLayout.setRefreshing(false);
+            }
         }
     }
 
 }
+
+

@@ -7,17 +7,17 @@ android {
         applicationId "ru.merkulyevsasha.news"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 9
-        versionName "1.1.4"
+        versionCode 10
+        versionName "1.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
@@ -35,6 +35,8 @@ dependencies {
 
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
+
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
 
     testCompile 'junit:junit:4.12'
 }

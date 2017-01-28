@@ -38,6 +38,7 @@
             android:name=".loaders.HttpService"
             android:enabled="true"
             android:exported="false" />
+
     </application>
 
 </manifest>

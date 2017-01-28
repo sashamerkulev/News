@@ -1,19 +1,11 @@
 package ru.merkulyevsasha.news.loaders;
 
-import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import android.util.Xml;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -25,31 +17,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-
-import ru.merkulyevsasha.news.R;
-import ru.merkulyevsasha.news.db.DatabaseHelper;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import ru.merkulyevsasha.news.models.Const;
 import ru.merkulyevsasha.news.models.ItemNews;
-
 
 public class HttpReader {
 
 
-    private final int mNavId;
-    private final DatabaseHelper mHelper;
-    private final Const mConst;
+    public final Const mConst;
 
-    public HttpReader(Context context, int navId) {
+    OkHttpClient mClient;
 
-        mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(context));
+
+    public HttpReader() {
         mConst = new Const();
-
-        mNavId = navId;
+        mClient = new OkHttpClient();
     }
 
     private boolean tryParseDateFormat(String date, String formatDate, ItemNews item){
@@ -124,28 +109,26 @@ public class HttpReader {
 
     }
 
-    private List<ItemNews> GetHttpData(HttpClient httpclient, int navId, String url)
+    public List<ItemNews> GetHttpData(int navId, String url)
     {
-        List<ItemNews> result = new ArrayList<ItemNews>();
-        HttpGet httpget = new HttpGet(url);
-        HttpResponse response;
+        List<ItemNews> result = new ArrayList<>();
+
         try {
-            response = httpclient.execute(httpget);
-            if(response.getStatusLine().getStatusCode() == 200){
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    String jsonText = EntityUtils.toString(entity, HTTP.UTF_8);
-                    XmlPullParser parser = Xml.newPullParser();
 
-                    parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            Response response = mClient.newCall(request).execute();
+            String jsonText = response.body().string();
+            XmlPullParser parser = Xml.newPullParser();
 
-                    InputStream stream = new ByteArrayInputStream(jsonText.getBytes("UTF-8"));
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 
-                    parser.setInput(stream, "UTF-8");
+            InputStream stream = new ByteArrayInputStream(jsonText.getBytes("UTF-8"));
 
-                    result=  parseXML(parser, navId);
-                }
-            }
+            parser.setInput(stream, "UTF-8");
+
+            result = parseXML(parser, navId);
         } catch (Exception e) {
             FirebaseCrash.report(e);
             Log.d("GetHttpData", url);
@@ -153,36 +136,5 @@ public class HttpReader {
         }
         return result;
     }
-
-    public void load(){
-
-        HttpClient httpclient = new DefaultHttpClient();
-        List<ItemNews> result = new ArrayList<ItemNews>();
-
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){
-            public boolean verify(String string,SSLSession ssls) {
-                return true;
-            }
-        });
-
-        if (mNavId == R.id.nav_all){
-            for (Map.Entry<Integer, String> entry : mConst.getLinks().entrySet()) {
-                Integer key = entry.getKey();
-                String url = entry.getValue();
-                List<ItemNews> items = GetHttpData(httpclient, key, url);
-                if (items != null) {
-                    result.addAll(items);
-                }
-            }
-            mHelper.deleteAll();
-            mHelper.addListNews(result);
-        } else {
-            result = GetHttpData(httpclient, mNavId, mConst.getLinkByNavId(mNavId));
-            mHelper.delete(mNavId);
-            mHelper.addListNews(result);
-        }
-
-    }
-
 
 }
