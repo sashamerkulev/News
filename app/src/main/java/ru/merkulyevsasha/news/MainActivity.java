@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -149,8 +150,9 @@ public class MainActivity extends AppCompatActivity
                 final boolean updated = intent.getBooleanExtra(KEY_UPDATE_NAME, false);
 
                 if (updated) {
-                    mAdapter.Items = getItemNews(mNavId);
-                    mAdapter.notifyDataSetChanged();
+                    new ReadNews().run(mNavId);
+//                    mAdapter.Items = getItemNews(mNavId);
+//                    mAdapter.notifyDataSetChanged();
                 }
                 if (finished) {
                     mRefreshLayout.setRefreshing(false);
@@ -161,14 +163,14 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
 
             mNavId = R.id.nav_all;
-            List<ItemNews> items = getItemNews(mNavId);
-            if (items.size() > 0) {
-                mAdapter.Items = items;
-                mAdapter.notifyDataSetChanged();
-            } else {
-                mRefreshLayout.setRefreshing(true);
-                startService(mNavId, false);
-            }
+//            List<ItemNews> items = getItemNews(mNavId);
+//            if (items.size() > 0) {
+//                mAdapter.Items = items;
+//                mAdapter.notifyDataSetChanged();
+//            } else {
+//                mRefreshLayout.setRefreshing(true);
+//                startService(mNavId, false);
+//            }
         } else {
 
             Icepick.restoreInstanceState(this, savedInstanceState);
@@ -195,12 +197,6 @@ public class MainActivity extends AppCompatActivity
         setTitle(stringId > 0 ? getResources().getString(stringId) : "");
     }
 
-    private List<ItemNews> getItemNews(int navId) {
-        return navId == R.id.nav_all
-                ? mHelper.selectAll()
-                : mHelper.select(navId);
-    }
-
     private void startService(int navId, boolean isRefreshing){
         startService(new Intent(this, HttpService.class)
             .putExtra(KEY_NAV_ID, navId)
@@ -221,8 +217,9 @@ public class MainActivity extends AppCompatActivity
             startService(mNavId, isRefreshing());
         } else {
             if (mSearchText == null || mSearchText.isEmpty()) {
-                mAdapter.Items = getItemNews(mNavId);
-                mAdapter.notifyDataSetChanged();
+                new ReadNews().run(mNavId);
+//                mAdapter.Items = getItemNews(mNavId);
+//                mAdapter.notifyDataSetChanged();
             } else {
                 search(mSearchText);
             }
@@ -302,8 +299,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextChange(String newText) {
         if (newText.isEmpty()) {
             mSearchText = "";
-            mAdapter.Items = getItemNews(mNavId);
-            mAdapter.notifyDataSetChanged();
+            new ReadNews().run(mNavId);
+
+//            mAdapter.Items = getItemNews(mNavId);
+//            mAdapter.notifyDataSetChanged();
+
         }
         return false;
     }
@@ -315,14 +315,52 @@ public class MainActivity extends AppCompatActivity
 
         setTitle(item.getTitle());
         mNavId = item.getItemId();
-        List<ItemNews> items = getItemNews(mNavId);
-        if (items.size() > 0) {
-            mAdapter.Items = items;
-            mAdapter.notifyDataSetChanged();
-            mRecyclerView.scrollToPosition(0);
-        }
+
+        new ReadNews().run(mNavId);
+
+//        List<ItemNews> items = getItemNews(mNavId);
+//        if (items.size() > 0) {
+//            mAdapter.Items = items;
+//            mAdapter.notifyDataSetChanged();
+//            mRecyclerView.scrollToPosition(0);
+//        }
 
         return true;
+    }
+
+    private class ReadNews extends AsyncTask<Integer, Void, List<ItemNews>>{
+
+        private int navId;
+
+        private List<ItemNews> getItemNews(int navId) {
+            return navId == R.id.nav_all
+                    ? mHelper.selectAll()
+                    : mHelper.select(navId);
+        }
+
+        public void run(int id) {
+            navId = id;
+            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, navId);
+        }
+
+        @Override
+        protected void onPostExecute(List<ItemNews> result) {
+            super.onPostExecute(result);
+            if (result.size() > 0) {
+                mAdapter.Items = result;
+                mAdapter.notifyDataSetChanged();
+                //mRecyclerView.scrollToPosition(0);
+            } else {
+                mRefreshLayout.setRefreshing(true);
+                startService(navId, false);
+            }
+        }
+
+        @Override
+        protected List<ItemNews> doInBackground(Integer... params) {
+            int navId = params[0];
+            return getItemNews(navId);
+        }
     }
 
 }

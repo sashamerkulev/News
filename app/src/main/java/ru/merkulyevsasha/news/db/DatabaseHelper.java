@@ -38,7 +38,6 @@ public class DatabaseHelper {
             SEARCH + " string " +
             " ); create index search_index on " + TABLE_NAME + "(" + SEARCH + "); create index pubdate_index on" + TABLE_NAME + "(" + PUBDATE + ")";
 
-    private SQLiteDatabase mSqlite;
     private final String mDbPath;
 
     // https://habrahabr.ru/post/27108/
@@ -68,7 +67,7 @@ public class DatabaseHelper {
 
     private DatabaseHelper(final String dbPath) {
         mDbPath = dbPath;
-        mSqlite = openOrCreateDatabase();
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         if (mSqlite !=null && mSqlite.getVersion() == 0) {
             mSqlite.execSQL(DATABASE_CREATE);
             mSqlite.setVersion(DATABASE_VERSION);
@@ -77,8 +76,8 @@ public class DatabaseHelper {
     }
 
     public void addListNews(List<ItemNews> items) {
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {
-            mSqlite = openOrCreateDatabase();
             if (mSqlite != null) {
                 mSqlite.beginTransaction();
                 for (ItemNews item : items) {
@@ -108,8 +107,8 @@ public class DatabaseHelper {
     }
 
     public void deleteAll() {
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {
-            mSqlite = openOrCreateDatabase();
             if (mSqlite != null) {
                 mSqlite.delete(TABLE_NAME, null, null);
             }
@@ -123,8 +122,8 @@ public class DatabaseHelper {
     }
 
     public void delete(int navId) {
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {
-            mSqlite = openOrCreateDatabase();
             if (mSqlite != null) {
                 mSqlite.delete(TABLE_NAME, SOURCE_NAV_ID + " = ?", new String[]{String.valueOf(navId)});
             }
@@ -153,8 +152,8 @@ public class DatabaseHelper {
         List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " order by " + PUBDATE + " desc";
 
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {
-            mSqlite = openOrCreateDatabase();
             if (mSqlite != null) {
 
                 Cursor cursor = mSqlite.rawQuery(selectQuery, null);
@@ -180,8 +179,8 @@ public class DatabaseHelper {
         List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SOURCE_NAV_ID + "=? order by " + PUBDATE + " desc";
 
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {
-            mSqlite = openOrCreateDatabase();
             if (mSqlite != null) {
                 Cursor cursor = mSqlite.rawQuery(selectQuery, new String[]{String.valueOf(navId)});
 
@@ -207,8 +206,8 @@ public class DatabaseHelper {
         List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SEARCH + " like @search";
 
+        SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {
-            mSqlite = openOrCreateDatabase();
             if (mSqlite != null) {
                 Cursor cursor = mSqlite.rawQuery(selectQuery, new String[]{"%" + searchText.toLowerCase() + "%"});
 
