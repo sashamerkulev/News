@@ -7,11 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.lang.ref.WeakReference;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.io.File;
 
 import ru.merkulyevsasha.news.models.ItemNews;
 
@@ -40,7 +39,7 @@ public class DatabaseHelper {
             " ); create index search_index on " + TABLE_NAME + "(" + SEARCH + "); create index pubdate_index on" + TABLE_NAME + "(" + PUBDATE + ")";
 
     private SQLiteDatabase mSqlite;
-    private String mDbPath;
+    private final String mDbPath;
 
     // https://habrahabr.ru/post/27108/
     private static volatile DatabaseHelper mInstance;
@@ -151,7 +150,7 @@ public class DatabaseHelper {
     }
 
     public List<ItemNews> selectAll() {
-        List<ItemNews> items = new ArrayList<ItemNews>();
+        List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " order by " + PUBDATE + " desc";
 
         try {
@@ -178,7 +177,7 @@ public class DatabaseHelper {
     }
 
     public List<ItemNews> select(int navId) {
-        List<ItemNews> items = new ArrayList<ItemNews>();
+        List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SOURCE_NAV_ID + "=? order by " + PUBDATE + " desc";
 
         try {
@@ -205,7 +204,7 @@ public class DatabaseHelper {
     }
 
     public List<ItemNews> query(String searchText) {
-        List<ItemNews> items = new ArrayList<ItemNews>();
+        List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SEARCH + " like @search";
 
         try {

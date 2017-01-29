@@ -1,7 +1,6 @@
 package ru.merkulyevsasha.news.loaders;
 
 import android.text.Html;
-import android.util.Log;
 import android.util.Xml;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -21,19 +20,13 @@ import java.util.Locale;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import ru.merkulyevsasha.news.models.Const;
 import ru.merkulyevsasha.news.models.ItemNews;
 
-public class HttpReader {
+class HttpReader {
 
-
-    public final Const mConst;
-
-    OkHttpClient mClient;
-
+    private final OkHttpClient mClient;
 
     public HttpReader() {
-        mConst = new Const();
         mClient = new OkHttpClient();
     }
 
@@ -44,14 +37,13 @@ public class HttpReader {
             return true;
         }
         catch(ParseException e){
-            //FirebaseCrash.report(e);
             e.printStackTrace();
             return false;
         }
     }
 
     private List<ItemNews> parseXML(XmlPullParser parser, int navId) throws XmlPullParserException, IOException {
-        List<ItemNews> items = new ArrayList<ItemNews>();
+        List<ItemNews> items = new ArrayList<>();
         int eventType = parser.getEventType();
         ItemNews item = null;
 
@@ -131,7 +123,6 @@ public class HttpReader {
             result = parseXML(parser, navId);
         } catch (Exception e) {
             FirebaseCrash.report(e);
-            Log.d("GetHttpData", url);
             e.printStackTrace();
         }
         return result;

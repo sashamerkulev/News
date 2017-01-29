@@ -8,13 +8,12 @@ import android.util.Log;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
+import ru.merkulyevsasha.news.models.Const;
 import ru.merkulyevsasha.news.models.ItemNews;
 
 import static ru.merkulyevsasha.news.MainActivity.KEY_NAV_ID;
@@ -29,7 +28,10 @@ public class HttpService extends Service {
     private final String TAG = "HttpService";
 
     private boolean isRunning = false;
-    private long mLastDownloadDate;
+
+    private DatabaseHelper mHelper;
+    private HttpReader reader;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,12 +52,15 @@ public class HttpService extends Service {
         final boolean refreshing = intent.getBooleanExtra(KEY_REFRESHING, false);
         if (refreshing && !isRunning){
             sendBroadcast(true, true);
+            stopSelf(startId);
             return super.onStartCommand(intent, flags, startId);
         }
 
         if (!isRunning) {
             isRunning = true;
-            mLastDownloadDate = new Date().getTime();
+
+            mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(HttpService.this));
+            reader = new HttpReader();
 
             new Thread(new Runnable() {
                 public void run() {
@@ -66,31 +71,13 @@ public class HttpService extends Service {
                         if (mNavId > 0) {
                             Log.d(TAG, String.valueOf(mNavId));
 
-                            DatabaseHelper mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(HttpService.this));
-                            HttpReader reader = new HttpReader();
-
+                            final Const mConst = new Const();
                             if (mNavId == R.id.nav_all){
-                                for (Map.Entry<Integer, String> entry : reader.mConst.getLinks().entrySet()) {
-                                    try {
-                                        List<ItemNews> result = new ArrayList<ItemNews>();
-                                        Integer key = entry.getKey();
-                                        String url = entry.getValue();
-                                        List<ItemNews> items = reader.GetHttpData(key, url);
-                                        if (items != null) {
-                                            result.addAll(items);
-                                        }
-                                        mHelper.delete(key);
-                                        mHelper.addListNews(result);
-                                        sendBroadcast(true, false);
-                                    } catch(Exception e){
-                                        e.printStackTrace();
-                                    }
+                                for (Map.Entry<Integer, String> entry : mConst.getLinks().entrySet()) {
+                                    readHttpDataAndSaveToDb(entry.getKey(), entry.getValue());
                                 }
                             } else {
-                                List<ItemNews> result = reader.GetHttpData(mNavId, reader.mConst.getLinkByNavId(mNavId));
-                                mHelper.delete(mNavId);
-                                mHelper.addListNews(result);
-                                sendBroadcast(true, false);
+                                readHttpDataAndSaveToDb(mNavId, mConst.getLinkByNavId(mNavId));
                             }
                         }
                     } catch (Exception e) {
@@ -107,8 +94,21 @@ public class HttpService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private void readHttpDataAndSaveToDb(int id, String url){
+        try {
+            List<ItemNews> items = reader.GetHttpData(id, url);
+            if (items.size() > 0) {
+                mHelper.delete(id);
+                mHelper.addListNews(items);
+                sendBroadcast(true, false);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public class HttpServiceBinder extends Binder {
-        HttpService getService() {
+        public HttpService getService() {
             return HttpService.this;
         }
     }

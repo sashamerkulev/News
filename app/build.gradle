@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.butterknife'
 
+//noinspection GroovyMissingReturnStatement
 android {
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
@@ -8,8 +9,8 @@ android {
         applicationId "ru.merkulyevsasha.news"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 10
-        versionName "1.1.5"
+        versionCode 11
+        versionName "1.1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

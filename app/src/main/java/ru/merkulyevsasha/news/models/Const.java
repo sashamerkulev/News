@@ -8,8 +8,8 @@ import ru.merkulyevsasha.news.R;
 
 public final class Const {
 
-    private final Map<Integer, String> mLinks = new HashMap<Integer, String>();
-    private final Map<Integer, Integer> mSources = new HashMap<Integer, Integer>();
+    private final Map<Integer, String> mLinks = new HashMap<>();
+    private final Map<Integer, Integer> mSources = new HashMap<>();
 
     public Map<Integer, String> getLinks(){
         return mLinks;

@@ -1,10 +1,13 @@
 package ru.merkulyevsasha.news;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     public static final String KEY_NAV_ID = "navId";
-    public static final String KEY_POSITION = "position";
+    private static final String KEY_POSITION = "position";
     public static final String KEY_REFRESHING = "refreshing";
 
 
@@ -68,7 +71,28 @@ public class MainActivity extends AppCompatActivity
     private SearchView mSearchView;
 
     private Const mConst;
-    private Receiver mReceiver;
+    private BroadcastReceiver mReceiver;
+
+    private HttpService mService;
+    private boolean mBound = false;
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private final ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            HttpService.HttpServiceBinder binder = (HttpService.HttpServiceBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -118,9 +142,24 @@ public class MainActivity extends AppCompatActivity
         mHelper = DatabaseHelper.getInstance(DatabaseHelper.getDbPath(this));
         mConst = new Const();
 
-        mReceiver = new Receiver();
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final boolean finished = intent.getBooleanExtra(KEY_FINISH_NAME, false);
+                final boolean updated = intent.getBooleanExtra(KEY_UPDATE_NAME, false);
+
+                if (updated) {
+                    mAdapter.Items = getItemNews(mNavId);
+                    mAdapter.notifyDataSetChanged();
+                }
+                if (finished) {
+                    mRefreshLayout.setRefreshing(false);
+                }
+            }
+        };
 
         if (savedInstanceState == null) {
+
             mNavId = R.id.nav_all;
             List<ItemNews> items = getItemNews(mNavId);
             if (items.size() > 0) {
@@ -134,31 +173,16 @@ public class MainActivity extends AppCompatActivity
 
             Icepick.restoreInstanceState(this, savedInstanceState);
 
-            int position = savedInstanceState.getInt(KEY_POSITION, -1);
+            //int position = savedInstanceState.getInt(KEY_POSITION, -1);
             boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
             mRefreshLayout.setRefreshing(isRefreshing);
-            if (isRefreshing){
-                startService(mNavId, isRefreshing);
-            }
-
-            if (mSearchText == null || mSearchText.isEmpty()) {
-                mAdapter.Items = getItemNews(mNavId);
-                mAdapter.notifyDataSetChanged();
-            } else {
-                search(mSearchText);
-            }
-
-            if (position > 0) {
-                mLayoutManager.scrollToPosition(position);
-            }
         }
         setActivityTitle(mNavId);
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private boolean isRefreshing(){
+        return mRefreshLayout.isRefreshing();
     }
 
     private void searchViewText() {
@@ -181,20 +205,39 @@ public class MainActivity extends AppCompatActivity
         startService(new Intent(this, HttpService.class)
             .putExtra(KEY_NAV_ID, navId)
             .putExtra(KEY_REFRESHING, isRefreshing));
+        // Bind to LocalService
+        Intent intent = new Intent(this, HttpService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onResume() {
+    protected void onStart() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HttpService.ACTION_NAME);
         registerReceiver(mReceiver, intentFilter);
+
+        if (isRefreshing()){
+            startService(mNavId, isRefreshing());
+        } else {
+            if (mSearchText == null || mSearchText.isEmpty()) {
+                mAdapter.Items = getItemNews(mNavId);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                search(mSearchText);
+            }
+        }
     }
 
     @Override
-    protected void onPause() {
+    protected void onStop() {
         super.onPause();
         unregisterReceiver(mReceiver);
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     @Override
@@ -224,7 +267,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (!mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(true);
-                    startService(mNavId, false);;
+                    startService(mNavId, false);
                 }
                 return false;
             }
@@ -280,26 +323,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         return true;
-    }
-
-    public class Receiver extends BroadcastReceiver {
-
-        public Receiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final boolean finished = intent.getBooleanExtra(KEY_FINISH_NAME, false);
-            final boolean updated = intent.getBooleanExtra(KEY_UPDATE_NAME, false);
-
-            if (updated) {
-                mAdapter.Items = getItemNews(mNavId);
-                mAdapter.notifyDataSetChanged();
-            }
-            if (finished) {
-                mRefreshLayout.setRefreshing(false);
-            }
-        }
     }
 
 }

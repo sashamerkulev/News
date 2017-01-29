@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.news.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (pubDate == null){
             holder.mTitle.setText(source + " " + title);
         } else {
-            DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             holder.mTitle.setText(source + " " + format.format(pubDate) + " " + title);
         }
         holder.mDescription.setText(description == null ? "" : description.trim());
