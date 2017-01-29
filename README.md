@@ -8,17 +8,26 @@
 
 Вторая отображает новость более подробно, по ссылке (WebView). 
 
-Для чтения rss из сети используется OkHttp3.
+Переход между активити анимируется методом overridePendingTransition.
 
-Для работы в фоне (чтения из сети) используется Service. Для сообщения об окончании создавшей сервис Activity используется BroadcastReceiver.
+### Service, OkHttp3, BroadcastReceiver
 
-Данные кешируются в БД Sqlite (используется класс SQLiteDatabase).
+Для работы в фоне (чтения новостей из сети) используется Service. 
+
+Для чтения rss-файлов с новостями используется OkHttp3.
+
+Для сообщения об окончании работы сервис посылает broadcast-сообщения, которые активити перехватывает в своем локальном BroadcastReceiver.
 
 ### SQLiteDatabase (транзакции)
+
+Данные хранятся в БД Sqlite (используется класс SQLiteDatabase).
+
+Для чтения данных из БД используется AsyncTask :-)
+
 А вот как надо работать с транзакциями:
 ```java
+SQLiteDatabase mSqlite = SQLiteDatabase.openOrCreateDatabase();
 try {
-  mSqlite = SQLiteDatabase.openOrCreateDatabase();
   mSqlite.beginTransaction();
   for (ItemNews item : items) {
     mSqlite.insert(TABLE_NAME, null, values);
@@ -32,14 +41,42 @@ try {
 }
 ```  
   
-### Удобный Binding
+### Удобный Butterknife
+
 А еще используется вот такая штука:
 ```java
-    @Bind(R.id.fab)
-    public FloatingActionButton mFab;
+    @Bind(R.id.fab) public FloatingActionButton mFab;
 ```  
   хотя, пожалуй в этом проекте, она применяется даже там где не нужно.
   
   подключить ее можно так: 
-  
-  compile 'com.jakewharton:butterknife:7.0.1'
+```java  
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+```
+### Сохранение состояния (Icepick)
+
+Есть библиотека для автоматического сохранения/восстановления состояний активити/фрагментов в bundle.
+
+```java
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Icepick.saveInstanceState(this, outState);
+    }
+```
+Восстановления состояния происходит так:
+```java
+    Icepick.restoreInstanceState(this, savedInstanceState);
+```
+
+Для того, что бы все работало, поля состояние которых должно сохранятся надо пометить аннотацией:
+```java
+    @State int mNavId;
+```  
+Подключается так:
+```java  
+    compile 'frankiesardo:icepick:3.2.0'
+    provided 'frankiesardo:icepick-processor:3.2.0'
+```
