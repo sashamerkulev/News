@@ -204,7 +204,7 @@ public class DatabaseHelper {
 
     public List<ItemNews> query(String searchText) {
         List<ItemNews> items = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SEARCH + " like @search";
+        String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SEARCH + " like @search order by " + PUBDATE + " desc";
 
         SQLiteDatabase mSqlite = openOrCreateDatabase();
         try {

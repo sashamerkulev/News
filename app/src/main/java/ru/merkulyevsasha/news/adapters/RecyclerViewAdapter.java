@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,13 +25,13 @@ import static ru.merkulyevsasha.news.WebViewActivity.KEY_TITLE;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder>{
 
-    private final Activity mActivity;
+    private final WeakReference<Activity> mRef;
     private final Const mConst;
     public List<ItemNews> Items;
 
     public RecyclerViewAdapter(Activity activity, List<ItemNews> items){
         Items = items;
-        mActivity = activity;
+        mRef = new WeakReference(activity);
         mConst = new Const();
     }
 
@@ -40,19 +41,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ItemViewHolder(view, new OnClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent link_intent = new Intent(mActivity, WebViewActivity.class);
-                ItemNews item = Items.get(position);
-                link_intent.putExtra(KEY_LINK, item.Link);
 
-                link_intent.putExtra(KEY_TITLE, getSourceNameTitle(item.SourceNavId));
-                mActivity.startActivity(link_intent);
+                Activity activity = mRef.get();
+                if (activity != null) {
+                    Intent link_intent = new Intent(activity, WebViewActivity.class);
+                    ItemNews item = Items.get(position);
+                    link_intent.putExtra(KEY_LINK, item.Link);
+
+                    link_intent.putExtra(KEY_TITLE, getSourceNameTitle(item.SourceNavId));
+                    activity.startActivity(link_intent);
+                }
             }
         });
     }
 
     private String getSourceNameTitle(int navId) {
+        Activity activity = mRef.get();
+        if (activity == null)
+            return "";
         int stringId = mConst.getTitleByNavId(navId);
-        return stringId > 0 ? mActivity.getResources().getString(stringId) : "";
+        return stringId > 0 ? activity.getResources().getString(stringId) : "";
     }
 
     @Override
