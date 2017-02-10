@@ -68,10 +68,19 @@ public class DatabaseHelper {
     private DatabaseHelper(final String dbPath) {
         mDbPath = dbPath;
         SQLiteDatabase mSqlite = openOrCreateDatabase();
-        if (mSqlite !=null && mSqlite.getVersion() == 0) {
-            mSqlite.execSQL(DATABASE_CREATE);
-            mSqlite.setVersion(DATABASE_VERSION);
-            mSqlite.close();
+        try {
+            if (mSqlite != null && mSqlite.getVersion() == 0) {
+                mSqlite.execSQL(DATABASE_CREATE);
+                mSqlite.setVersion(DATABASE_VERSION);
+            }
+        } catch (Exception e) {
+            FirebaseCrash.report(e);
+            e.printStackTrace();
+        } finally {
+            if (mSqlite != null && mSqlite.inTransaction())
+                mSqlite.endTransaction();
+            if (mSqlite != null && mSqlite.isOpen())
+                mSqlite.close();
         }
     }
 

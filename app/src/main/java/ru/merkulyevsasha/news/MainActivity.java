@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
+import ru.merkulyevsasha.apprate.AppRateRequester;
 import ru.merkulyevsasha.news.adapters.RecyclerViewAdapter;
 import ru.merkulyevsasha.news.db.DatabaseHelper;
 import ru.merkulyevsasha.news.loaders.HttpService;
@@ -181,6 +182,8 @@ public class MainActivity extends AppCompatActivity
         }
         setActivityTitle(mNavId);
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
+
+        AppRateRequester.Run(this, getPackageName()); //"ru.merkulyevsasha.news");
     }
 
     private boolean isRefreshing(){
