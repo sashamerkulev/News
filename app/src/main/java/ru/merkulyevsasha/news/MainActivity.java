@@ -152,8 +152,6 @@ public class MainActivity extends AppCompatActivity
 
                 if (updated) {
                     new ReadNews().run(mNavId);
-//                    mAdapter.Items = getItemNews(mNavId);
-//                    mAdapter.notifyDataSetChanged();
                 }
                 if (finished) {
                     mRefreshLayout.setRefreshing(false);
@@ -162,28 +160,16 @@ public class MainActivity extends AppCompatActivity
         };
 
         if (savedInstanceState == null) {
-
             mNavId = R.id.nav_all;
-//            List<ItemNews> items = getItemNews(mNavId);
-//            if (items.size() > 0) {
-//                mAdapter.Items = items;
-//                mAdapter.notifyDataSetChanged();
-//            } else {
-//                mRefreshLayout.setRefreshing(true);
-//                startService(mNavId, false);
-//            }
         } else {
-
             Icepick.restoreInstanceState(this, savedInstanceState);
-
-            //int position = savedInstanceState.getInt(KEY_POSITION, -1);
             boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
             mRefreshLayout.setRefreshing(isRefreshing);
         }
         setActivityTitle(mNavId);
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
 
-        AppRateRequester.Run(this, getPackageName()); //"ru.merkulyevsasha.news");
+        AppRateRequester.Run(this, BuildConfig.APPLICATION_ID);
     }
 
     private boolean isRefreshing(){
@@ -221,8 +207,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (mSearchText == null || mSearchText.isEmpty()) {
                 new ReadNews().run(mNavId);
-//                mAdapter.Items = getItemNews(mNavId);
-//                mAdapter.notifyDataSetChanged();
             } else {
                 search(mSearchText);
             }
@@ -281,16 +265,14 @@ public class MainActivity extends AppCompatActivity
             mAdapter.Items = items;
             mAdapter.notifyDataSetChanged();
         } else {
-            Snackbar.make(this.findViewById(R.id.content_main), R.string.search_nofound_message, Snackbar.LENGTH_LONG)
-                    .show();
+            Snackbar.make(this.findViewById(R.id.content_main), R.string.search_nofound_message, Snackbar.LENGTH_LONG).show();
         }
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         if (query.length() < 5) {
-            Snackbar.make(this.findViewById(R.id.content_main), R.string.search_validation_message, Snackbar.LENGTH_LONG)
-                    .show();
+            Snackbar.make(this.findViewById(R.id.content_main), R.string.search_validation_message, Snackbar.LENGTH_LONG).show();
             return false;
         }
         mSearchText = query;
@@ -303,10 +285,6 @@ public class MainActivity extends AppCompatActivity
         if (newText.isEmpty()) {
             mSearchText = "";
             new ReadNews().run(mNavId);
-
-//            mAdapter.Items = getItemNews(mNavId);
-//            mAdapter.notifyDataSetChanged();
-
         }
         return false;
     }
@@ -320,13 +298,6 @@ public class MainActivity extends AppCompatActivity
         mNavId = item.getItemId();
 
         new ReadNews().run(mNavId);
-
-//        List<ItemNews> items = getItemNews(mNavId);
-//        if (items.size() > 0) {
-//            mAdapter.Items = items;
-//            mAdapter.notifyDataSetChanged();
-//            mRecyclerView.scrollToPosition(0);
-//        }
 
         return true;
     }
@@ -352,7 +323,6 @@ public class MainActivity extends AppCompatActivity
             if (result.size() > 0) {
                 mAdapter.Items = result;
                 mAdapter.notifyDataSetChanged();
-                //mRecyclerView.scrollToPosition(0);
             } else {
                 mRefreshLayout.setRefreshing(true);
                 startService(navId, false);
