@@ -26,6 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity
 
     private HttpService mService;
     private boolean mBound = false;
+    private AdView mAdView;
+
 
     /** Defines callbacks for service binding, passed to bindService() */
     private final ServiceConnection mConnection = new ServiceConnection() {
@@ -170,6 +175,10 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
 
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID);
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private boolean isRefreshing(){
@@ -197,7 +206,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        super.onResume();
+        super.onStart();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HttpService.ACTION_NAME);
         registerReceiver(mReceiver, intentFilter);
@@ -215,7 +224,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onPause();
+        super.onStop();
         unregisterReceiver(mReceiver);
         // Unbind from the service
         if (mBound) {
@@ -334,6 +343,31 @@ public class MainActivity extends AppCompatActivity
             int navId = params[0];
             return getItemNews(navId);
         }
+    }
+
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
 }
