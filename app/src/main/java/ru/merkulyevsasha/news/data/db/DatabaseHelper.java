@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.db;
+package ru.merkulyevsasha.news.data.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ru.merkulyevsasha.news.models.ItemNews;
+import ru.merkulyevsasha.news.pojos.ItemNews;
 
 public class DatabaseHelper {
     private static final int DATABASE_VERSION = 1;

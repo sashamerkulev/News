@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.models;
+package ru.merkulyevsasha.news.pojos;
 
 import java.util.Date;
 

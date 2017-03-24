@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.adapters;
+package ru.merkulyevsasha.news.presentation;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,12 +16,11 @@ import java.util.Date;
 import java.util.List;
 
 import ru.merkulyevsasha.news.R;
-import ru.merkulyevsasha.news.WebViewActivity;
-import ru.merkulyevsasha.news.models.Const;
-import ru.merkulyevsasha.news.models.ItemNews;
+import ru.merkulyevsasha.news.helpers.Const;
+import ru.merkulyevsasha.news.pojos.ItemNews;
 
-import static ru.merkulyevsasha.news.WebViewActivity.KEY_LINK;
-import static ru.merkulyevsasha.news.WebViewActivity.KEY_TITLE;
+import static ru.merkulyevsasha.news.presentation.WebViewActivity.KEY_LINK;
+import static ru.merkulyevsasha.news.presentation.WebViewActivity.KEY_TITLE;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder>{
 

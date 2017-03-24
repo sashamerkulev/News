@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.loaders;
+package ru.merkulyevsasha.news.data.http;
 
 import android.text.Html;
 import android.util.Xml;
@@ -20,9 +20,9 @@ import java.util.Locale;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import ru.merkulyevsasha.news.models.ItemNews;
+import ru.merkulyevsasha.news.pojos.ItemNews;
 
-class HttpReader {
+public class HttpReader {
 
     private final OkHttpClient mClient;
 

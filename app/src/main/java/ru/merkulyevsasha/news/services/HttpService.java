@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.loaders;
+package ru.merkulyevsasha.news.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,12 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 import ru.merkulyevsasha.news.R;
-import ru.merkulyevsasha.news.db.DatabaseHelper;
-import ru.merkulyevsasha.news.models.Const;
-import ru.merkulyevsasha.news.models.ItemNews;
+import ru.merkulyevsasha.news.data.db.DatabaseHelper;
+import ru.merkulyevsasha.news.data.http.HttpReader;
+import ru.merkulyevsasha.news.helpers.Const;
+import ru.merkulyevsasha.news.pojos.ItemNews;
 
-import static ru.merkulyevsasha.news.MainActivity.KEY_NAV_ID;
-import static ru.merkulyevsasha.news.MainActivity.KEY_REFRESHING;
+import static ru.merkulyevsasha.news.presentation.MainActivity.KEY_NAV_ID;
+import static ru.merkulyevsasha.news.presentation.MainActivity.KEY_REFRESHING;
 
 public class HttpService extends Service {
 
@@ -49,11 +50,14 @@ public class HttpService extends Service {
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
 
         Log.d(TAG, "onStartCommand");
+        if (intent == null)
+            return START_NOT_STICKY;
+
         final boolean refreshing = intent.getBooleanExtra(KEY_REFRESHING, false);
         if (refreshing && !isRunning){
             sendBroadcast(true, true);
             stopSelf(startId);
-            return super.onStartCommand(intent, flags, startId);
+            return START_NOT_STICKY;
         }
 
         if (!isRunning) {
@@ -91,7 +95,7 @@ public class HttpService extends Service {
                 }
             }).start();
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     private void readHttpDataAndSaveToDb(int id, String url){

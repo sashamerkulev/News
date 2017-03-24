@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news;
+package ru.merkulyevsasha.news.presentation;
 
 
 import android.content.Intent;

@@ -3,7 +3,6 @@ package ru.merkulyevsasha.apprate;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 public class DialogHelper {

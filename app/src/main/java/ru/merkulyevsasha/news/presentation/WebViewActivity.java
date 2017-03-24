@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news;
+package ru.merkulyevsasha.news.presentation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.merkulyevsasha.news.R;
 
 public class WebViewActivity extends AppCompatActivity {
 

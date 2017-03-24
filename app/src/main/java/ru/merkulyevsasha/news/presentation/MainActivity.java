@@ -1,14 +1,11 @@
-package ru.merkulyevsasha.news;
+package ru.merkulyevsasha.news.presentation;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -37,14 +34,16 @@ import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
 import ru.merkulyevsasha.apprate.AppRateRequester;
-import ru.merkulyevsasha.news.adapters.RecyclerViewAdapter;
-import ru.merkulyevsasha.news.db.DatabaseHelper;
-import ru.merkulyevsasha.news.loaders.HttpService;
-import ru.merkulyevsasha.news.models.Const;
-import ru.merkulyevsasha.news.models.ItemNews;
+import ru.merkulyevsasha.news.BuildConfig;
+import ru.merkulyevsasha.news.R;
+import ru.merkulyevsasha.news.data.db.DatabaseHelper;
+import ru.merkulyevsasha.news.services.HttpService;
+import ru.merkulyevsasha.news.helpers.Const;
+import ru.merkulyevsasha.news.pojos.ItemNews;
+import ru.merkulyevsasha.news.services.ServicesHelper;
 
-import static ru.merkulyevsasha.news.loaders.HttpService.KEY_FINISH_NAME;
-import static ru.merkulyevsasha.news.loaders.HttpService.KEY_UPDATE_NAME;
+import static ru.merkulyevsasha.news.services.HttpService.KEY_FINISH_NAME;
+import static ru.merkulyevsasha.news.services.HttpService.KEY_UPDATE_NAME;
 
 
 public class MainActivity extends AppCompatActivity
@@ -84,22 +83,22 @@ public class MainActivity extends AppCompatActivity
 
 
     /** Defines callbacks for service binding, passed to bindService() */
-    private final ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            HttpService.HttpServiceBinder binder = (HttpService.HttpServiceBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
+//    private final ServiceConnection mConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName className,
+//                                       IBinder service) {
+//            // We've bound to LocalService, cast the IBinder and get LocalService instance
+//            HttpService.HttpServiceBinder binder = (HttpService.HttpServiceBinder) service;
+//            mService = binder.getService();
+//            mBound = true;
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName arg0) {
+//            mBound = false;
+//        }
+//    };
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -177,8 +176,12 @@ public class MainActivity extends AppCompatActivity
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID);
 
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = BuildConfig.DEBUG_MODE
+                ? new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
+                : new AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build();
         mAdView.loadAd(adRequest);
+
+        ServicesHelper.register(this);
     }
 
     private boolean isRefreshing(){
@@ -200,8 +203,8 @@ public class MainActivity extends AppCompatActivity
             .putExtra(KEY_NAV_ID, navId)
             .putExtra(KEY_REFRESHING, isRefreshing));
         // Bind to LocalService
-        Intent intent = new Intent(this, HttpService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, HttpService.class);
+//        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -227,10 +230,10 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         unregisterReceiver(mReceiver);
         // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
+//        if (mBound) {
+//            unbindService(mConnection);
+//            mBound = false;
+//        }
     }
 
     @Override
