@@ -3,6 +3,8 @@
 
 Простенький проект на Android Java: новости из публичных rss источников, проект содержит две Activity.
 
+https://play.google.com/store/apps/details?id=ru.merkulyevsasha.news
+
 Первая Activity отображает список новостей (android.support.v7.widget.RecyclerView).
 Реализован поиск по БД Sqlite android.support.v7.widget.SearchView. А с помощью android.support.v4.widget.SwipeRefreshLayout реализован pull-to-refresh.
 
