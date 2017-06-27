@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,14 +69,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         int sourceNavId = Items.get(position).SourceNavId;
         String source= getSourceNameTitle(sourceNavId);
         String title = Items.get(position).Title.trim();
+
+        SpannableStringBuilder str = new SpannableStringBuilder();
+        str.append(source);
+        str.append(" ");
+        str.append(title);
+
         String description = Items.get(position).Description;
         Date pubDate = Items.get(position).PubDate;
         if (pubDate == null){
-            holder.mTitle.setText(source + " " + title);
+            //holder.mTitle.setText(source + " " + title);
         } else {
             @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            holder.mTitle.setText(source + " " + format.format(pubDate) + " " + title);
+            //holder.mTitle.setText(source + " " + format.format(pubDate) + " " + title);
+            str.append(" ");
+            str.append(format.format(pubDate));
         }
+        str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, source.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.mTitle.setText(str);
+
         holder.mDescription.setText(description == null ? "" : description.trim());
     }
 
