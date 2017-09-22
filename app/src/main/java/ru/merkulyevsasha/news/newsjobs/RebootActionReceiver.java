@@ -1,15 +1,15 @@
-package ru.merkulyevsasha.news.services;
+package ru.merkulyevsasha.news.newsjobs;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 
-public class Reciever extends BroadcastReceiver {
+/**
+ * Created by sasha_merkulev on 10.07.2017.
+ */
 
-    private static String TAG = Reciever.class.getSimpleName();
-
+public class RebootActionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -18,11 +18,7 @@ public class Reciever extends BroadcastReceiver {
                 || action.equals("android.intent.action.QUICKBOOT_POWERON")
                 || action.equals("com.htc.intent.action.QUICKBOOT_POWERON") ) {
 
-            Log.d(TAG, "on receive: register after reboot");
-            ServicesHelper.register(context);
-        } else {
-            Log.d(TAG, "on receive: start service");
-            context.startService(new Intent(context, NewsService.class));
+            NewsJob.scheduleJob();
         }
 
     }

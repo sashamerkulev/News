@@ -33,7 +33,7 @@ public class HttpReader {
     private boolean tryParseDateFormat(String date, String formatDate, ItemNews item){
         try{
             SimpleDateFormat format = new SimpleDateFormat(formatDate, Locale.ENGLISH);
-            item.PubDate = format.parse(date);
+            item.setPubDate(format.parse(date));
             return true;
         }
         catch(ParseException e){
@@ -56,21 +56,21 @@ public class HttpReader {
                     name = parser.getName();
                     if (name.equals("item")){
                         item = new ItemNews();
-                        item.SourceNavId = navId;
+                        item.setSourceNavId (navId);
                     } else if (item != null){
                         switch (name) {
                             case "title":
-                                item.Title = parser.nextText();
+                                item.setTitle(parser.nextText());
                                 break;
                             case "description":
                                 String description = parser.nextText();
                                 if (description != null) {
                                     description = Html.fromHtml(description).toString();
                                 }
-                                item.Description = description;
+                                item.setDescription(description);
                                 break;
                             case "link":
-                                item.Link = parser.nextText();
+                                item.setLink(parser.nextText());
                                 break;
                             case "pubDate":
                                 String pubDate = parser.nextText();
@@ -79,18 +79,18 @@ public class HttpReader {
                                         tryParseDateFormat(pubDate, "d MMM yyyy HH:mm:ss z", item);
                                 break;
                             case "category":
-                                item.Category = parser.nextText();
+                                item.setCategory(parser.nextText());
                                 break;
                         }
                     }
                     break;
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
-                    if (name.equalsIgnoreCase("item") && item != null && item.PubDate != null){
-                        String description = item.Description == null ? "" :item.Description.toLowerCase();
-                        String title = item.Title == null ? "" :item.Title.toLowerCase();
-                        String category = item.Category == null ? "" :item.Category.toLowerCase();
-                        item.Search =  title + category + description;
+                    if (name.equalsIgnoreCase("item") && item != null && item.getPubDate() != null){
+                        String description = item.getDescription() == null ? "" :item.getDescription().toLowerCase();
+                        String title = item.getTitle() == null ? "" :item.getTitle().toLowerCase();
+                        String category = item.getCategory() == null ? "" :item.getCategory().toLowerCase();
+                        item.setSearch(title + category + description);
                         items.add(item);
                     }
             }

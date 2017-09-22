@@ -34,7 +34,8 @@
     <!--<string name="news_rianovosti">РИА Новости</string>-->
     <string name="news_planetanews">Планета Новости</string>
     <string name="news_rambler">Новости Rambler.ru</string>
-    <string name="news_newsrucom">Новости Newsru.com</string>
+    <!--<string name="news_newsrucom">Новости Newsru.com</string>-->
+    <string name="news_topwar">Военное обозрение</string>
 
     <string name="share_using">Отправить куда</string>
 

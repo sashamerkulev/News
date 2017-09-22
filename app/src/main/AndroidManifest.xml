@@ -15,9 +15,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".NewsApp"
+        >
         <activity
-            android:name=".presentation.SplashActivity"
+            android:name=".presentation.splash.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter tools:ignore="GoogleAppIndexingWarning">
@@ -28,34 +30,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.WebViewActivity"
+            android:name=".presentation.webview.WebViewActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             />
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"
             />
 
         <service
-            android:name=".services.HttpService"
+            android:name=".newsservices.HttpService"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".services.Reciever">
+        <receiver android:name=".newsjobs.RebootActionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+
         <service
-            android:name=".services.NewsJobService"
+            android:name=".newsservices.NewsJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
-        <service android:name=".services.NewsService" />
+        <service android:name=".newsservices.NewsService" />
 
 
 

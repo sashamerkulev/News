@@ -4,21 +4,20 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.firebase.crash.FirebaseCrash;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import ru.merkulyevsasha.news.pojos.ItemNews;
 
-public class DatabaseHelper {
+public class DatabaseHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "news.db";
     private static final String TABLE_NAME = "news";
-    private static final String FOLDER_NAME = "news";
 
     private static final String SOURCE_NAV_ID = "sourceNavId";
     private static final String TITLE = "title";
@@ -38,122 +37,55 @@ public class DatabaseHelper {
             SEARCH + " string " +
             " ); create index search_index on " + TABLE_NAME + "(" + SEARCH + "); create index pubdate_index on" + TABLE_NAME + "(" + PUBDATE + ")";
 
-    private final String mDbPath;
-
-    // https://habrahabr.ru/post/27108/
-    private static volatile DatabaseHelper mInstance;
-
-    public static DatabaseHelper getInstance(final String dbPath) {
-        if (mInstance == null) {
-            synchronized (DatabaseHelper.class) {
-                if (mInstance == null) {
-                    mInstance = new DatabaseHelper(dbPath);
-                }
-            }
-        }
-        return mInstance;
-    }
-
-    public static String getDbPath(Context context){
-        File subFolder = new File(context.getFilesDir(), FOLDER_NAME);
-        subFolder.mkdirs();
-        File mFile = new File(subFolder, DATABASE_NAME);
-        return mFile.getPath();
-    }
-
-    private SQLiteDatabase openOrCreateDatabase() {
-        return SQLiteDatabase.openOrCreateDatabase(mDbPath, null);
-    }
-
-    private DatabaseHelper(final String dbPath) {
-        mDbPath = dbPath;
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
-        try {
-            if (mSqlite != null && mSqlite.getVersion() == 0) {
-                mSqlite.execSQL(DATABASE_CREATE);
-                mSqlite.setVersion(DATABASE_VERSION);
-            }
-        } catch (Exception e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
-        } finally {
-            if (mSqlite != null && mSqlite.inTransaction())
-                mSqlite.endTransaction();
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
-        }
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public void addListNews(List<ItemNews> items) {
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         try {
-            if (mSqlite != null) {
-                mSqlite.beginTransaction();
-                for (ItemNews item : items) {
-                    ContentValues values = new ContentValues();
-                    values.put(SOURCE_NAV_ID, item.SourceNavId);
-                    values.put(TITLE, item.Title);
-                    values.put(LINK, item.Link);
-                    values.put(DESCRIPTION, item.Description == null ? "" : item.Description);
-                    values.put(CATEGORY, item.Category);
-                    values.put(SEARCH, item.Search);
-                    if (item.PubDate != null) {
-                        values.put(PUBDATE, item.PubDate.getTime());
-                        mSqlite.insert(TABLE_NAME, null, values);
-                    }
+            db.beginTransaction();
+            for (ItemNews item : items) {
+                ContentValues values = new ContentValues();
+                values.put(SOURCE_NAV_ID, item.getSourceNavId());
+                values.put(TITLE, item.getTitle());
+                values.put(LINK, item.getLink());
+                values.put(DESCRIPTION, item.getDescription() == null ? "" : item.getDescription());
+                values.put(CATEGORY, item.getCategory());
+                values.put(SEARCH, item.getSearch());
+                if (item.getPubDate() != null) {
+                    values.put(PUBDATE, item.getPubDate().getTime());
+                    db.insert(TABLE_NAME, null, values);
                 }
-                mSqlite.setTransactionSuccessful();
             }
+            db.setTransactionSuccessful();
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
-            if (mSqlite != null && mSqlite.inTransaction())
-                mSqlite.endTransaction();
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
-        }
-    }
-
-    public void deleteAll() {
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
-        try {
-            if (mSqlite != null) {
-                mSqlite.delete(TABLE_NAME, null, null);
-            }
-        } catch (Exception e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
-        } finally {
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
+            db.endTransaction();
         }
     }
 
     public void delete(int navId) {
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         try {
-            if (mSqlite != null) {
-                mSqlite.delete(TABLE_NAME, SOURCE_NAV_ID + " = ?", new String[]{String.valueOf(navId)});
-            }
+            db.delete(TABLE_NAME, SOURCE_NAV_ID + " = ?", new String[]{String.valueOf(navId)});
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
-        } finally {
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
         }
     }
 
     private ItemNews getItemNews(Cursor cursor) {
         ItemNews item = new ItemNews();
-        item.SourceNavId = cursor.getInt(cursor.getColumnIndex(SOURCE_NAV_ID));
-        item.Title = cursor.getString(cursor.getColumnIndex(TITLE));
-        item.Link = cursor.getString(cursor.getColumnIndex(LINK));
-        item.Description = cursor.getString(cursor.getColumnIndex(DESCRIPTION));
-        item.PubDate = new Date(cursor.getLong(cursor.getColumnIndex(PUBDATE)));
-        item.Category = cursor.getString(cursor.getColumnIndex(CATEGORY));
-        item.Search = cursor.getString(cursor.getColumnIndex(SEARCH));
+        item.setSourceNavId(cursor.getInt(cursor.getColumnIndex(SOURCE_NAV_ID)));
+        item.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
+        item.setLink(cursor.getString(cursor.getColumnIndex(LINK)));
+        item.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
+        item.setPubDate(new Date(cursor.getLong(cursor.getColumnIndex(PUBDATE))));
+        item.setCategory(cursor.getString(cursor.getColumnIndex(CATEGORY)));
+        item.setSearch(cursor.getString(cursor.getColumnIndex(SEARCH)));
         return item;
     }
 
@@ -161,11 +93,10 @@ public class DatabaseHelper {
         List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " order by " + PUBDATE + " desc";
 
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         try {
-            if (mSqlite != null) {
 
-                Cursor cursor = mSqlite.rawQuery(selectQuery, null);
+                Cursor cursor = db.rawQuery(selectQuery, null);
 
                 if (cursor.moveToFirst()) {
                     do {
@@ -173,13 +104,9 @@ public class DatabaseHelper {
                         items.add(item);
                     } while (cursor.moveToNext());
                 }
-            }
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
-        } finally {
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
         }
         return items;
     }
@@ -188,10 +115,9 @@ public class DatabaseHelper {
         List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SOURCE_NAV_ID + "=? order by " + PUBDATE + " desc";
 
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         try {
-            if (mSqlite != null) {
-                Cursor cursor = mSqlite.rawQuery(selectQuery, new String[]{String.valueOf(navId)});
+                Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(navId)});
 
                 if (cursor.moveToFirst()) {
                     do {
@@ -199,13 +125,9 @@ public class DatabaseHelper {
                         items.add(item);
                     } while (cursor.moveToNext());
                 }
-            }
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
-        } finally {
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
         }
 
         return items;
@@ -215,10 +137,9 @@ public class DatabaseHelper {
         List<ItemNews> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SEARCH + " like @search order by " + PUBDATE + " desc";
 
-        SQLiteDatabase mSqlite = openOrCreateDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         try {
-            if (mSqlite != null) {
-                Cursor cursor = mSqlite.rawQuery(selectQuery, new String[]{"%" + searchText.toLowerCase() + "%"});
+                Cursor cursor = db.rawQuery(selectQuery, new String[]{"%" + searchText.toLowerCase() + "%"});
 
                 if (cursor.moveToFirst()) {
                     do {
@@ -226,15 +147,20 @@ public class DatabaseHelper {
                         items.add(item);
                     } while (cursor.moveToNext());
                 }
-            }
         } catch (Exception e) {
             FirebaseCrash.report(e);
             e.printStackTrace();
-        } finally {
-            if (mSqlite != null && mSqlite.isOpen())
-                mSqlite.close();
         }
         return items;
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(DATABASE_CREATE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
 }

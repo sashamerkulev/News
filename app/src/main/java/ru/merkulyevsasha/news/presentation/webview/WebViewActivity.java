@@ -1,9 +1,9 @@
-package ru.merkulyevsasha.news.presentation;
+package ru.merkulyevsasha.news.presentation.webview;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -13,17 +13,17 @@ import android.webkit.WebViewClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.merkulyevsasha.news.NewsApp;
 import ru.merkulyevsasha.news.R;
+import ru.merkulyevsasha.news.pojos.ItemNews;
 
 public class WebViewActivity extends AppCompatActivity {
 
-    public static final String KEY_LINK = "LINK";
-    public static final String KEY_TITLE = "TITLE";
+    public static final String KEY_LINK = "ru.merkulyevsasha.news.key_link";
+    public static final String KEY_TITLE = "ru.merkulyevsasha.news.key_title";
 
     @BindView(R.id.webView) public WebView mWebView;
-
     @BindView(R.id.fab) public FloatingActionButton mFab;
-
     @BindView(R.id.toolbar) public Toolbar mToolbar;
 
     @Override
@@ -31,12 +31,10 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         ButterKnife.bind(this);
+        NewsApp.getComponent().inject(this);
 
         setSupportActionBar(mToolbar);
-        ActionBar ab = getSupportActionBar();
-        if (ab != null){
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         final String url = intent.getStringExtra(KEY_LINK);
@@ -56,7 +54,6 @@ public class WebViewActivity extends AppCompatActivity {
                 startActivity(Intent.createChooser(sendIntent, getString(R.string.share_using)));
             }
         });
-        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
     }
 
     @Override
@@ -77,8 +74,14 @@ public class WebViewActivity extends AppCompatActivity {
             mWebView.goBack();
         } else {
             super.onBackPressed();
-            overridePendingTransition(R.anim.enter_from_left, R.anim.exit_out_right);
         }
+    }
+
+    public static void startActivity(Context context, String title, ItemNews item) {
+        Intent link_intent = new Intent(context, WebViewActivity.class);
+        link_intent.putExtra(KEY_LINK, item.getLink());
+        link_intent.putExtra(KEY_TITLE, title);
+        context.startActivity(link_intent);
     }
 
     private class MyWebViewClient extends WebViewClient

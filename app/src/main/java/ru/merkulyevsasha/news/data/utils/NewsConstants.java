@@ -1,12 +1,14 @@
-package ru.merkulyevsasha.news.helpers;
+package ru.merkulyevsasha.news.data.utils;
 
+
+import android.content.Context;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ru.merkulyevsasha.news.R;
 
-public final class Const {
+public final class NewsConstants {
 
     private final Map<Integer, String> mLinks = new HashMap<>();
     private final Map<Integer, Integer> mSources = new HashMap<>();
@@ -15,12 +17,16 @@ public final class Const {
         return mLinks;
     }
 
-    public Const(){
+    private final Context context;
+
+    public NewsConstants(Context context){
+
+        this.context = context;
 
         mLinks.put(R.id.nav_lenta, "http://lenta.ru/rss");
         mLinks.put(R.id.nav_rbc, "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/mainnews.rss");
         mLinks.put(R.id.nav_wot, "http://worldoftanks.ru/ru/rss/news/");
-        //mLinks.put(R.id.nav_topwar, "http://topwar.ru/rss.xml");
+        mLinks.put(R.id.nav_topwar, "https://topwar.ru/rss.xml");
         mLinks.put(R.id.nav_interfax, "http://www.interfax.ru/rss.asp");
 
         mLinks.put(R.id.nav_vesti, "http://www.vesti.ru/vesti.rss");
@@ -29,7 +35,7 @@ public final class Const {
 //        mLinks.put(R.id.nav_ria, "http://ria.ru/export/rss2/world/index.xml");
         mLinks.put(R.id.nav_planetanovosti, "http://www.planetanovosti.com/news/rss/");
         mLinks.put(R.id.nav_ramblernews, "https://news.rambler.ru/rss/world/");
-        mLinks.put(R.id.nav_newsrucom, "http://rss.newsru.com/world/");
+        //mLinks.put(R.id.nav_newsrucom, "http://rss.newsru.com/world/");
         mLinks.put(R.id.nav_mixednews, "http://mixednews.ru/feed/");
 
         mLinks.put(R.id.nav_rg, "http://rg.ru/xml/index.xml");
@@ -54,7 +60,7 @@ public final class Const {
         mSources.put(R.id.nav_lenta, R.string.news_lenta);
         mSources.put(R.id.nav_rbc, R.string.news_rbc);
         mSources.put(R.id.nav_wot, R.string.wot);
-        //mSources.put(R.id.nav_topwar, R.string.news_topwar);
+        mSources.put(R.id.nav_topwar, R.string.news_topwar);
         mSources.put(R.id.nav_interfax, R.string.news_interfax);
 
         mSources.put(R.id.nav_vesti, R.string.news_vesti);
@@ -63,7 +69,7 @@ public final class Const {
 //        mSources.put(R.id.nav_ria, R.string.news_rianovosti);
         mSources.put(R.id.nav_ramblernews, R.string.news_rambler);
         mSources.put(R.id.nav_planetanovosti, R.string.news_planetanews);
-        mSources.put(R.id.nav_newsrucom, R.string.news_newsrucom);
+        //mSources.put(R.id.nav_newsrucom, R.string.news_newsrucom);
 
         mSources.put(R.id.nav_mixednews, R.string.news_mixednews);
 
@@ -88,13 +94,17 @@ public final class Const {
     }
 
     public String getLinkByNavId(int navId){
-
         return mLinks.containsKey(navId) ? mLinks.get(navId) : "";
     }
 
     public int getTitleByNavId(int navId){
-
         return mSources.containsKey(navId) ? mSources.get(navId) : -1;
     }
+
+    public String getSourceNameTitle(int navId) {
+        int stringId = getTitleByNavId(navId);
+        return stringId > 0 ? context.getResources().getString(stringId) : "";
+    }
+
 
 }
