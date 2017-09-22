@@ -222,6 +222,30 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
@@ -299,30 +323,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
-    }
-
     private class ReadNews extends AsyncTask<Integer, Void, List<ItemNews>> {
 
         private int navId;
@@ -344,7 +344,6 @@ public class MainActivity extends AppCompatActivity
             if (result.size() > 0) {
                 mAdapter.setItems(result);
                 mAdapter.notifyDataSetChanged();
-                mRecyclerView.scrollToPosition(0);
             } else {
                 mRefreshLayout.setRefreshing(true);
                 startService(navId, false);
@@ -392,14 +391,14 @@ public class MainActivity extends AppCompatActivity
             Date pubDate = item.getPubDate();
             @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             holder.sourceAndDate.setText(format.format(pubDate) + " " + source);
-            if (title.equals(description)){
-                holder.title.setVisibility(View.GONE);
-            } else {
-                holder.title.setVisibility(View.VISIBLE);
-                holder.title.setText(title);
-            }
+            holder.title.setText(title);
 
-            holder.description.setText(description == null ? "" : description.trim());
+            if (title.equals(description) || description == null || description.isEmpty()){
+                holder.description.setVisibility(View.GONE);
+            } else {
+                holder.description.setVisibility(View.VISIBLE);
+                holder.description.setText(description.trim());
+            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
