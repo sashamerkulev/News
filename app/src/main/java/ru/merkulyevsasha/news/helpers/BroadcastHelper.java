@@ -2,6 +2,7 @@ package ru.merkulyevsasha.news.helpers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 /**
  * Created by sasha_merkulev on 22.09.2017.
@@ -23,7 +24,7 @@ public class BroadcastHelper {
         Intent intent = new Intent(ACTION_NAME);
         intent.putExtra(KEY_UPDATE_NAME, updated);
         intent.putExtra(KEY_FINISH_NAME, finished);
-        context.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void sendFinishBroadcast(){

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,26 +51,30 @@ import ru.merkulyevsasha.news.data.db.DatabaseHelper;
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
-import ru.merkulyevsasha.news.presentation.webview.WebViewActivity;
 import ru.merkulyevsasha.news.newsservices.HttpService;
 import ru.merkulyevsasha.news.pojos.ItemNews;
 import ru.merkulyevsasha.news.newsjobs.NewsJob;
+import ru.merkulyevsasha.news.presentation.webview.WebViewActivity;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+        implements MainView,
+        NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     public static final String KEY_NAV_ID = "ru.merkulyevsasha.news.key_navId";
     private static final String KEY_POSITION = "ru.merkulyevsasha.news.key_position";
     public static final String KEY_REFRESHING = "ru.merkulyevsasha.news.key_refreshing";
 
-    @State int mNavId;
-    @State String mSearchText;
+    @State int navId;
+    @State String searchText;
 
-    @BindView(R.id.refreshLayout) SwipeRefreshLayout mRefreshLayout;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
-    @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.recyclerView) RecyclerView recyclerView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.adView) AdView adView;
+
+    @BindView(R.id.content_main) View root;
 
     private MenuItem mSearchItem;
     private SearchView mSearchView;
@@ -77,13 +82,15 @@ public class MainActivity extends AppCompatActivity
     @Inject NewsConstants newsConsts;
     @Inject DatabaseHelper db;
     @Inject NewsSharedPreferences prefs;
+    @Inject MainPresenter pres;
 
-    private BroadcastReceiver mReceiver;
+    private BroadcastReceiver broadcastReceiver;
 
-    private AdView mAdView;
+    private NewsViewAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
-    private RecyclerViewAdapter mAdapter;
-    private LinearLayoutManager mLayoutManager;
+    private NewsReaderTask newsReader;
+    private NewsSearcherTask newsSearcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,64 +99,58 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         NewsApp.getComponent().inject(this);
 
-        setSupportActionBar(mToolbar);
-        mToolbar.setOnClickListener(new View.OnClickListener() {
+        setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchViewText();
+                pres.onPrepareToSearch();
             }
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.addDrawerListener(toggle);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mAdapter = new RecyclerViewAdapter(new ArrayList<ItemNews>(), new OnNewsItemClickListener() {
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new NewsViewAdapter(new ArrayList<ItemNews>(), new OnNewsItemClickListener() {
             @Override
             public void onItemClick(ItemNews item) {
-                WebViewActivity.startActivity(MainActivity.this, newsConsts.getSourceNameTitle(item.getSourceNavId()), item);
+                pres.onItemClicked(item);
             }
         });
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                startService(mNavId, false);
+                pres.onRefresh(navId);
             }
         });
 
-        mReceiver = new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 final boolean finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false);
                 final boolean updated = intent.getBooleanExtra(BroadcastHelper.KEY_UPDATE_NAME, false);
 
-                if (updated) {
-                    new ReadNews().run(mNavId);
-                }
-                if (finished) {
-                    mRefreshLayout.setRefreshing(false);
-                }
+                pres.onReceived(navId, updated, finished);
             }
         };
 
-        mNavId = R.id.nav_all;
-        setActivityTitle(mNavId);
+        navId = R.id.nav_all;
+        setActivityTitle(navId);
 
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID);
 
-        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = BuildConfig.DEBUG_MODE
                 ? new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
                 : new AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
         if (prefs.getFirstRunFlag()){
             NewsJob.scheduleJob();
@@ -157,13 +158,120 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private boolean isRefreshing() {
-        return mRefreshLayout.isRefreshing();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Icepick.saveInstanceState(this, outState);
+
+        outState.putInt(KEY_POSITION, layoutManager.findFirstCompletelyVisibleItemPosition());
+        outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
     }
 
-    private void searchViewText() {
-        mSearchItem.expandActionView();
-        mSearchView.setQuery(mSearchText, false);
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Icepick.restoreInstanceState(this, savedInstanceState);
+
+        boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
+        refreshLayout.setRefreshing(isRefreshing);
+    }
+
+    @Override
+    public void onPause() {
+        if (newsReader != null) newsReader.cancel(false);
+        if (newsSearcher != null) newsSearcher.cancel(false);
+        if (adView != null) {
+            adView.pause();
+        }
+        pres.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        pres.setView(this);
+        pres.onResume(refreshLayout.isRefreshing(), navId, searchText);
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        mSearchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+
+        if (searchText != null && !searchText.isEmpty()) {
+            pres.onPrepareToSearch();
+        }
+
+        mSearchView.setOnQueryTextListener(this);
+
+        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
+        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (!refreshLayout.isRefreshing()) {
+                    pres.onRefresh(navId);
+                }
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (query.length() < 5) {
+            Snackbar.make(root, R.string.search_validation_message, Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        searchText = query;
+        pres.onSearch(searchText);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.isEmpty()) {
+            searchText = "";
+            pres.onCancelSearch(navId);
+        }
+        return false;
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        drawer.closeDrawer(GravityCompat.START);
+
+        setTitle(item.getTitle());
+        navId = item.getItemId();
+
+        pres.onSelectSource(navId);
+
+        return true;
     }
 
     private void setActivityTitle(int navId) {
@@ -177,163 +285,73 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        Icepick.saveInstanceState(this, outState);
-
-        outState.putInt(KEY_POSITION, mLayoutManager.findFirstCompletelyVisibleItemPosition());
-        outState.putBoolean(KEY_REFRESHING, mRefreshLayout.isRefreshing());
-
+    public void loadFreshNews(int navId) {
+        refreshLayout.setRefreshing(true);
+        startService(navId, false);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        Icepick.restoreInstanceState(this, savedInstanceState);
-
-        boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
-        mRefreshLayout.setRefreshing(isRefreshing);
+    public void readNews(int navId) {
+        newsReader = new NewsReaderTask();
+        newsReader.run(navId);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BroadcastHelper.ACTION_NAME);
-        registerReceiver(mReceiver, intentFilter);
-
-        if (isRefreshing()) {
-            startService(mNavId, isRefreshing());
-        } else {
-            if (mSearchText == null || mSearchText.isEmpty()) {
-                new ReadNews().run(mNavId);
-            } else {
-                search(mSearchText);
-            }
-        }
+    public void searchNews(String searchText) {
+        newsSearcher = new NewsSearcherTask();
+        newsSearcher.run(searchText);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(mReceiver);
+    public void startLoadingNewsService() {
+        startService(navId, refreshLayout.isRefreshing());
+    }
+
+    private LocalBroadcastManager getLocalBroadcastManager(){
+        return LocalBroadcastManager.getInstance(this);
     }
 
     @Override
-    public void onPause() {
-        if (mAdView != null) {
-            mAdView.pause();
-        }
-        super.onPause();
+    public void registerBroadcastReceiver() {
+        getLocalBroadcastManager().registerReceiver(broadcastReceiver, new IntentFilter(BroadcastHelper.ACTION_NAME));
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
+    public void unregisterBroadcastReceiver() {
+        getLocalBroadcastManager().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
-    public void onDestroy() {
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-        super.onDestroy();
+    public void prepareToSearch() {
+        mSearchItem.expandActionView();
+        mSearchView.setQuery(searchText, false);
     }
 
     @Override
-    public void onBackPressed() {
-        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-            mDrawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    public void showWebViewScreen(ItemNews item) {
+        WebViewActivity.startActivity(MainActivity.this, newsConsts.getSourceNameTitle(item.getSourceNavId()), item);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        mSearchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
-
-        if (mSearchText != null && !mSearchText.isEmpty()) {
-            searchViewText();
-        }
-
-        mSearchView.setOnQueryTextListener(this);
-
-        MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                if (!mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(true);
-                    startService(mNavId, false);
-                }
-                return false;
-            }
-        });
-        return true;
-    }
-
-    private void search(String searchText) {
-        List<ItemNews> items = db.query(searchText);
-        if (items.size() > 0) {
-            mAdapter.setItems(items);
-            mAdapter.notifyDataSetChanged();
-        } else {
-            Snackbar.make(this.findViewById(R.id.content_main), R.string.search_nofound_message, Snackbar.LENGTH_LONG).show();
-        }
+    public void hideProgress() {
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (query.length() < 5) {
-            Snackbar.make(this.findViewById(R.id.content_main), R.string.search_validation_message, Snackbar.LENGTH_LONG).show();
-            return false;
-        }
-        mSearchText = query;
-        search(query);
-        return false;
+    public void showItems(List<ItemNews> result) {
+        adapter.setItems(result);
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.isEmpty()) {
-            mSearchText = "";
-            new ReadNews().run(mNavId);
-        }
-        return false;
+    public void showNoSearchResultMessage() {
+        Snackbar.make(root, R.string.search_nofound_message, Snackbar.LENGTH_LONG).show();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        mDrawer.closeDrawer(GravityCompat.START);
-
-        setTitle(item.getTitle());
-        mNavId = item.getItemId();
-
-        new ReadNews().run(mNavId);
-
-        return true;
-    }
-
-    private class ReadNews extends AsyncTask<Integer, Void, List<ItemNews>> {
+    private class NewsReaderTask extends AsyncTask<Integer, Void, List<ItemNews>> {
 
         private int navId;
 
-        private List<ItemNews> getItemNews(int navId) {
-            return navId == R.id.nav_all
-                    ? db.selectAll()
-                    : db.select(navId);
-        }
-
-        public void run(int id) {
+        void run(int id) {
             navId = id;
             executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, navId);
         }
@@ -341,19 +359,40 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<ItemNews> result) {
             super.onPostExecute(result);
-            if (result.size() > 0) {
-                mAdapter.setItems(result);
-                mAdapter.notifyDataSetChanged();
-            } else {
-                mRefreshLayout.setRefreshing(true);
-                startService(navId, false);
+            if (!isCancelled()) {
+                pres.onLoadResult(navId, result);
             }
+            newsReader = null;
         }
 
         @Override
         protected List<ItemNews> doInBackground(Integer... params) {
             int navId = params[0];
-            return getItemNews(navId);
+            return navId == R.id.nav_all
+                    ? db.selectAll()
+                    : db.select(navId);
+        }
+    }
+
+    private class NewsSearcherTask extends AsyncTask<String, Void, List<ItemNews>> {
+
+        void run(String searchText) {
+            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, searchText);
+        }
+
+        @Override
+        protected void onPostExecute(List<ItemNews> result) {
+            super.onPostExecute(result);
+            if (!isCancelled()) {
+                pres.onSearchResult(result);
+            }
+            newsSearcher = null;
+        }
+
+        @Override
+        protected List<ItemNews> doInBackground(String... params) {
+            String searchText = params[0];
+            return db.query(searchText);
         }
     }
 
@@ -361,25 +400,24 @@ public class MainActivity extends AppCompatActivity
         void onItemClick(ItemNews item);
     }
 
-    private class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ItemViewHolder> {
+    private class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ItemViewHolder> {
 
         private final List<ItemNews> items;
         private final OnNewsItemClickListener onNewsItemClickListener;
 
-        private RecyclerViewAdapter(List<ItemNews> items, OnNewsItemClickListener onNewsItemClickListener) {
+        private NewsViewAdapter(List<ItemNews> items, OnNewsItemClickListener onNewsItemClickListener) {
             this.items = items;
             this.onNewsItemClickListener = onNewsItemClickListener;
         }
 
         @Override
-        public RecyclerViewAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public NewsViewAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_news_item, parent, false);
-            return new RecyclerViewAdapter.ItemViewHolder(view);
+            return new NewsViewAdapter.ItemViewHolder(view);
         }
 
-
         @Override
-        public void onBindViewHolder(RecyclerViewAdapter.ItemViewHolder holder, int position) {
+        public void onBindViewHolder(NewsViewAdapter.ItemViewHolder holder, int position) {
 
             final ItemNews item = items.get(position);
 
@@ -414,7 +452,7 @@ public class MainActivity extends AppCompatActivity
             return items.size();
         }
 
-        public void setItems(List<ItemNews> items){
+        void setItems(List<ItemNews> items){
             this.items.clear();
             this.items.addAll(items);
             this.notifyDataSetChanged();

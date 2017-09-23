@@ -9,8 +9,8 @@ android {
         applicationId "ru.merkulyevsasha.news"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 21
-        versionName "1.2.5"
+        versionCode 22
+        versionName "1.2.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

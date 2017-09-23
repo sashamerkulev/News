@@ -12,7 +12,7 @@ import ru.merkulyevsasha.news.newsjobs.NewsJob;
 
 
 @Singleton
-@Component(modules={AppModule.class, DataModule.class, InteractorsModule.class})
+@Component(modules={AppModule.class, DataModule.class, PresentersModule.class, InteractorsModule.class})
 public interface AppComponent {
     void inject(MainActivity context);
     void inject(WebViewActivity context);
