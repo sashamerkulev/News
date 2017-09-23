@@ -76,9 +76,6 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.content_main) View root;
 
-    private MenuItem mSearchItem;
-    private SearchView mSearchView;
-
     @Inject NewsConstants newsConsts;
     @Inject DatabaseHelper db;
     @Inject NewsSharedPreferences prefs;
@@ -91,6 +88,9 @@ public class MainActivity extends AppCompatActivity
 
     private NewsReaderTask newsReader;
     private NewsSearcherTask newsSearcher;
+
+    private MenuItem searchItem;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,14 +219,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        mSearchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+        searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         if (searchText != null && !searchText.isEmpty()) {
             pres.onPrepareToSearch();
         }
 
-        mSearchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextListener(this);
 
         MenuItem refreshItem = menu.findItem(R.id.action_refresh);
         refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -323,8 +323,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void prepareToSearch() {
-        mSearchItem.expandActionView();
-        mSearchView.setQuery(searchText, false);
+        searchItem.expandActionView();
+        searchView.setQuery(searchText, false);
     }
 
     @Override
