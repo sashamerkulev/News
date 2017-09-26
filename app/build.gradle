@@ -9,8 +9,8 @@ android {
         applicationId "ru.merkulyevsasha.news"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 22
-        versionName "1.2.6"
+        versionCode 23
+        versionName "1.2.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -52,6 +52,8 @@ dependencies {
 
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
+
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     testCompile 'junit:junit:4.12'
 }

@@ -22,6 +22,10 @@
             android:id="@+id/nav_topwar"
             android:icon="@drawable/ic_rss_feed_black_18dp"
             android:title="@string/news_topwar" />
+        <!--<item-->
+            <!--android:id="@+id/nav_warspot"-->
+            <!--android:icon="@drawable/ic_rss_feed_black_18dp"-->
+            <!--android:title="@string/news_warspot" />-->
         <item
             android:id="@+id/nav_interfax"
             android:icon="@drawable/ic_rss_feed_black_18dp"

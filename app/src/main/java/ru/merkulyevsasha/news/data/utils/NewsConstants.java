@@ -27,6 +27,7 @@ public final class NewsConstants {
         mLinks.put(R.id.nav_rbc, "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/mainnews.rss");
         mLinks.put(R.id.nav_wot, "http://worldoftanks.ru/ru/rss/news/");
         mLinks.put(R.id.nav_topwar, "https://topwar.ru/rss.xml");
+//        mLinks.put(R.id.nav_warspot, "http://warspot.ru/?format=atom");
         mLinks.put(R.id.nav_interfax, "http://www.interfax.ru/rss.asp");
 
         mLinks.put(R.id.nav_vesti, "http://www.vesti.ru/vesti.rss");
@@ -61,6 +62,7 @@ public final class NewsConstants {
         mSources.put(R.id.nav_rbc, R.string.news_rbc);
         mSources.put(R.id.nav_wot, R.string.wot);
         mSources.put(R.id.nav_topwar, R.string.news_topwar);
+//        mSources.put(R.id.nav_warspot, R.string.news_warspot);
         mSources.put(R.id.nav_interfax, R.string.news_interfax);
 
         mSources.put(R.id.nav_vesti, R.string.news_vesti);

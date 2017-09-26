@@ -12,6 +12,7 @@ public class ItemNews {
     private Date pubDate;
     private String category;
     private String search;
+    private String pictureUrl;
 
     public int getId() {
         return id;
@@ -75,5 +76,13 @@ public class ItemNews {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

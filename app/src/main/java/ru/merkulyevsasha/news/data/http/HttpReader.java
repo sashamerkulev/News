@@ -72,6 +72,30 @@ public class HttpReader {
                             case "link":
                                 item.setLink(parser.nextText());
                                 break;
+                            case "enclosure":
+                                try {
+                                    for( int i = 0; i < parser.getAttributeCount(); i++) {
+                                        String url = parser.getAttributeValue(i);
+                                        if (url != null && url.trim().endsWith("jpg"))
+                                            item.setPictureUrl(url.trim());
+                                        //System.out.println(url);
+                                    }
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                                break;
+                            case "media:thumbnail":
+                                try {
+                                    for( int i = 0; i < parser.getAttributeCount(); i++) {
+                                        String url = parser.getAttributeValue(i);
+                                        if (url != null && url.trim().endsWith("jpg"))
+                                            item.setPictureUrl(url.trim());
+                                        //System.out.println(url);
+                                    }
+                                } catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                                break;
                             case "pubDate":
                                 String pubDate = parser.nextText();
                                 if (!tryParseDateFormat(pubDate, "E, dd MMM yyyy HH:mm:ss z", item))

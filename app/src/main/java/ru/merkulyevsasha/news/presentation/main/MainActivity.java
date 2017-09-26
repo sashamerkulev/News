@@ -26,8 +26,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new NewsViewAdapter(new ArrayList<ItemNews>(), new OnNewsItemClickListener() {
+        adapter = new NewsViewAdapter(this, new ArrayList<ItemNews>(), new OnNewsItemClickListener() {
             @Override
             public void onItemClick(ItemNews item) {
                 pres.onItemClicked(item);
@@ -404,8 +406,10 @@ public class MainActivity extends AppCompatActivity
 
         private final List<ItemNews> items;
         private final OnNewsItemClickListener onNewsItemClickListener;
+        private final Context context;
 
-        private NewsViewAdapter(List<ItemNews> items, OnNewsItemClickListener onNewsItemClickListener) {
+        private NewsViewAdapter(Context context, List<ItemNews> items, OnNewsItemClickListener onNewsItemClickListener) {
+            this.context = context;
             this.items = items;
             this.onNewsItemClickListener = onNewsItemClickListener;
         }
@@ -437,6 +441,13 @@ public class MainActivity extends AppCompatActivity
                 holder.description.setVisibility(View.VISIBLE);
                 holder.description.setText(description.trim());
             }
+            holder.thumb.setImageResource(0);
+            if (item.getPictureUrl() == null){
+                holder.thumb.setVisibility(View.GONE);
+            } else {
+                holder.thumb.setVisibility(View.VISIBLE);
+                Glide.with(context).load(item.getPictureUrl()).into(holder.thumb);
+            }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -463,6 +474,7 @@ public class MainActivity extends AppCompatActivity
             private final TextView sourceAndDate;
             private final TextView title;
             private final TextView description;
+            private final ImageView thumb;
 
             ItemViewHolder(View itemView) {
                 super(itemView);
@@ -470,6 +482,7 @@ public class MainActivity extends AppCompatActivity
                 sourceAndDate = (TextView) itemView.findViewById(R.id.news_date_source);
                 title = (TextView) itemView.findViewById(R.id.news_title);
                 description = (TextView) itemView.findViewById(R.id.news_description);
+                thumb = (ImageView)itemView.findViewById(R.id.imageview_thumb);
             }
         }
 

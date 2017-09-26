@@ -15,7 +15,7 @@ import java.util.List;
 import ru.merkulyevsasha.news.pojos.ItemNews;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "news.db";
     private static final String TABLE_NAME = "news";
 
@@ -25,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String DESCRIPTION = "description";
     private static final String PUBDATE = "pubDate";
     private static final String CATEGORY = "category";
+    private static final String THUMB = "picture_url";
     private static final String SEARCH = "search";
 
     private static final String DATABASE_CREATE = "create table " + TABLE_NAME + " ( " +
@@ -34,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             DESCRIPTION + " string, " +
             PUBDATE + " long, " +
             CATEGORY + " string, " +
+            THUMB + " string, " +
             SEARCH + " string " +
             " ); create index search_index on " + TABLE_NAME + "(" + SEARCH + "); create index pubdate_index on" + TABLE_NAME + "(" + PUBDATE + ")";
 
@@ -52,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 values.put(LINK, item.getLink());
                 values.put(DESCRIPTION, item.getDescription() == null ? "" : item.getDescription());
                 values.put(CATEGORY, item.getCategory());
+                values.put(THUMB, item.getPictureUrl());
                 values.put(SEARCH, item.getSearch());
                 if (item.getPubDate() != null) {
                     values.put(PUBDATE, item.getPubDate().getTime());
@@ -86,6 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         item.setPubDate(new Date(cursor.getLong(cursor.getColumnIndex(PUBDATE))));
         item.setCategory(cursor.getString(cursor.getColumnIndex(CATEGORY)));
         item.setSearch(cursor.getString(cursor.getColumnIndex(SEARCH)));
+        item.setPictureUrl(cursor.getString(cursor.getColumnIndex(THUMB)));
         return item;
     }
 
@@ -161,6 +165,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 1) {
+            String addingThumbColumn = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + THUMB + " STRING";
+            db.execSQL(addingThumbColumn);
+        }
 
     }
 }
