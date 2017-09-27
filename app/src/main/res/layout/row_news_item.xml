@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:orientation="horizontal"
+            android:paddingBottom="8dp"
             >
 
             <RelativeLayout
@@ -56,10 +57,11 @@
                     android:id="@+id/imageview_thumb"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
+                    android:layout_marginTop="8dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:scaleType="centerInside"
+                    android:scaleType="centerCrop"
                     />
 
                 <TextView
@@ -81,12 +83,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/layout_title"
-                android:layout_marginEnd="4dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="4dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_toLeftOf="@+id/imageview_chevron"
                 android:textSize="14sp"
                 tools:text="description"
