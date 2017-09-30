@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity
     @State int navId;
     @State String searchText;
 
+    @BindView(R.id.appbar_layout) AppBarLayout appbarLayout;
+    @BindView(R.id.collapsinng_toolbar_layout) CollapsingToolbarLayout collapsToolbar;
     @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.nav_view) NavigationView navigationView;
@@ -109,6 +113,24 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        collapsToolbar.setTitleEnabled(false);
+        appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    // Collapsed
+                    if (!toolbar.getTitle().equals("")) toolbar.setTitle("");
+//                } else if (verticalOffset == 0) {
+//                    // Expanded
+//                    toolbar.setTitle(newsConsts.getSourceNameTitle(navId));
+                } else {
+                    // Somewhere in between
+                    String newTitle = newsConsts.getSourceNameTitle(navId);
+                    if (!toolbar.getTitle().equals(newTitle)) toolbar.setTitle(newTitle);
+                }
+            }
+        });
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -145,7 +167,6 @@ public class MainActivity extends AppCompatActivity
         };
 
         navId = R.id.nav_all;
-        setActivityTitle(navId);
 
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID);
 
@@ -274,10 +295,6 @@ public class MainActivity extends AppCompatActivity
         pres.onSelectSource(navId);
 
         return true;
-    }
-
-    private void setActivityTitle(int navId) {
-        setTitle(newsConsts.getSourceNameTitle(navId));
     }
 
     private void startService(int navId, boolean isRefreshing) {
