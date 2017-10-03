@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity
     private MenuItem searchItem;
     private SearchView searchView;
 
+    private AppbarScrollExpander appbarScrollExpander;
+    private boolean expanded;
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,23 +117,26 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        appbarScrollExpander = new AppbarScrollExpander(recyclerView, appbarLayout);
+        appbarScrollExpander.setExpanded(expanded);
         collapsToolbar.setTitleEnabled(false);
-        appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
-                    // Collapsed
-                    if (!toolbar.getTitle().equals("")) toolbar.setTitle("");
-//                } else if (verticalOffset == 0) {
-//                    // Expanded
-//                    toolbar.setTitle(newsConsts.getSourceNameTitle(navId));
-                } else {
-                    // Somewhere in between
-                    String newTitle = newsConsts.getSourceNameTitle(navId);
-                    if (!toolbar.getTitle().equals(newTitle)) toolbar.setTitle(newTitle);
-                }
-            }
-        });
+//        collapsToolbar.setTitleEnabled(false);
+//        appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+//                    // Collapsed
+//                    if (!toolbar.getTitle().equals("")) toolbar.setTitle("");
+////                } else if (verticalOffset == 0) {
+////                    // Expanded
+////                    toolbar.setTitle(newsConsts.getSourceNameTitle(navId));
+//                } else {
+//                    // Somewhere in between
+//                    String newTitle = newsConsts.getSourceNameTitle(navId);
+//                    if (!toolbar.getTitle().equals(newTitle)) toolbar.setTitle(newTitle);
+//                }
+//            }
+//        });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -167,6 +174,7 @@ public class MainActivity extends AppCompatActivity
         };
 
         navId = R.id.nav_all;
+        setTitle(newsConsts.getSourceNameTitle(navId));
 
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID);
 
@@ -198,6 +206,8 @@ public class MainActivity extends AppCompatActivity
         Icepick.restoreInstanceState(this, savedInstanceState);
 
         boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
+        position = savedInstanceState.getInt(KEY_POSITION, -1);
+        expanded = savedInstanceState.getBoolean(KEY_POSITION, true);
         refreshLayout.setRefreshing(isRefreshing);
     }
 
@@ -220,6 +230,8 @@ public class MainActivity extends AppCompatActivity
         if (adView != null) {
             adView.resume();
         }
+        appbarLayout.setExpanded(expanded);
+        if (position > 0) layoutManager.scrollToPosition(position);
     }
 
     @Override
