@@ -10,7 +10,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import ru.merkulyevsasha.news.NewsApp;
+import dagger.android.AndroidInjection;
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.domain.NewsInteractor;
@@ -20,24 +20,22 @@ import static ru.merkulyevsasha.news.presentation.main.MainActivity.KEY_NAV_ID;
 
 public class HttpService extends IntentService {
 
-
     @Inject BroadcastHelper broadcastHelper;
     @Inject NewsConstants newsConstants;
     @Inject NewsInteractor newsInteractor;
 
     public HttpService(String name) {
         super(name);
-        NewsApp.getComponent().inject(this);
     }
 
     public HttpService() {
-        super("HttpService");
-        NewsApp.getComponent().inject(this);
+        this("HttpService");
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-
+        if (intent == null) return;
+        AndroidInjection.inject(this);
         final int mNavId = intent.getIntExtra(KEY_NAV_ID, -1);
         if (mNavId > 0) {
             if (mNavId == R.id.nav_all) {

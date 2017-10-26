@@ -45,11 +45,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import icepick.Icepick;
-import icepick.State;
+import dagger.android.AndroidInjection;
 import ru.merkulyevsasha.apprate.AppRateRequester;
 import ru.merkulyevsasha.news.BuildConfig;
-import ru.merkulyevsasha.news.NewsApp;
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.data.db.DatabaseHelper;
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
@@ -68,8 +66,10 @@ public class MainActivity extends AppCompatActivity
     private static final String KEY_POSITION = "ru.merkulyevsasha.news.key_position";
     public static final String KEY_REFRESHING = "ru.merkulyevsasha.news.key_refreshing";
 
-    @State int navId;
-    @State String searchText;
+    @Inject NewsConstants newsConsts;
+    @Inject DatabaseHelper db;
+    @Inject NewsSharedPreferences prefs;
+    @Inject MainPresenter pres;
 
     @BindView(R.id.appbar_layout) AppBarLayout appbarLayout;
     @BindView(R.id.collapsinng_toolbar_layout) CollapsingToolbarLayout collapsToolbar;
@@ -81,11 +81,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.adView) AdView adView;
 
     @BindView(R.id.content_main) View root;
-
-    @Inject NewsConstants newsConsts;
-    @Inject DatabaseHelper db;
-    @Inject NewsSharedPreferences prefs;
-    @Inject MainPresenter pres;
 
     private BroadcastReceiver broadcastReceiver;
 
@@ -102,12 +97,15 @@ public class MainActivity extends AppCompatActivity
     private boolean expanded;
     private int position;
 
+    private int navId;
+    private String searchText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        NewsApp.getComponent().inject(this);
+        AndroidInjection.inject(this);
 
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -120,23 +118,6 @@ public class MainActivity extends AppCompatActivity
         appbarScrollExpander = new AppbarScrollExpander(recyclerView, appbarLayout);
         appbarScrollExpander.setExpanded(expanded);
         collapsToolbar.setTitleEnabled(false);
-//        collapsToolbar.setTitleEnabled(false);
-//        appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-//            @Override
-//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-//                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
-//                    // Collapsed
-//                    if (!toolbar.getTitle().equals("")) toolbar.setTitle("");
-////                } else if (verticalOffset == 0) {
-////                    // Expanded
-////                    toolbar.setTitle(newsConsts.getSourceNameTitle(navId));
-//                } else {
-//                    // Somewhere in between
-//                    String newTitle = newsConsts.getSourceNameTitle(navId);
-//                    if (!toolbar.getTitle().equals(newTitle)) toolbar.setTitle(newTitle);
-//                }
-//            }
-//        });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -193,8 +174,6 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        Icepick.saveInstanceState(this, outState);
-
         outState.putInt(KEY_POSITION, layoutManager.findFirstCompletelyVisibleItemPosition());
         outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
     }
@@ -202,8 +181,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
-        Icepick.restoreInstanceState(this, savedInstanceState);
 
         boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
         position = savedInstanceState.getInt(KEY_POSITION, -1);
@@ -309,12 +286,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void startService(int navId, boolean isRefreshing) {
-        startService(new Intent(this, HttpService.class)
-                .putExtra(KEY_NAV_ID, navId)
-                .putExtra(KEY_REFRESHING, isRefreshing));
-    }
-
     @Override
     public void loadFreshNews(int navId) {
         refreshLayout.setRefreshing(true);
@@ -378,6 +349,13 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(root, R.string.search_nofound_message, Snackbar.LENGTH_LONG).show();
     }
 
+    private void startService(int navId, boolean isRefreshing) {
+        startService(new Intent(this, HttpService.class)
+                .putExtra(KEY_NAV_ID, navId)
+                .putExtra(KEY_REFRESHING, isRefreshing));
+    }
+
+    @SuppressLint("StaticFieldLeak")
     private class NewsReaderTask extends AsyncTask<Integer, Void, List<ItemNews>> {
 
         private int navId;
@@ -405,6 +383,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class NewsSearcherTask extends AsyncTask<String, Void, List<ItemNews>> {
 
         void run(String searchText) {
@@ -431,7 +410,7 @@ public class MainActivity extends AppCompatActivity
         void onItemClick(ItemNews item);
     }
 
-    private class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ItemViewHolder> {
+    private class NewsViewAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         private final List<ItemNews> items;
         private final OnNewsItemClickListener onNewsItemClickListener;
@@ -444,13 +423,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public NewsViewAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_news_item, parent, false);
-            return new NewsViewAdapter.ItemViewHolder(view);
+            return new ItemViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(NewsViewAdapter.ItemViewHolder holder, int position) {
+        public void onBindViewHolder(ItemViewHolder holder, int position) {
 
             final ItemNews item = items.get(position);
 
@@ -458,11 +437,11 @@ public class MainActivity extends AppCompatActivity
             String source = newsConsts.getSourceNameTitle(sourceNavId);
             String title = item.getTitle().trim();
             String description = item.getDescription();
+            String url = item.getPictureUrl();
 
             Date pubDate = item.getPubDate();
             @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            holder.sourceAndDate.setText(format.format(pubDate) + " " + source);
-            holder.title.setText(title);
+            holder.sourceAndDate.setText(String.format("%s %s", format.format(pubDate), source));
 
             if (title.equals(description) || description == null || description.isEmpty()){
                 holder.description.setVisibility(View.GONE);
@@ -470,12 +449,13 @@ public class MainActivity extends AppCompatActivity
                 holder.description.setVisibility(View.VISIBLE);
                 holder.description.setText(description.trim());
             }
+            holder.title.setText(title);
             holder.thumb.setImageResource(0);
-            if (item.getPictureUrl() == null){
+            if (url == null){
                 holder.thumb.setVisibility(View.GONE);
             } else {
                 holder.thumb.setVisibility(View.VISIBLE);
-                Glide.with(context).load(item.getPictureUrl()).into(holder.thumb);
+                Glide.with(context).load(url).into(holder.thumb);
             }
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -498,23 +478,19 @@ public class MainActivity extends AppCompatActivity
             this.notifyDataSetChanged();
         }
 
-        class ItemViewHolder extends RecyclerView.ViewHolder {
+    }
 
-            private final TextView sourceAndDate;
-            private final TextView title;
-            private final TextView description;
-            private final ImageView thumb;
+    class ItemViewHolder extends RecyclerView.ViewHolder {
 
-            ItemViewHolder(View itemView) {
-                super(itemView);
+        @BindView(R.id.news_date_source) TextView sourceAndDate;
+        @BindView(R.id.news_title) TextView title;
+        @BindView(R.id.news_description) TextView description;
+        @BindView(R.id.imageview_thumb) ImageView thumb;
 
-                sourceAndDate = (TextView) itemView.findViewById(R.id.news_date_source);
-                title = (TextView) itemView.findViewById(R.id.news_title);
-                description = (TextView) itemView.findViewById(R.id.news_description);
-                thumb = (ImageView)itemView.findViewById(R.id.imageview_thumb);
-            }
+        ItemViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
-
     }
 
 }

@@ -49,6 +49,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
+                android:layout_toStartOf="@+id/imageview_chevron"
                 android:layout_toLeftOf="@+id/imageview_chevron"
                 android:orientation="horizontal"
                 >

@@ -13,7 +13,6 @@ import android.webkit.WebViewClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ru.merkulyevsasha.news.NewsApp;
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.pojos.ItemNews;
 
@@ -31,7 +30,6 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         ButterKnife.bind(this);
-        NewsApp.getComponent().inject(this);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

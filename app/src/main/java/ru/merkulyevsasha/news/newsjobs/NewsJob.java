@@ -36,6 +36,7 @@ public class NewsJob extends Job {
     @Inject NewsConstants newsConstants;
     @Inject NewsInteractor newsInteractor;
 
+    @Inject
     NewsJob(){
         NewsApp.getComponent().inject(this);
     }
