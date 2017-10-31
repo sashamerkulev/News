@@ -21,29 +21,18 @@
 -keep interface android.support.v7.app.** { *; }
 -keep class android.support.v7.widget.** { *; }
 
--dontwarn icepick.**
--keep class icepick.** { *; }
--keep class **$$Icepick { *; }
--keepclasseswithmembernames class * {
-    @icepick.* <fields>;
-}
--keepnames class * { @icepick.State *;}
-
-
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
-
 -keepclasseswithmembernames class * {
     @butterknife.* <fields>;
 }
-
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
-
 
 -dontwarn com.squareup.okhttp.**
 
 -dontwarn okio.**
 
+-dontwarn dagger.android.**
