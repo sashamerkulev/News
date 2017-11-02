@@ -4,13 +4,15 @@ package ru.merkulyevsasha.news.dagger.components;
 
 import android.content.Context;
 
+
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
 import ru.merkulyevsasha.news.NewsApp;
 import ru.merkulyevsasha.news.dagger.modules.AppModule;
-import ru.merkulyevsasha.news.newsjobs.NewsJob;
+import ru.merkulyevsasha.news.data.utils.NewsConstants;
+import ru.merkulyevsasha.news.domain.NewsInteractor;
 
 
 @Singleton
@@ -26,6 +28,7 @@ public interface AppComponent {
     }
 
     void inject(NewsApp app);
-    void inject(NewsJob job);
 
+    NewsConstants getNewsConstants();
+    NewsInteractor getNewsInteractor();
 }

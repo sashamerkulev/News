@@ -3,8 +3,11 @@ package ru.merkulyevsasha.news.dagger.modules;
 
 import android.content.Context;
 
+import com.evernote.android.job.JobCreator;
+
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
@@ -17,6 +20,7 @@ import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.domain.NewsInteractor;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
+import ru.merkulyevsasha.news.newsjobs.NewsJobCreator;
 import ru.merkulyevsasha.news.newsservices.HttpService;
 import ru.merkulyevsasha.news.presentation.main.MainActivity;
 
@@ -59,6 +63,10 @@ public abstract class AppModule {
     static NewsInteractor providesNewsInteractor(HttpReader reader, DatabaseHelper db) {
         return new NewsInteractor(reader, db);
     }
+
+    @Singleton
+    @Binds
+    abstract JobCreator providesJobCreator(NewsJobCreator jobCreator);
 
     @MainScope
     @ContributesAndroidInjector(modules = MainModule.class)

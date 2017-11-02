@@ -14,9 +14,7 @@ import com.evernote.android.job.JobRequest;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
 
-import ru.merkulyevsasha.news.NewsApp;
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.domain.NewsInteractor;
@@ -31,14 +29,12 @@ public class NewsJob extends Job {
 
     private static final String TAG = NewsJob.class.getName();
 
-    private static int lastJobId;
+    private final NewsConstants newsConstants;
+    private final NewsInteractor newsInteractor;
 
-    @Inject NewsConstants newsConstants;
-    @Inject NewsInteractor newsInteractor;
-
-    @Inject
-    NewsJob(){
-        NewsApp.getComponent().inject(this);
+    NewsJob(NewsConstants newsConstants, NewsInteractor newsInteractor){
+        this.newsConstants = newsConstants;
+        this.newsInteractor = newsInteractor;
     }
 
     @NonNull
@@ -52,7 +48,7 @@ public class NewsJob extends Job {
     }
 
     public static void scheduleJob() {
-        lastJobId = new JobRequest.Builder(NewsJob.TAG)
+        new JobRequest.Builder(NewsJob.TAG)
                 .setPeriodic(TimeUnit.MINUTES.toMillis(60))
                 .setRequiresCharging(false)
                 .setRequiresDeviceIdle(false)

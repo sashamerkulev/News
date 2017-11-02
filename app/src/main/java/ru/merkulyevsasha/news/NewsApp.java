@@ -26,21 +26,18 @@ public class NewsApp extends Application
     @Inject DispatchingAndroidInjector<Activity> activityInjector;
     @Inject DispatchingAndroidInjector<Service> serviceInjector;
 
-    private static AppComponent component;
-
     @Override
     public void onCreate() {
         super.onCreate();
 
-        component = DaggerAppComponent
+        AppComponent component = DaggerAppComponent
                 .builder()
                 .context(this)
                 .build();
 
         component.inject(this);
 
-        JobManager.create(this).addJobCreator(new NewsJobCreator());
-
+        JobManager.create(this).addJobCreator(new NewsJobCreator(component.getNewsConstants(), component.getNewsInteractor()));
     }
 
     @Override
@@ -51,7 +48,4 @@ public class NewsApp extends Application
     @Override
     public AndroidInjector<Service> serviceInjector() { return serviceInjector; }
 
-    public static AppComponent getComponent(){
-        return component;
-    }
 }
