@@ -4,6 +4,8 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
 
+import javax.inject.Inject;
+
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.domain.NewsInteractor;
 
@@ -16,6 +18,7 @@ public class NewsJobCreator implements JobCreator {
     private final NewsConstants newsConstants;
     private final NewsInteractor newsInteractor;
 
+    @Inject
     public NewsJobCreator(NewsConstants newsConstants, NewsInteractor newsInteractor){
         this.newsConstants = newsConstants;
         this.newsInteractor = newsInteractor;

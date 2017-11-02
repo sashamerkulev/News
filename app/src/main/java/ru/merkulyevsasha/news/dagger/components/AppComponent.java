@@ -5,6 +5,8 @@ package ru.merkulyevsasha.news.dagger.components;
 import android.content.Context;
 
 
+import com.evernote.android.job.JobCreator;
+
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
@@ -29,6 +31,5 @@ public interface AppComponent {
 
     void inject(NewsApp app);
 
-    NewsConstants getNewsConstants();
-    NewsInteractor getNewsInteractor();
+    JobCreator getJobCreator();
 }

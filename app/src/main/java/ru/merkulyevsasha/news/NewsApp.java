@@ -14,7 +14,6 @@ import dagger.android.HasActivityInjector;
 import dagger.android.HasServiceInjector;
 import ru.merkulyevsasha.news.dagger.components.AppComponent;
 import ru.merkulyevsasha.news.dagger.components.DaggerAppComponent;
-import ru.merkulyevsasha.news.newsjobs.NewsJobCreator;
 
 /**
  * Created by sasha_merkulev on 21.09.2017.
@@ -37,7 +36,7 @@ public class NewsApp extends Application
 
         component.inject(this);
 
-        JobManager.create(this).addJobCreator(new NewsJobCreator(component.getNewsConstants(), component.getNewsInteractor()));
+        JobManager.create(this).addJobCreator(component.getJobCreator());
     }
 
     @Override
