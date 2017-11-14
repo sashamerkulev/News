@@ -52,10 +52,11 @@ public final class NewsConstants {
         mLinks.put(R.id.nav_nauka, "http://www.nkj.ru/rss/");
 
         mLinks.put(R.id.nav_politikaru, "http://polytika.ru/feed");
-        mLinks.put(R.id.nav_mk, "http://www.mk.ru/rss/index.xml");
+//        mLinks.put(R.id.nav_mk, "http://www.mk.ru/rss/index.xml");
         mLinks.put(R.id.nav_cnews, "http://www.cnews.ru/inc/rss/news.xml");
         mLinks.put(R.id.nav_mailru, "https://news.mail.ru/rss/91/");
         mLinks.put(R.id.nav_sportexpress, "http://www.sport-express.ru/services/materials/news/se/");
+        mLinks.put(R.id.nav_dp, "http://dp.ru/rss");
 
         mSources.put(R.id.nav_all, R.string.news_all);
         mSources.put(R.id.nav_lenta, R.string.news_lenta);
@@ -88,10 +89,11 @@ public final class NewsConstants {
         mSources.put(R.id.nav_nauka, R.string.news_nauka);
 
         mSources.put(R.id.nav_politikaru, R.string.news_politikaru);
-        mSources.put(R.id.nav_mk, R.string.news_mk);
+//        mSources.put(R.id.nav_mk, R.string.news_mk);
         mSources.put(R.id.nav_cnews, R.string.news_cnews);
         mSources.put(R.id.nav_mailru, R.string.news_mailru);
         mSources.put(R.id.nav_sportexpress, R.string.news_sportexpress);
+        mSources.put(R.id.nav_dp, R.string.news_dp);
 
     }
 
