@@ -13,8 +13,6 @@ import dagger.BindsInstance;
 import dagger.Component;
 import ru.merkulyevsasha.news.NewsApp;
 import ru.merkulyevsasha.news.dagger.modules.AppModule;
-import ru.merkulyevsasha.news.data.utils.NewsConstants;
-import ru.merkulyevsasha.news.domain.NewsInteractor;
 
 
 @Singleton
