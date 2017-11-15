@@ -70,6 +70,11 @@ public class HttpReader {
                                 item.setDescription(description);
                                 break;
                             case "link":
+                                if (item.getLink() == null || item.getLink().isEmpty()) {
+                                    item.setLink(parser.nextText());
+                                }
+                                break;
+                            case "pdalink":
                                 item.setLink(parser.nextText());
                                 break;
                             case "enclosure":
