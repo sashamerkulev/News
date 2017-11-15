@@ -440,7 +440,7 @@ public class MainActivity extends AppCompatActivity
             String url = item.getPictureUrl();
 
             Date pubDate = item.getPubDate();
-            @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             holder.sourceAndDate.setText(String.format("%s %s", format.format(pubDate), source));
 
             if (title.equals(description) || description == null || description.isEmpty()){
