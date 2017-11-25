@@ -12,24 +12,24 @@ public class PreferencesHelper {
     private static final String KEY_RATED = "rated";
     private static final String KEY_DATE = "last_date";
 
-    private final SharedPreferences mSharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
-    public PreferencesHelper(Context context){
-        mSharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+    PreferencesHelper(Context context){
+        sharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    public void updateCountRuns(){
+    void updateCountRuns(){
         int count = getCount();
 
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_COUNT, count + 1);
 
         editor.apply();
     }
 
-    public void updateDate(){
+    void updateDate(){
 
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         Calendar calendar = Calendar.getInstance();
 
@@ -38,20 +38,20 @@ public class PreferencesHelper {
         editor.apply();
     }
 
-    public int getCount(){
-        return mSharedPreferences.getInt(KEY_COUNT, 0);
+    int getCount(){
+        return sharedPreferences.getInt(KEY_COUNT, 0);
     }
 
     public long getDate(){
-        return mSharedPreferences.getLong(KEY_DATE, 0);
+        return sharedPreferences.getLong(KEY_DATE, 0);
     }
 
-    public boolean isRated(){
-        return mSharedPreferences.getBoolean(KEY_RATED, false);
+    boolean isRated(){
+        return sharedPreferences.getBoolean(KEY_RATED, false);
     }
 
-    public void setRated() {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
+    void setRated() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putBoolean(KEY_RATED, true);
 
