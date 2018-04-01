@@ -10,18 +10,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,9 +52,9 @@ import ru.merkulyevsasha.news.data.db.DatabaseHelper;
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
+import ru.merkulyevsasha.news.newsjobs.NewsJob;
 import ru.merkulyevsasha.news.newsservices.HttpService;
 import ru.merkulyevsasha.news.pojos.ItemNews;
-import ru.merkulyevsasha.news.newsjobs.NewsJob;
 import ru.merkulyevsasha.news.presentation.webview.WebViewActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -93,7 +92,6 @@ public class MainActivity extends AppCompatActivity
     private MenuItem searchItem;
     private SearchView searchView;
 
-    private AppbarScrollExpander appbarScrollExpander;
     private boolean expanded;
     private int position;
 
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        appbarScrollExpander = new AppbarScrollExpander(recyclerView, appbarLayout);
+        AppbarScrollExpander appbarScrollExpander = new AppbarScrollExpander(recyclerView, appbarLayout);
         appbarScrollExpander.setExpanded(expanded);
         collapsToolbar.setTitleEnabled(false);
 
@@ -422,14 +420,15 @@ public class MainActivity extends AppCompatActivity
             this.onNewsItemClickListener = onNewsItemClickListener;
         }
 
+        @NonNull
         @Override
-        public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_news_item, parent, false);
             return new ItemViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ItemViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
 
             final ItemNews item = items.get(position);
 

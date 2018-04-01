@@ -39,11 +39,11 @@ public class NewsJob extends Job {
 
     @NonNull
     @Override
-    protected Result onRunJob(Params params) {
+    protected Result onRunJob(@NonNull Params params) {
         for (Map.Entry<Integer, String> entry : newsConstants.getLinks().entrySet()) {
             newsInteractor.readNewsAndSaveToDb(entry.getKey(), entry.getValue());
         }
-        sendNotification(getContext(), "Есть свежие новости!");
+        sendNotification(getContext());
         return Result.SUCCESS;
     }
 
@@ -53,17 +53,16 @@ public class NewsJob extends Job {
                 .setRequiresCharging(false)
                 .setRequiresDeviceIdle(false)
                 .setRequiredNetworkType(JobRequest.NetworkType.ANY)
-                .setPersisted(true)
                 .build()
                 .schedule();
     }
 
-    private void sendNotification(Context context, String news){
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
+    private void sendNotification(Context context){
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, "news_chanell_993")
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(news)
+                        .setContentText("Есть свежие новости!")
                         .setAutoCancel(true);
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(context, MainActivity.class);
@@ -81,10 +80,10 @@ public class NewsJob extends Job {
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        builder.setContentIntent(resultPendingIntent);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
-        mNotificationManager.notify(993, mBuilder.build());
+        if (notificationManager != null) notificationManager.notify(993, builder.build());
     }
 
 

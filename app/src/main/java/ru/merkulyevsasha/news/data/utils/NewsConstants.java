@@ -57,6 +57,7 @@ public final class NewsConstants {
         mLinks.put(R.id.nav_mailru, "https://news.mail.ru/rss/91/");
         mLinks.put(R.id.nav_sportexpress, "http://www.sport-express.ru/services/materials/news/se/");
         mLinks.put(R.id.nav_dp, "http://dp.ru/rss");
+        mLinks.put(R.id.nav_unas, "https://sdelanounas.ru/index/rss/");
 
         mSources.put(R.id.nav_all, R.string.news_all);
         mSources.put(R.id.nav_lenta, R.string.news_lenta);
@@ -94,6 +95,7 @@ public final class NewsConstants {
         mSources.put(R.id.nav_mailru, R.string.news_mailru);
         mSources.put(R.id.nav_sportexpress, R.string.news_sportexpress);
         mSources.put(R.id.nav_dp, R.string.news_dp);
+        mSources.put(R.id.nav_unas, R.string.news_unas);
 
     }
 
@@ -101,7 +103,7 @@ public final class NewsConstants {
         return mLinks.containsKey(navId) ? mLinks.get(navId) : "";
     }
 
-    public int getTitleByNavId(int navId){
+    private int getTitleByNavId(int navId){
         return mSources.containsKey(navId) ? mSources.get(navId) : -1;
     }
 

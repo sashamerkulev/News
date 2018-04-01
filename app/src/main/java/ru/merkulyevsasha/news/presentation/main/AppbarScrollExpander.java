@@ -13,7 +13,7 @@ public class AppbarScrollExpander {
     private final TouchPoint touchPoint;
     private boolean expanded;
 
-    public AppbarScrollExpander(View view, final AppBarLayout appbarlayout){
+    AppbarScrollExpander(View view, final AppBarLayout appbarlayout){
         touchPoint = new TouchPoint();
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override

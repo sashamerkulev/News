@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.newsjobs;
 
+import android.support.annotation.NonNull;
+
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
@@ -19,13 +21,13 @@ public class NewsJobCreator implements JobCreator {
     private final NewsInteractor newsInteractor;
 
     @Inject
-    public NewsJobCreator(NewsConstants newsConstants, NewsInteractor newsInteractor){
+    NewsJobCreator(NewsConstants newsConstants, NewsInteractor newsInteractor){
         this.newsConstants = newsConstants;
         this.newsInteractor = newsInteractor;
     }
 
     @Override
-    public Job create(String tag) {
+    public Job create(@NonNull String tag) {
         return new NewsJob(newsConstants, newsInteractor);
     }
 }

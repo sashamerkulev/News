@@ -126,6 +126,10 @@
             android:id="@+id/nav_dp"
             android:icon="@drawable/ic_rss_feed_black_24px"
             android:title="@string/news_dp" />
+        <item
+            android:id="@+id/nav_unas"
+            android:icon="@drawable/ic_rss_feed_black_24px"
+            android:title="@string/news_unas" />
     </group>
 
 </menu>
