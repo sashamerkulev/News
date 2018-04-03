@@ -45,7 +45,6 @@ public class HttpService extends IntentService {
                             broadcastHelper.sendUpdateBroadcast();
                         }
                     } catch(Exception e){
-                        FirebaseCrash.report(e);
                         e.printStackTrace();
                     }
                 }

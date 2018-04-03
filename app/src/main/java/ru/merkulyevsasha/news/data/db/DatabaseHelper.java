@@ -63,7 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            FirebaseCrash.report(e);
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -75,7 +74,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         try {
             db.delete(TABLE_NAME, SOURCE_NAV_ID + " = ?", new String[]{String.valueOf(navId)});
         } catch (Exception e) {
-            FirebaseCrash.report(e);
             e.printStackTrace();
         }
     }
@@ -109,8 +107,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     } while (cursor.moveToNext());
                 }
         } catch (Exception e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
+             e.printStackTrace();
         }
         return items;
     }
@@ -130,7 +127,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     } while (cursor.moveToNext());
                 }
         } catch (Exception e) {
-            FirebaseCrash.report(e);
             e.printStackTrace();
         }
 
@@ -152,8 +148,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     } while (cursor.moveToNext());
                 }
         } catch (Exception e) {
-            FirebaseCrash.report(e);
-            e.printStackTrace();
+             e.printStackTrace();
         }
         return items;
     }

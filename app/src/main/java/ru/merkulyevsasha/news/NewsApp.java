@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.Service;
 
 import com.evernote.android.job.JobManager;
+import com.google.android.gms.ads.MobileAds;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,7 @@ public class NewsApp extends Application
 
         component.inject(this);
 
+        MobileAds.initialize(this, getString(R.string.APP_ID));
         JobManager.create(this).addJobCreator(component.getJobCreator());
     }
 

@@ -151,7 +151,6 @@ public class HttpReader {
 
             result = parseXML(parser, navId);
         } catch (Exception e) {
-            FirebaseCrash.report(e);
             e.printStackTrace();
         }
         return result;

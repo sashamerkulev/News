@@ -33,7 +33,6 @@ public class NewsInteractor {
                 result = true;
             }
         } catch(Exception e){
-            FirebaseCrash.report(e);
             e.printStackTrace();
         }
         return result;
