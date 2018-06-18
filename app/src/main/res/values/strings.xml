@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Открыть</string>
     <string name="navigation_drawer_close">Закрыть</string>
 
-    <string name="search_validation_message">Строка поиска должна содержать не менее 5 символов.</string>
+    <string name="search_validation_message">Строка поиска должна содержать не менее 3 символов.</string>
     <string name="search_nofound_message">Ничего не найдено, попробуйте изменить строку поиска.</string>
 
     <string name="news_all">Все новости</string>

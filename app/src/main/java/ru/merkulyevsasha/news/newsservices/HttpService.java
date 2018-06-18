@@ -41,9 +41,9 @@ public class HttpService extends IntentService {
             if (mNavId == R.id.nav_all) {
                 for (Map.Entry<Integer, String> entry : newsConstants.getLinks().entrySet()) {
                     try {
-                        if (newsInteractor.readNewsAndSaveToDb(entry.getKey(), entry.getValue())){
-                            broadcastHelper.sendUpdateBroadcast();
-                        }
+//                        if (newsInteractor.readNewsAndSaveToDb(entry.getKey(), entry.getValue())){
+//                            broadcastHelper.sendUpdateBroadcast();
+//                        }
                     } catch(Exception e){
                         e.printStackTrace();
                     }

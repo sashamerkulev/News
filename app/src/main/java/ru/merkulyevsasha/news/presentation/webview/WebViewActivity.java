@@ -14,7 +14,7 @@ import android.webkit.WebViewClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.merkulyevsasha.news.R;
-import ru.merkulyevsasha.news.pojos.ItemNews;
+import ru.merkulyevsasha.news.pojos.Article;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -75,7 +75,7 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-    public static void startActivity(Context context, String title, ItemNews item) {
+    public static void startActivity(Context context, String title, Article item) {
         Intent link_intent = new Intent(context, WebViewActivity.class);
         link_intent.putExtra(KEY_LINK, item.getLink());
         link_intent.putExtra(KEY_TITLE, title);

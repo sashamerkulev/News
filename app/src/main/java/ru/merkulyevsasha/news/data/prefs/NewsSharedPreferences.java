@@ -3,6 +3,8 @@ package ru.merkulyevsasha.news.data.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import io.reactivex.Single;
+
 /**
  * Created by sasha_merkulev on 21.09.2017.
  */
@@ -19,8 +21,8 @@ public class NewsSharedPreferences {
         prefs = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    public boolean getFirstRunFlag() {
-        return prefs.getBoolean(KEY_FIRST_RUN, true);
+    public Single<Boolean> getFirstRunFlag() {
+        return Single.fromCallable(() -> prefs.getBoolean(KEY_FIRST_RUN, true));
     }
 
     public void setFirstRunFlag() {

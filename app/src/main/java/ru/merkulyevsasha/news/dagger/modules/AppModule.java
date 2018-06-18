@@ -1,7 +1,9 @@
 package ru.merkulyevsasha.news.dagger.modules;
 
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.evernote.android.job.JobCreator;
 
@@ -12,9 +14,13 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
+import ru.merkulyevsasha.news.BuildConfig;
 import ru.merkulyevsasha.news.dagger.scopes.MainScope;
 import ru.merkulyevsasha.news.dagger.components.MainComponent;
 import ru.merkulyevsasha.news.data.db.DatabaseHelper;
+import ru.merkulyevsasha.news.data.db.NewsDbRepository;
+import ru.merkulyevsasha.news.data.db.NewsDbRepositoryImpl;
+import ru.merkulyevsasha.news.data.db.NewsDbRoom;
 import ru.merkulyevsasha.news.data.http.HttpReader;
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
@@ -26,7 +32,6 @@ import ru.merkulyevsasha.news.presentation.main.MainActivity;
 
 @Module(includes = {AndroidSupportInjectionModule.class}, subcomponents = {MainComponent.class})
 public abstract class AppModule {
-
 
     @Singleton
     @Provides
@@ -42,9 +47,16 @@ public abstract class AppModule {
 
     @Singleton
     @Provides
-    static DatabaseHelper providesDatabaseHelper(Context context) {
-        return new DatabaseHelper(context);
+    static NewsDbRoom providesNewsDbRoom(Context context) {
+        return Room
+                .databaseBuilder(context, NewsDbRoom.class, BuildConfig.DB_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
     }
+
+    @Singleton
+    @Binds
+    abstract NewsDbRepository providesNewsDbRepository(NewsDbRepositoryImpl newsDbRepository);
 
     @Singleton
     @Provides
@@ -60,8 +72,8 @@ public abstract class AppModule {
 
     @Singleton
     @Provides
-    static NewsInteractor providesNewsInteractor(HttpReader reader, DatabaseHelper db) {
-        return new NewsInteractor(reader, db);
+    static NewsInteractor providesNewsInteractor(NewsConstants newsConstants, HttpReader reader, NewsSharedPreferences prefs, NewsDbRepository db) {
+        return new NewsInteractor(newsConstants, reader, prefs, db);
     }
 
     @Singleton

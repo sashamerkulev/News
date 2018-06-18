@@ -2,39 +2,57 @@ package ru.merkulyevsasha.news.presentation.main;
 
 import java.util.List;
 
-import ru.merkulyevsasha.news.pojos.ItemNews;
+import javax.inject.Inject;
 
-/**
- * Created by sasha_merkulev on 23.09.2017.
- */
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import ru.merkulyevsasha.news.R;
+import ru.merkulyevsasha.news.domain.NewsInteractor;
+import ru.merkulyevsasha.news.pojos.Article;
+import ru.merkulyevsasha.news.presentation.BasePresenter;
 
-public class MainPresenter {
+public class MainPresenter extends BasePresenter<MainView> {
 
-    private MainView view;
+    private final NewsInteractor news;
 
-    void setView(MainView view){
-        this.view = view;
+    @Inject
+    MainPresenter(NewsInteractor news) {
+        this.news = news;
     }
 
-    void onPause(){
-        view.unregisterBroadcastReceiver();
-        view = null;
-    }
-
-    void onResume(boolean isRefreshing, int navId, String searchText){
-        if (view == null) return;
-
-        view.registerBroadcastReceiver();
-
-        if (isRefreshing){
-            view.startLoadingNewsService();
+    void onResume(boolean isRefreshing, int navId, String searchText) {
+        Single<List<Article>> articles;
+        if (searchText == null || searchText.isEmpty()) {
+            if (navId == R.id.nav_all) articles = news.selectAll()
+                    .flattenAsFlowable(t->t)
+                    .switchIfEmpty(Flowable.defer(()->news.readNewsAndSaveToDb(navId).flattenAsFlowable(tt->tt))).toList();
+            else articles = news.selectNavId(navId);
         } else {
-            if (searchText == null || searchText.isEmpty()) {
-                view.readNews(navId);
-            } else {
-                view.searchNews(searchText);
-            }
+            articles = news.search(searchText);
         }
+        procceed(articles);
+    }
+
+    private void procceed(Single<List<Article>> articles) {
+        compositeDisposable.add(
+                articles
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(unused -> {
+                                    if (view == null) return;
+                                    view.showProgress();
+                                }
+                        )
+                        .doFinally(() -> {
+                            if (view == null) return;
+                            view.hideProgress();
+                        })
+                        .subscribe(items -> {
+                                    if (view == null) return;
+                                    view.showItems(items);
+                                },
+                                throwable -> {
+                                }));
     }
 
     void onPrepareToSearch() {
@@ -42,50 +60,39 @@ public class MainPresenter {
         view.prepareToSearch();
     }
 
-    void onItemClicked(ItemNews item) {
+    void onItemClicked(Article item) {
         if (view == null) return;
-        view.showWebViewScreen(item);
+        view.showDetailScreen(item);
     }
 
     void onRefresh(int navId) {
-        if (view == null) return;
-        view.loadFreshNews(navId);
-    }
-
-    void onReceived(int navId, boolean updated, boolean finished) {
-        if (view == null) return;
-        if (updated){
-            view.readNews(navId);
-        }
-        if (finished){
-            view.hideProgress();
-        }
+        procceed(news.readNewsAndSaveToDb(navId));
     }
 
     void onSearch(String searchText) {
-        if (view == null) return;
-        view.searchNews(searchText);
+        procceed(news.search(searchText));
     }
 
     void onCancelSearch(int navId) {
-        if (view == null) return;
-        view.readNews(navId);
+        procceed(navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId));
     }
 
     void onSelectSource(int navId) {
-        if (view == null) return;
-        view.readNews(navId);
+        procceed(news.selectNavId(navId));
     }
 
-    void onLoadResult(int navId, List<ItemNews> result) {
-        if (view == null) return;
-        if (result.size() > 0) view.showItems(result);
-        else view.loadFreshNews(navId);
-    }
-
-    void onSearchResult(List<ItemNews> result) {
-        if (view == null) return;
-        if (result.size() > 0) view.showItems(result);
-        else view.showNoSearchResultMessage();
+    void onCreateView() {
+        compositeDisposable.add(
+                news
+                        .getFirstRunFlag()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(first -> {
+                                    if (view == null) return;
+                                    view.scheduleJob();
+                                    news.setFirstRunFlag();
+                                },
+                                throwable -> {
+                                })
+        );
     }
 }

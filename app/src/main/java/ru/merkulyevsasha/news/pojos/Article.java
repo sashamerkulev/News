@@ -2,7 +2,7 @@ package ru.merkulyevsasha.news.pojos;
 
 import java.util.Date;
 
-public class ItemNews {
+public class Article {
 
     private int id;
     private int sourceNavId;
@@ -13,6 +13,21 @@ public class ItemNews {
     private String category;
     private String search;
     private String pictureUrl;
+
+    public Article() {
+    }
+
+    public Article(int id, int sourceNavId, String title, String link, String description, Date pubDate, String category, String search, String pictureUrl) {
+        this.id = id;
+        this.sourceNavId = sourceNavId;
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.pubDate = pubDate;
+        this.category = category;
+        this.search = search;
+        this.pictureUrl = pictureUrl;
+    }
 
     public int getId() {
         return id;

@@ -3,8 +3,6 @@ package ru.merkulyevsasha.news.data.http;
 import android.text.Html;
 import android.util.Xml;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -20,7 +18,7 @@ import java.util.Locale;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import ru.merkulyevsasha.news.pojos.ItemNews;
+import ru.merkulyevsasha.news.pojos.Article;
 
 public class HttpReader {
 
@@ -30,7 +28,7 @@ public class HttpReader {
         mClient = new OkHttpClient();
     }
 
-    private boolean tryParseDateFormat(String date, String formatDate, ItemNews item){
+    private boolean tryParseDateFormat(String date, String formatDate, Article item){
         try{
             SimpleDateFormat format = new SimpleDateFormat(formatDate, Locale.ENGLISH);
             item.setPubDate(format.parse(date));
@@ -42,10 +40,10 @@ public class HttpReader {
         }
     }
 
-    private List<ItemNews> parseXML(XmlPullParser parser, int navId) throws XmlPullParserException, IOException {
-        List<ItemNews> items = new ArrayList<>();
+    private List<Article> parseXML(XmlPullParser parser, int navId) throws XmlPullParserException, IOException {
+        List<Article> items = new ArrayList<>();
         int eventType = parser.getEventType();
-        ItemNews item = null;
+        Article item = null;
 
         while (eventType != XmlPullParser.END_DOCUMENT){
             String name;
@@ -55,7 +53,7 @@ public class HttpReader {
                 case XmlPullParser.START_TAG:
                     name = parser.getName();
                     if (name.equals("item")){
-                        item = new ItemNews();
+                        item = new Article();
                         item.setSourceNavId (navId);
                     } else if (item != null){
                         switch (name) {
@@ -130,9 +128,9 @@ public class HttpReader {
 
     }
 
-    public List<ItemNews> GetHttpData(int navId, String url)
+    public List<Article> GetHttpData(int navId, String url)
     {
-        List<ItemNews> result = new ArrayList<>();
+        List<Article> result = new ArrayList<>();
 
         try {
 
