@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         outState.putInt(KEY_POSITION, layoutManager.findFirstCompletelyVisibleItemPosition());
-        outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
+//        outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
         outState.putBoolean(KEY_EXPANDED, appbarScrollExpander.getExpanded());
     }
 
@@ -141,10 +141,10 @@ public class MainActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
+//        boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
         position = savedInstanceState.getInt(KEY_POSITION, -1);
         expanded = savedInstanceState.getBoolean(KEY_EXPANDED, true);
-        refreshLayout.setRefreshing(isRefreshing);
+//        refreshLayout.setRefreshing(isRefreshing);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         pres.bindView(this);
-        pres.onResume(refreshLayout.isRefreshing(), navId, searchText);
+        pres.onResume(navId, searchText);
         if (adView != null) {
             adView.resume();
         }
@@ -270,6 +270,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showNoSearchResultMessage() {
         Snackbar.make(root, R.string.search_nofound_message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMessageError() {
+        Snackbar.make(root, R.string.something_went_wrong_message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

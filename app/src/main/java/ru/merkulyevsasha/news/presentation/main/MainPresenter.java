@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.news.presentation.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,38 +22,20 @@ public class MainPresenter extends BasePresenter<MainView> {
         this.news = news;
     }
 
-    void onResume(boolean isRefreshing, int navId, String searchText) {
+    void onResume(int navId, String searchText) {
+        boolean isSearch = false;
         Single<List<Article>> articles;
         if (searchText == null || searchText.isEmpty()) {
             if (navId == R.id.nav_all) articles = news.selectAll()
-                    .flattenAsFlowable(t->t)
-                    .switchIfEmpty(Flowable.defer(()->news.readNewsAndSaveToDb(navId).flattenAsFlowable(tt->tt))).toList();
+                    .flattenAsFlowable(t -> t)
+                    .switchIfEmpty(Flowable.defer(() -> news.readNewsAndSaveToDb(navId).flattenAsFlowable(tt -> tt)))
+                    .toList();
             else articles = news.selectNavId(navId);
         } else {
+            isSearch = true;
             articles = news.search(searchText);
         }
-        procceed(articles);
-    }
-
-    private void procceed(Single<List<Article>> articles) {
-        compositeDisposable.add(
-                articles
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(unused -> {
-                                    if (view == null) return;
-                                    view.showProgress();
-                                }
-                        )
-                        .doFinally(() -> {
-                            if (view == null) return;
-                            view.hideProgress();
-                        })
-                        .subscribe(items -> {
-                                    if (view == null) return;
-                                    view.showItems(items);
-                                },
-                                throwable -> {
-                                }));
+        procceed(articles, isSearch);
     }
 
     void onPrepareToSearch() {
@@ -66,19 +49,19 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     void onRefresh(int navId) {
-        procceed(news.readNewsAndSaveToDb(navId));
+        procceed(news.readNewsAndSaveToDb(navId), false);
     }
 
     void onSearch(String searchText) {
-        procceed(news.search(searchText));
+        procceed(news.search(searchText), true);
     }
 
     void onCancelSearch(int navId) {
-        procceed(navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId));
+        procceed(navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId), false);
     }
 
     void onSelectSource(int navId) {
-        procceed(news.selectNavId(navId));
+        procceed(news.selectNavId(navId), false);
     }
 
     void onCreateView() {
@@ -94,5 +77,33 @@ public class MainPresenter extends BasePresenter<MainView> {
                                 throwable -> {
                                 })
         );
+    }
+
+
+    private void procceed(Single<List<Article>> articles, boolean isSearch) {
+        compositeDisposable.add(
+                articles
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(unused -> {
+                                    if (view == null) return;
+                                    view.showProgress();
+                                }
+                        )
+                        .doFinally(() -> {
+                            if (view == null) return;
+                            view.hideProgress();
+                        })
+                        .subscribe(items -> {
+                                    if (view == null) return;
+                                    if (isSearch && items.isEmpty()) {
+                                        view.showNoSearchResultMessage();
+                                        return;
+                                    }
+                                    view.showItems(items);
+                                },
+                                throwable -> {
+                                    if (view == null) return;
+                                    view.showMessageError();
+                                }));
     }
 }

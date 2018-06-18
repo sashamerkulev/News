@@ -15,6 +15,7 @@ interface MainView {
 
     void showItems(List<Article> result);
     void showNoSearchResultMessage();
+    void showMessageError();
 
     void scheduleJob();
 
