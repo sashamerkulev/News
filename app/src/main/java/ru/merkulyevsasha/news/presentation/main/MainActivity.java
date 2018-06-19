@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -167,6 +169,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         if (adView != null) {
             adView.pause();
         }
@@ -179,6 +182,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         pres.bindView(this);
         pres.onResume(refreshLayout.isRefreshing(), navId, searchText);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(BroadcastHelper.ACTION_LOADING));
         if (adView != null) {
             adView.resume();
         }

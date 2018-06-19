@@ -41,7 +41,7 @@ public class NewsInteractor {
                 for (Map.Entry<Integer, String> entry : newsConstants.getLinks().entrySet()) {
                     try {
                         List<Article> articles = getArticles(entry.getKey(), newsConstants.getLinkByNavId(entry.getKey()));
-                        db.deleteAll();
+                        db.delete(entry.getKey());
                         db.addListNews(articles);
                         broadcastHelper.sendUpdateBroadcast();
                         items.addAll(articles);
@@ -59,10 +59,6 @@ public class NewsInteractor {
                 .sorted((article, t1) -> t1.getPubDate().compareTo(article.getPubDate()))
                 .toList()
                 .cache()
-                .doOnSuccess(articles -> {
-                    db.deleteAll();
-                    db.addListNews(articles);
-                })
                 .subscribeOn(Schedulers.io());
     }
 

@@ -51,8 +51,16 @@ public class MainPresenter extends BasePresenter<MainView> {
     void onReceived(int navId, boolean updated, boolean finished) {
         if (view == null) return;
         if (updated) {
-            onCancelSearch(navId);
-        }
+            Single<List<Article>> articles = navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId);
+            compositeDisposable.add(
+                    articles
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(items -> {
+                                        if (view == null) return;
+                                        view.showItems(items);
+                                    },
+                                    throwable -> {
+                                    }));        }
         if (finished) {
             view.hideProgress();
         }
@@ -71,7 +79,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     void onSelectSource(int navId) {
-        procceed(news.selectNavId(navId), false);
+        procceed(navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId), false);
     }
 
     void onCreateView() {
