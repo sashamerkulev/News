@@ -30,11 +30,9 @@ public class NewsJob extends Job {
 
     private static final String TAG = NewsJob.class.getName();
 
-    private final NewsConstants newsConstants;
     private final NewsInteractor newsInteractor;
 
-    NewsJob(NewsConstants newsConstants, NewsInteractor newsInteractor){
-        this.newsConstants = newsConstants;
+    NewsJob(NewsInteractor newsInteractor) {
         this.newsInteractor = newsInteractor;
     }
 
@@ -42,11 +40,13 @@ public class NewsJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(@NonNull Params params) {
-        newsInteractor.readNewsAndSaveToDb(R.id.nav_all)
-                .subscribe((articles, throwable) -> {
+        if (newsInteractor.needUpdate()) {
+            newsInteractor.readNewsAndSaveToDb(R.id.nav_all)
+                    .subscribe((articles, throwable) -> {
 
-                });
-        sendNotification(getContext());
+                    });
+            sendNotification(getContext());
+        }
         return Result.SUCCESS;
     }
 
@@ -60,7 +60,7 @@ public class NewsJob extends Job {
                 .schedule();
     }
 
-    private void sendNotification(Context context){
+    private void sendNotification(Context context) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, "news_chanell_993")
                         .setSmallIcon(R.drawable.ic_notification)
@@ -82,7 +82,7 @@ public class NewsJob extends Job {
         stackBuilder.addParentStack(MainActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT );
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.

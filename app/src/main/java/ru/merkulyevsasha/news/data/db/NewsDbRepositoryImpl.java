@@ -1,11 +1,10 @@
 package ru.merkulyevsasha.news.data.db;
 
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
 import io.reactivex.Single;
 import ru.merkulyevsasha.news.data.ListUtils;
 import ru.merkulyevsasha.news.pojos.Article;
@@ -58,6 +57,13 @@ public class NewsDbRepositoryImpl implements NewsDbRepository {
     public Single<List<Article>> search(String searchTtext) {
         ArticleDao dao = room.getArticleDao();
         return dao.search(searchTtext).flattenAsFlowable(t -> t).map(articleEntityMapper::map).toList();
+    }
+
+    @Override
+    public Date getLastPubDate() {
+        ArticleDao dao = room.getArticleDao();
+        ArticleEntity article = dao.getLastArticle();
+        return article == null? null : article.getPubDate();
     }
 
 }

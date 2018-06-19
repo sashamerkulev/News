@@ -3,6 +3,7 @@ package ru.merkulyevsasha.news.domain;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class NewsInteractor {
 
             return items;
         })
-                .flattenAsFlowable(t->t)
+                .flattenAsFlowable(t -> t)
                 .sorted((article, t1) -> t1.getPubDate().compareTo(article.getPubDate()))
                 .toList()
                 .cache()
@@ -102,4 +103,12 @@ public class NewsInteractor {
         return items;
     }
 
+    public boolean needUpdate() {
+        Date lastpubDate = db.getLastPubDate();
+        if (lastpubDate == null) return true;
+
+        Date nowdate = new Date();
+        int diffMinutes = (int) ((nowdate.getTime() / 60000) - (lastpubDate.getTime() / 60000));
+        return diffMinutes > 30;
+    }
 }

@@ -20,6 +20,9 @@ public interface ArticleDao {
     @Query("delete from articles")
     void deleteAll();
 
+    @Query("select * from articles order by pubDate desc limit 1")
+    ArticleEntity getLastArticle();
+
     @Query("select * from articles order by pubDate desc")
     Single<List<ArticleEntity>> selectAll();
 

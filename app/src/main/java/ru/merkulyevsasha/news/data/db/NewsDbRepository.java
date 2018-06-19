@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.news.data.db;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -19,4 +20,5 @@ public interface NewsDbRepository {
 
     Single<List<Article>> search(String searchTtext);
 
+    Date getLastPubDate();
 }
