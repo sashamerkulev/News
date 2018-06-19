@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -49,7 +52,6 @@ import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.newsjobs.NewsJob;
 import ru.merkulyevsasha.news.pojos.Article;
-import ru.merkulyevsasha.news.presentation.webview.WebViewActivity;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
@@ -265,7 +267,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showDetailScreen(Article item) {
-        WebViewActivity.startActivity(MainActivity.this, newsConsts.getSourceNameTitle(item.getSourceNavId()), item);
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        CustomTabsIntent customTabsIntent = builder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary)).build();
+        customTabsIntent.launchUrl(this, Uri.parse(item.getLink()));
     }
 
     @Override

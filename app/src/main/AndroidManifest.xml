@@ -29,12 +29,6 @@
         </activity>
 
         <activity
-            android:name=".presentation.webview.WebViewActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".presentation.main.MainActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
