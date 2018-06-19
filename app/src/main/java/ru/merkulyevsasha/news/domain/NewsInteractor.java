@@ -2,6 +2,7 @@ package ru.merkulyevsasha.news.domain;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import ru.merkulyevsasha.news.data.db.NewsDbRepository;
 import ru.merkulyevsasha.news.data.http.HttpReader;
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
+import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.pojos.Article;
 
 public class NewsInteractor {
@@ -21,17 +23,14 @@ public class NewsInteractor {
     private final NewsDbRepository db;
     private final NewsSharedPreferences prefs;
     private final NewsConstants newsConstants;
+    private final BroadcastHelper broadcastHelper;
 
-    public NewsInteractor(NewsConstants newsConstants, HttpReader reader, NewsSharedPreferences prefs, NewsDbRepository db) {
+    public NewsInteractor(NewsConstants newsConstants, HttpReader reader, NewsSharedPreferences prefs, NewsDbRepository db, BroadcastHelper broadcastHelper) {
         this.reader = reader;
         this.db = db;
         this.prefs = prefs;
         this.newsConstants = newsConstants;
-    }
-
-    public Single<List<Article>> readNewsAndSaveToDb(int id, String url) {
-        return Single.fromCallable(() -> getArticles(id, url))
-                .subscribeOn(Schedulers.io());
+        this.broadcastHelper = broadcastHelper;
     }
 
     public Single<List<Article>> readNewsAndSaveToDb(int navId) {
@@ -41,8 +40,12 @@ public class NewsInteractor {
             if (navId == R.id.nav_all) {
                 for (Map.Entry<Integer, String> entry : newsConstants.getLinks().entrySet()) {
                     try {
-                        items.addAll(getArticles(navId, newsConstants.getLinkByNavId(entry.getKey())));
-                    } catch(Exception e){
+                        List<Article> articles = getArticles(entry.getKey(), newsConstants.getLinkByNavId(entry.getKey()));
+                        db.deleteAll();
+                        db.addListNews(articles);
+                        broadcastHelper.sendUpdateBroadcast();
+                        items.addAll(articles);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -51,8 +54,15 @@ public class NewsInteractor {
             }
 
             return items;
-
         })
+                .flattenAsFlowable(t->t)
+                .sorted((article, t1) -> t1.getPubDate().compareTo(article.getPubDate()))
+                .toList()
+                .cache()
+                .doOnSuccess(articles -> {
+                    db.deleteAll();
+                    db.addListNews(articles);
+                })
                 .subscribeOn(Schedulers.io());
     }
 

@@ -1,7 +1,9 @@
 package ru.merkulyevsasha.news.presentation.main;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -44,6 +46,7 @@ import ru.merkulyevsasha.apprate.AppRateRequester;
 import ru.merkulyevsasha.news.BuildConfig;
 import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
+import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.newsjobs.NewsJob;
 import ru.merkulyevsasha.news.pojos.Article;
 import ru.merkulyevsasha.news.presentation.webview.WebViewActivity;
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     private String searchText;
 
     private AppbarScrollExpander appbarScrollExpander;
+
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,14 +131,24 @@ public class MainActivity extends AppCompatActivity
         pres.bindView(this);
         pres.onCreateView();
 
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final boolean finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false);
+                final boolean updated = intent.getBooleanExtra(BroadcastHelper.KEY_UPDATE_NAME, false);
+
+                pres.onReceived(navId, updated, finished);
+            }
+        };
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putInt(KEY_NAV_ID, navId);
         outState.putInt(KEY_POSITION, layoutManager.findFirstCompletelyVisibleItemPosition());
-//        outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
+        outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
         outState.putBoolean(KEY_EXPANDED, appbarScrollExpander.getExpanded());
     }
 
@@ -141,10 +156,11 @@ public class MainActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-//        boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
+        boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
         position = savedInstanceState.getInt(KEY_POSITION, -1);
+        navId = savedInstanceState.getInt(KEY_NAV_ID, R.id.nav_all);
         expanded = savedInstanceState.getBoolean(KEY_EXPANDED, true);
-//        refreshLayout.setRefreshing(isRefreshing);
+        refreshLayout.setRefreshing(isRefreshing);
     }
 
     @Override
@@ -160,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         pres.bindView(this);
-        pres.onResume(navId, searchText);
+        pres.onResume(refreshLayout.isRefreshing(), navId, searchText);
         if (adView != null) {
             adView.resume();
         }
@@ -173,7 +189,7 @@ public class MainActivity extends AppCompatActivity
         if (adView != null) {
             adView.destroy();
         }
-        pres.onDestroy();
+        //pres.onDestroy();
         super.onDestroy();
     }
 

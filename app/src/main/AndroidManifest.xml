@@ -9,14 +9,13 @@
     <uses-permission android:name="android.permission.QUICKBOOT_POWERON" />
 
     <application
+        android:name=".NewsApp"
         android:allowBackup="true"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".NewsApp"
-        >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".presentation.splash.SplashActivity"
             android:label="@string/app_name"
@@ -28,22 +27,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".presentation.webview.WebViewActivity"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            />
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".presentation.main.MainActivity"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-
-        <service
-            android:name=".newsservices.HttpService"
-            android:enabled="true"
-            android:exported="false" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".newsjobs.RebootActionReceiver">
             <intent-filter>

@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.news.newsjobs;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -37,12 +38,14 @@ public class NewsJob extends Job {
         this.newsInteractor = newsInteractor;
     }
 
+    @SuppressLint("CheckResult")
     @NonNull
     @Override
     protected Result onRunJob(@NonNull Params params) {
-        for (Map.Entry<Integer, String> entry : newsConstants.getLinks().entrySet()) {
-            newsInteractor.readNewsAndSaveToDb(entry.getKey(), entry.getValue());
-        }
+        newsInteractor.readNewsAndSaveToDb(R.id.nav_all)
+                .subscribe((articles, throwable) -> {
+
+                });
         sendNotification(getContext());
         return Result.SUCCESS;
     }

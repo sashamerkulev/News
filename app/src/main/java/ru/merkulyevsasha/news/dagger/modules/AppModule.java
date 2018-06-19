@@ -27,8 +27,8 @@ import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.domain.NewsInteractor;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.newsjobs.NewsJobCreator;
-import ru.merkulyevsasha.news.newsservices.HttpService;
 import ru.merkulyevsasha.news.presentation.main.MainActivity;
+import ru.merkulyevsasha.news.presentation.main.MainPresenter;
 
 @Module(includes = {AndroidSupportInjectionModule.class}, subcomponents = {MainComponent.class})
 public abstract class AppModule {
@@ -72,19 +72,21 @@ public abstract class AppModule {
 
     @Singleton
     @Provides
-    static NewsInteractor providesNewsInteractor(NewsConstants newsConstants, HttpReader reader, NewsSharedPreferences prefs, NewsDbRepository db) {
-        return new NewsInteractor(newsConstants, reader, prefs, db);
+    static NewsInteractor providesNewsInteractor(NewsConstants newsConstants, HttpReader reader, NewsSharedPreferences prefs, NewsDbRepository db, BroadcastHelper broadcastHelper) {
+        return new NewsInteractor(newsConstants, reader, prefs, db, broadcastHelper);
     }
 
     @Singleton
     @Binds
     abstract JobCreator providesJobCreator(NewsJobCreator jobCreator);
 
-    @MainScope
-    @ContributesAndroidInjector(modules = MainModule.class)
-    abstract MainActivity injectorActivity();
+    @Singleton
+    @Provides
+    static MainPresenter providePres(NewsInteractor news) {
+        return new MainPresenter(news);
+    }
 
     @MainScope
     @ContributesAndroidInjector(modules = MainModule.class)
-    abstract HttpService injectorService();
+    abstract MainActivity injectorActivity();
 }

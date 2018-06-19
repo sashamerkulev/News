@@ -17,20 +17,20 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     private final NewsInteractor news;
 
-    @Inject
-    MainPresenter(NewsInteractor news) {
+    private final List<Article> cached = new ArrayList<>();
+
+    public MainPresenter(NewsInteractor news) {
         this.news = news;
     }
 
-    void onResume(int navId, String searchText) {
+    void onResume(boolean isRefreshing, int navId, String searchText) {
+
+        if (isRefreshing) return;
+
         boolean isSearch = false;
         Single<List<Article>> articles;
         if (searchText == null || searchText.isEmpty()) {
-            if (navId == R.id.nav_all) articles = news.selectAll()
-                    .flattenAsFlowable(t -> t)
-                    .switchIfEmpty(Flowable.defer(() -> news.readNewsAndSaveToDb(navId).flattenAsFlowable(tt -> tt)))
-                    .toList();
-            else articles = news.selectNavId(navId);
+            articles = getArticlesByNavId(navId);
         } else {
             isSearch = true;
             articles = news.search(searchText);
@@ -46,6 +46,16 @@ public class MainPresenter extends BasePresenter<MainView> {
     void onItemClicked(Article item) {
         if (view == null) return;
         view.showDetailScreen(item);
+    }
+
+    void onReceived(int navId, boolean updated, boolean finished) {
+        if (view == null) return;
+        if (updated) {
+            onCancelSearch(navId);
+        }
+        if (finished) {
+            view.hideProgress();
+        }
     }
 
     void onRefresh(int navId) {
@@ -65,6 +75,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     void onCreateView() {
+        view.showItems(cached);
         compositeDisposable.add(
                 news
                         .getFirstRunFlag()
@@ -79,6 +90,15 @@ public class MainPresenter extends BasePresenter<MainView> {
         );
     }
 
+    private Single<List<Article>> getArticlesByNavId(int navId) {
+        Single<List<Article>> articles;
+        if (navId == R.id.nav_all) articles = news.selectAll()
+                .flattenAsFlowable(t -> t)
+                .switchIfEmpty(Flowable.defer(() -> news.readNewsAndSaveToDb(navId).flattenAsFlowable(tt -> tt)))
+                .toList();
+        else articles = news.selectNavId(navId);
+        return articles;
+    }
 
     private void procceed(Single<List<Article>> articles, boolean isSearch) {
         compositeDisposable.add(
@@ -94,6 +114,8 @@ public class MainPresenter extends BasePresenter<MainView> {
                             view.hideProgress();
                         })
                         .subscribe(items -> {
+                                    cached.clear();
+                                    cached.addAll(items);
                                     if (view == null) return;
                                     if (isSearch && items.isEmpty()) {
                                         view.showNoSearchResultMessage();
