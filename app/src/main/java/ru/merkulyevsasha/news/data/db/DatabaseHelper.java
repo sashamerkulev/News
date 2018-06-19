@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.google.firebase.crash.FirebaseCrash;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ru.merkulyevsasha.news.pojos.ItemNews;
+import ru.merkulyevsasha.news.pojos.Article;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 2;
@@ -43,11 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void addListNews(List<ItemNews> items) {
+    public void addListNews(List<Article> items) {
         SQLiteDatabase db = getWritableDatabase();
         try {
             db.beginTransaction();
-            for (ItemNews item : items) {
+            for (Article item : items) {
                 ContentValues values = new ContentValues();
                 values.put(SOURCE_NAV_ID, item.getSourceNavId());
                 values.put(TITLE, item.getTitle());
@@ -78,8 +76,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
     }
 
-    private ItemNews getItemNews(Cursor cursor) {
-        ItemNews item = new ItemNews();
+    private Article getItemNews(Cursor cursor) {
+        Article item = new Article();
         item.setSourceNavId(cursor.getInt(cursor.getColumnIndex(SOURCE_NAV_ID)));
         item.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
         item.setLink(cursor.getString(cursor.getColumnIndex(LINK)));
@@ -91,8 +89,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return item;
     }
 
-    public List<ItemNews> selectAll() {
-        List<ItemNews> items = new ArrayList<>();
+    public List<Article> selectAll() {
+        List<Article> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " order by " + PUBDATE + " desc";
 
         SQLiteDatabase db = getReadableDatabase();
@@ -102,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
                 if (cursor.moveToFirst()) {
                     do {
-                        ItemNews item = getItemNews(cursor);
+                        Article item = getItemNews(cursor);
                         items.add(item);
                     } while (cursor.moveToNext());
                 }
@@ -112,8 +110,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return items;
     }
 
-    public List<ItemNews> select(int navId) {
-        List<ItemNews> items = new ArrayList<>();
+    public List<Article> select(int navId) {
+        List<Article> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SOURCE_NAV_ID + "=? order by " + PUBDATE + " desc";
 
         SQLiteDatabase db = getReadableDatabase();
@@ -122,7 +120,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
                 if (cursor.moveToFirst()) {
                     do {
-                        ItemNews item = getItemNews(cursor);
+                        Article item = getItemNews(cursor);
                         items.add(item);
                     } while (cursor.moveToNext());
                 }
@@ -133,8 +131,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return items;
     }
 
-    public List<ItemNews> query(String searchText) {
-        List<ItemNews> items = new ArrayList<>();
+    public List<Article> query(String searchText) {
+        List<Article> items = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " where " + SEARCH + " like @search order by " + PUBDATE + " desc";
 
         SQLiteDatabase db = getReadableDatabase();
@@ -143,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
                 if (cursor.moveToFirst()) {
                     do {
-                        ItemNews item = getItemNews(cursor);
+                        Article item = getItemNews(cursor);
                         items.add(item);
                     } while (cursor.moveToNext());
                 }

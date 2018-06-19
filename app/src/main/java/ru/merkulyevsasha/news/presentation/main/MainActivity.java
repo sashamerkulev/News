@@ -5,13 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,7 +35,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,26 +50,20 @@ import dagger.android.AndroidInjection;
 import ru.merkulyevsasha.apprate.AppRateRequester;
 import ru.merkulyevsasha.news.BuildConfig;
 import ru.merkulyevsasha.news.R;
-import ru.merkulyevsasha.news.data.db.DatabaseHelper;
-import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.newsjobs.NewsJob;
-import ru.merkulyevsasha.news.newsservices.HttpService;
-import ru.merkulyevsasha.news.pojos.ItemNews;
-import ru.merkulyevsasha.news.presentation.webview.WebViewActivity;
+import ru.merkulyevsasha.news.pojos.Article;
 
 public class MainActivity extends AppCompatActivity
-        implements MainView,
-        NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+        implements MainView, NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
     public static final String KEY_NAV_ID = "ru.merkulyevsasha.news.key_navId";
     private static final String KEY_POSITION = "ru.merkulyevsasha.news.key_position";
+    private static final String KEY_EXPANDED = "ru.merkulyevsasha.news.key_expanded";
     public static final String KEY_REFRESHING = "ru.merkulyevsasha.news.key_refreshing";
 
     @Inject NewsConstants newsConsts;
-    @Inject DatabaseHelper db;
-    @Inject NewsSharedPreferences prefs;
     @Inject MainPresenter pres;
 
     @BindView(R.id.appbar_layout) AppBarLayout appbarLayout;
@@ -82,39 +77,33 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.content_main) View root;
 
-    private BroadcastReceiver broadcastReceiver;
-
     private NewsViewAdapter adapter;
     private LinearLayoutManager layoutManager;
-
-    private NewsReaderTask newsReader;
-    private NewsSearcherTask newsSearcher;
 
     private MenuItem searchItem;
     private SearchView searchView;
 
-    private boolean expanded;
+    private boolean expanded = true;
     private int position;
 
     private int navId;
     private String searchText;
 
+    private AppbarScrollExpander appbarScrollExpander;
+
+    private BroadcastReceiver broadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        AndroidInjection.inject(this);
 
         setSupportActionBar(toolbar);
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pres.onPrepareToSearch();
-            }
-        });
+        toolbar.setOnClickListener(view -> pres.onPrepareToSearch());
 
-        AppbarScrollExpander appbarScrollExpander = new AppbarScrollExpander(recyclerView, appbarLayout);
+        appbarScrollExpander = new AppbarScrollExpander(recyclerView, appbarLayout);
         appbarScrollExpander.setExpanded(expanded);
         collapsToolbar.setTitleEnabled(false);
 
@@ -128,30 +117,10 @@ public class MainActivity extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        adapter = new NewsViewAdapter(this, new ArrayList<ItemNews>(), new OnNewsItemClickListener() {
-            @Override
-            public void onItemClick(ItemNews item) {
-                pres.onItemClicked(item);
-            }
-        });
+        adapter = new NewsViewAdapter(this, new ArrayList<>(), item -> pres.onItemClicked(item));
         recyclerView.setAdapter(adapter);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pres.onRefresh(navId);
-            }
-        });
-
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                final boolean finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false);
-                final boolean updated = intent.getBooleanExtra(BroadcastHelper.KEY_UPDATE_NAME, false);
-
-                pres.onReceived(navId, updated, finished);
-            }
-        };
+        refreshLayout.setOnRefreshListener(() -> pres.onRefresh(navId));
 
         navId = R.id.nav_all;
         setTitle(newsConsts.getSourceNameTitle(navId));
@@ -163,18 +132,28 @@ public class MainActivity extends AppCompatActivity
                 : new AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build();
         adView.loadAd(adRequest);
 
-        if (prefs.getFirstRunFlag()){
-            NewsJob.scheduleJob();
-            prefs.setFirstRunFlag();
-        }
+        pres.bindView(this);
+        pres.onCreateView();
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final boolean finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false);
+                final boolean updated = intent.getBooleanExtra(BroadcastHelper.KEY_UPDATE_NAME, false);
+
+                pres.onReceived(navId, updated, finished);
+            }
+        };
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putInt(KEY_NAV_ID, navId);
         outState.putInt(KEY_POSITION, layoutManager.findFirstCompletelyVisibleItemPosition());
         outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
+        outState.putBoolean(KEY_EXPANDED, appbarScrollExpander.getExpanded());
     }
 
     @Override
@@ -183,26 +162,27 @@ public class MainActivity extends AppCompatActivity
 
         boolean isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false);
         position = savedInstanceState.getInt(KEY_POSITION, -1);
-        expanded = savedInstanceState.getBoolean(KEY_POSITION, true);
+        navId = savedInstanceState.getInt(KEY_NAV_ID, R.id.nav_all);
+        expanded = savedInstanceState.getBoolean(KEY_EXPANDED, true);
         refreshLayout.setRefreshing(isRefreshing);
     }
 
     @Override
     public void onPause() {
-        if (newsReader != null) newsReader.cancel(false);
-        if (newsSearcher != null) newsSearcher.cancel(false);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         if (adView != null) {
             adView.pause();
         }
-        pres.onPause();
+        pres.unbindView();
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        pres.setView(this);
+        pres.bindView(this);
         pres.onResume(refreshLayout.isRefreshing(), navId, searchText);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(BroadcastHelper.ACTION_LOADING));
         if (adView != null) {
             adView.resume();
         }
@@ -215,6 +195,7 @@ public class MainActivity extends AppCompatActivity
         if (adView != null) {
             adView.destroy();
         }
+        //pres.onDestroy();
         super.onDestroy();
     }
 
@@ -240,21 +221,18 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(this);
 
         MenuItem refreshItem = menu.findItem(R.id.action_refresh);
-        refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                if (!refreshLayout.isRefreshing()) {
-                    pres.onRefresh(navId);
-                }
-                return false;
+        refreshItem.setOnMenuItemClickListener(menuItem -> {
+            if (!refreshLayout.isRefreshing()) {
+                pres.onRefresh(navId);
             }
+            return false;
         });
         return true;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (query.length() < 5) {
+        if (query.length() < 3) {
             Snackbar.make(root, R.string.search_validation_message, Snackbar.LENGTH_LONG).show();
             return false;
         }
@@ -286,51 +264,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void loadFreshNews(int navId) {
-        refreshLayout.setRefreshing(true);
-        startService(navId, false);
-    }
-
-    @Override
-    public void readNews(int navId) {
-        newsReader = new NewsReaderTask();
-        newsReader.run(navId);
-    }
-
-    @Override
-    public void searchNews(String searchText) {
-        newsSearcher = new NewsSearcherTask();
-        newsSearcher.run(searchText);
-    }
-
-    @Override
-    public void startLoadingNewsService() {
-        startService(navId, refreshLayout.isRefreshing());
-    }
-
-    private LocalBroadcastManager getLocalBroadcastManager(){
-        return LocalBroadcastManager.getInstance(this);
-    }
-
-    @Override
-    public void registerBroadcastReceiver() {
-        getLocalBroadcastManager().registerReceiver(broadcastReceiver, new IntentFilter(BroadcastHelper.ACTION_NAME));
-    }
-
-    @Override
-    public void unregisterBroadcastReceiver() {
-        getLocalBroadcastManager().unregisterReceiver(broadcastReceiver);
-    }
-
-    @Override
     public void prepareToSearch() {
         searchItem.expandActionView();
         searchView.setQuery(searchText, false);
     }
 
     @Override
-    public void showWebViewScreen(ItemNews item) {
-        WebViewActivity.startActivity(MainActivity.this, newsConsts.getSourceNameTitle(item.getSourceNavId()), item);
+    public void showDetailScreen(Article item) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        CustomTabsIntent customTabsIntent = builder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary)).build();
+        customTabsIntent.launchUrl(this, Uri.parse(item.getLink()));
+    }
+
+    @Override
+    public void showProgress() {
+        refreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -339,7 +287,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showItems(List<ItemNews> result) {
+    public void showItems(List<Article> result) {
         adapter.setItems(result);
     }
 
@@ -348,74 +296,27 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(root, R.string.search_nofound_message, Snackbar.LENGTH_LONG).show();
     }
 
-    private void startService(int navId, boolean isRefreshing) {
-        startService(new Intent(this, HttpService.class)
-                .putExtra(KEY_NAV_ID, navId)
-                .putExtra(KEY_REFRESHING, isRefreshing));
+    @Override
+    public void showMessageError() {
+        Snackbar.make(root, R.string.something_went_wrong_message, Snackbar.LENGTH_LONG).show();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private class NewsReaderTask extends AsyncTask<Integer, Void, List<ItemNews>> {
-
-        private int navId;
-
-        void run(int id) {
-            navId = id;
-            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, navId);
-        }
-
-        @Override
-        protected void onPostExecute(List<ItemNews> result) {
-            super.onPostExecute(result);
-            if (!isCancelled()) {
-                pres.onLoadResult(navId, result);
-            }
-            newsReader = null;
-        }
-
-        @Override
-        protected List<ItemNews> doInBackground(Integer... params) {
-            int navId = params[0];
-            return navId == R.id.nav_all
-                    ? db.selectAll()
-                    : db.select(navId);
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class NewsSearcherTask extends AsyncTask<String, Void, List<ItemNews>> {
-
-        void run(String searchText) {
-            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, searchText);
-        }
-
-        @Override
-        protected void onPostExecute(List<ItemNews> result) {
-            super.onPostExecute(result);
-            if (!isCancelled()) {
-                pres.onSearchResult(result);
-            }
-            newsSearcher = null;
-        }
-
-        @Override
-        protected List<ItemNews> doInBackground(String... params) {
-            String searchText = params[0];
-            return db.query(searchText);
-        }
+    @Override
+    public void scheduleJob() {
+        NewsJob.scheduleJob();
     }
 
     private interface OnNewsItemClickListener {
-        void onItemClick(ItemNews item);
+        void onItemClick(Article item);
     }
 
     private class NewsViewAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
-        private final List<ItemNews> items;
+        private final List<Article> items;
         private final OnNewsItemClickListener onNewsItemClickListener;
         private final Context context;
 
-        private NewsViewAdapter(Context context, List<ItemNews> items, OnNewsItemClickListener onNewsItemClickListener) {
+        private NewsViewAdapter(Context context, List<Article> items, OnNewsItemClickListener onNewsItemClickListener) {
             this.context = context;
             this.items = items;
             this.onNewsItemClickListener = onNewsItemClickListener;
@@ -431,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
 
-            final ItemNews item = items.get(position);
+            final Article item = items.get(position);
 
             int sourceNavId = item.getSourceNavId();
             String source = newsConsts.getSourceNameTitle(sourceNavId);
@@ -443,7 +344,7 @@ public class MainActivity extends AppCompatActivity
             @SuppressLint("SimpleDateFormat") DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             holder.sourceAndDate.setText(String.format("%s %s", format.format(pubDate), source));
 
-            if (title.equals(description) || description == null || description.isEmpty()){
+            if (title.equals(description) || description == null || description.isEmpty()) {
                 holder.description.setVisibility(View.GONE);
             } else {
                 holder.description.setVisibility(View.VISIBLE);
@@ -451,19 +352,14 @@ public class MainActivity extends AppCompatActivity
             }
             holder.title.setText(title);
             holder.thumb.setImageResource(0);
-            if (url == null){
+            if (url == null) {
                 holder.thumb.setVisibility(View.GONE);
             } else {
                 holder.thumb.setVisibility(View.VISIBLE);
                 Glide.with(context).load(url).into(holder.thumb);
             }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onNewsItemClickListener.onItemClick(item);
-                }
-            });
+            holder.itemView.setOnClickListener(v -> onNewsItemClickListener.onItemClick(item));
 
         }
 
@@ -472,7 +368,7 @@ public class MainActivity extends AppCompatActivity
             return items.size();
         }
 
-        void setItems(List<ItemNews> items){
+        void setItems(List<Article> items) {
             this.items.clear();
             this.items.addAll(items);
             this.notifyDataSetChanged();
