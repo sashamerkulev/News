@@ -3,8 +3,6 @@ package ru.merkulyevsasha.news.presentation.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,11 +17,18 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     private final List<Article> cached = new ArrayList<>();
 
+    private boolean isFinished = false;
+
     public MainPresenter(NewsInteractor news) {
         this.news = news;
     }
 
     void onResume(boolean isRefreshing, int navId, String searchText) {
+
+        if (isFinished){
+            isRefreshing = false;
+            isFinished = false;
+        }
 
         if (isRefreshing) return;
 
@@ -51,17 +56,18 @@ public class MainPresenter extends BasePresenter<MainView> {
     void onReceived(int navId, boolean updated, boolean finished) {
         if (view == null) return;
         if (updated) {
-            Single<List<Article>> articles = navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId);
             compositeDisposable.add(
-                    articles
+                    getArticlesByNavId(navId)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(items -> {
                                         if (view == null) return;
                                         view.showItems(items);
                                     },
                                     throwable -> {
-                                    }));        }
+                                    }));
+        }
         if (finished) {
+            if (view == null) return;
             view.hideProgress();
         }
     }
@@ -75,11 +81,11 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     void onCancelSearch(int navId) {
-        procceed(navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId), false);
+        procceed(getArticlesByNavId(navId), false);
     }
 
     void onSelectSource(int navId) {
-        procceed(navId == R.id.nav_all ? news.selectAll() : news.selectNavId(navId), false);
+        procceed(getArticlesByNavId(navId), false);
     }
 
     void onCreateView() {
@@ -89,7 +95,7 @@ public class MainPresenter extends BasePresenter<MainView> {
                         .getFirstRunFlag()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(first -> {
-                                    if (view == null) return;
+                                    if (view == null || !first) return;
                                     view.scheduleJob();
                                     news.setFirstRunFlag();
                                 },
@@ -118,12 +124,15 @@ public class MainPresenter extends BasePresenter<MainView> {
                                 }
                         )
                         .doFinally(() -> {
+                            isFinished = true;
                             if (view == null) return;
                             view.hideProgress();
                         })
                         .subscribe(items -> {
-                                    cached.clear();
-                                    cached.addAll(items);
+                                    if (!isSearch) {
+                                        cached.clear();
+                                        cached.addAll(items);
+                                    }
                                     if (view == null) return;
                                     if (isSearch && items.isEmpty()) {
                                         view.showNoSearchResultMessage();

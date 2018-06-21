@@ -121,6 +121,8 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
 
         refreshLayout.setOnRefreshListener(() -> pres.onRefresh(navId));
+        refreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.colorAccent));
+        refreshLayout.setColorSchemeResources(R.color.white);
 
         navId = R.id.nav_all;
         setTitle(newsConsts.getSourceNameTitle(navId));
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         outState.putInt(KEY_NAV_ID, navId);
-        outState.putInt(KEY_POSITION, layoutManager.findFirstCompletelyVisibleItemPosition());
+        outState.putInt(KEY_POSITION, layoutManager.findFirstVisibleItemPosition());
         outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing());
         outState.putBoolean(KEY_EXPANDED, appbarScrollExpander.getExpanded());
     }
@@ -169,6 +171,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPause() {
+        position = layoutManager.findFirstVisibleItemPosition();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         if (adView != null) {
             adView.pause();

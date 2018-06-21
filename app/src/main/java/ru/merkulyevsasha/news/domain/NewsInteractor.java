@@ -42,9 +42,7 @@ public class NewsInteractor {
                 for (Map.Entry<Integer, String> entry : newsConstants.getLinks().entrySet()) {
                     try {
                         List<Article> articles = getArticles(entry.getKey(), newsConstants.getLinkByNavId(entry.getKey()));
-                        db.delete(entry.getKey());
-                        db.addListNews(articles);
-                        broadcastHelper.sendUpdateBroadcast();
+                        updaDbAndSendNotification(articles, entry.getKey());
                         items.addAll(articles);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -52,7 +50,9 @@ public class NewsInteractor {
                 }
             } else {
                 items = getArticles(navId, newsConstants.getLinkByNavId(navId));
+                updaDbAndSendNotification(items, navId);
             }
+            broadcastHelper.sendFinishBroadcast();
 
             return items;
         })
@@ -62,7 +62,6 @@ public class NewsInteractor {
                 .cache()
                 .subscribeOn(Schedulers.io());
     }
-
 
     public Single<Boolean> getFirstRunFlag() {
         return prefs
@@ -89,6 +88,15 @@ public class NewsInteractor {
                 .subscribeOn(Schedulers.io());
     }
 
+    public boolean needUpdate() {
+        Date lastpubDate = db.getLastPubDate();
+        if (lastpubDate == null) return true;
+
+        Date nowdate = new Date();
+        int diffMinutes = (int) ((nowdate.getTime() / 60000) - (lastpubDate.getTime() / 60000));
+        return diffMinutes > 30;
+    }
+
     private List<Article> getArticles(int id, String url) {
         List<Article> items = new ArrayList<>();
         try {
@@ -103,12 +111,9 @@ public class NewsInteractor {
         return items;
     }
 
-    public boolean needUpdate() {
-        Date lastpubDate = db.getLastPubDate();
-        if (lastpubDate == null) return true;
-
-        Date nowdate = new Date();
-        int diffMinutes = (int) ((nowdate.getTime() / 60000) - (lastpubDate.getTime() / 60000));
-        return diffMinutes > 30;
+    private void updaDbAndSendNotification(List<Article> articles, Integer key) {
+        db.delete(key);
+        db.addListNews(articles);
+        broadcastHelper.sendUpdateBroadcast();
     }
 }
