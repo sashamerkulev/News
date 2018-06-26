@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.data.db;
+package ru.merkulyevsasha.news.data.db.entities;
 
 
 import android.arch.persistence.room.Entity;

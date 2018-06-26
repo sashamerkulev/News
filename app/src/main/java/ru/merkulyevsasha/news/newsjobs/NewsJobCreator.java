@@ -7,14 +7,14 @@ import com.evernote.android.job.JobCreator;
 
 import javax.inject.Inject;
 
-import ru.merkulyevsasha.news.domain.NewsInteractor;
+import ru.merkulyevsasha.news.domain.NewsInteractorImpl;
 
 public class NewsJobCreator implements JobCreator {
 
-    private final NewsInteractor newsInteractor;
+    private final NewsInteractorImpl newsInteractor;
 
     @Inject
-    NewsJobCreator(NewsInteractor newsInteractor){
+    NewsJobCreator(NewsInteractorImpl newsInteractor){
         this.newsInteractor = newsInteractor;
     }
 

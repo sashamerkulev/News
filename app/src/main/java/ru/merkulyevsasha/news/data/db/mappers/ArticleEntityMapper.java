@@ -1,6 +1,7 @@
-package ru.merkulyevsasha.news.data.db;
+package ru.merkulyevsasha.news.data.db.mappers;
 
 import ru.merkulyevsasha.news.data.Mapper;
+import ru.merkulyevsasha.news.data.db.entities.ArticleEntity;
 import ru.merkulyevsasha.news.pojos.Article;
 
 public class ArticleEntityMapper implements Mapper<ArticleEntity, Article> {

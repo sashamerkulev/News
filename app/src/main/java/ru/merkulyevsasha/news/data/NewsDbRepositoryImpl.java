@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.data.db;
+package ru.merkulyevsasha.news.data;
 
 import java.util.Date;
 import java.util.List;
@@ -6,7 +6,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Single;
-import ru.merkulyevsasha.news.data.ListUtils;
+import ru.merkulyevsasha.news.data.db.NewsDbRoom;
+import ru.merkulyevsasha.news.data.db.dao.ArticleDao;
+import ru.merkulyevsasha.news.data.db.entities.ArticleEntity;
+import ru.merkulyevsasha.news.data.db.mappers.ArticleEntityMapper;
+import ru.merkulyevsasha.news.data.db.mappers.ArticleMapper;
 import ru.merkulyevsasha.news.pojos.Article;
 
 public class NewsDbRepositoryImpl implements NewsDbRepository {
@@ -26,7 +30,7 @@ public class NewsDbRepositoryImpl implements NewsDbRepository {
     @Override
     public void addListNews(List<Article> items) {
         ArticleDao dao = room.getArticleDao();
-        dao.addListNews(ListUtils.convertToArray(items, articleMapper, ArticleEntity.class));
+        dao.addListNews(MappersUtils.convertToArray(items, articleMapper, ArticleEntity.class));
     }
 
     @Override

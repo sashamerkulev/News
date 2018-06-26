@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListUtils {
+public class MappersUtils {
     public static <From, To> To[] convertToArray(List<From> input, Mapper<From, To> mapper, Class<To> targetClass) {
         To[] targets = (To[]) Array.newInstance(targetClass, input.size());
         for(int i=0; i < input.size(); i++){

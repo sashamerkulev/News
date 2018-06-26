@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.data.db;
+package ru.merkulyevsasha.news.data.db.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import io.reactivex.Single;
+import ru.merkulyevsasha.news.data.db.entities.ArticleEntity;
 
 @Dao
 public interface ArticleDao {

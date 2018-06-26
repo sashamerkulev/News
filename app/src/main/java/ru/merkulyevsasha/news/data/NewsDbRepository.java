@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.data.db;
+package ru.merkulyevsasha.news.data;
 
 import java.util.Date;
 import java.util.List;

@@ -12,13 +12,11 @@ import android.support.v4.app.TaskStackBuilder;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
 import ru.merkulyevsasha.news.R;
-import ru.merkulyevsasha.news.data.utils.NewsConstants;
-import ru.merkulyevsasha.news.domain.NewsInteractor;
+import ru.merkulyevsasha.news.domain.NewsInteractorImpl;
 import ru.merkulyevsasha.news.presentation.main.MainActivity;
 
 
@@ -30,9 +28,9 @@ public class NewsJob extends Job {
 
     private static final String TAG = NewsJob.class.getName();
 
-    private final NewsInteractor newsInteractor;
+    private final NewsInteractorImpl newsInteractor;
 
-    NewsJob(NewsInteractor newsInteractor) {
+    NewsJob(NewsInteractorImpl newsInteractor) {
         this.newsInteractor = newsInteractor;
     }
 

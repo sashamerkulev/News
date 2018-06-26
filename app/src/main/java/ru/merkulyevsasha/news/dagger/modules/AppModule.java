@@ -3,7 +3,6 @@ package ru.merkulyevsasha.news.dagger.modules;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.evernote.android.job.JobCreator;
 
@@ -14,17 +13,20 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
+import okhttp3.OkHttpClient;
 import ru.merkulyevsasha.news.BuildConfig;
 import ru.merkulyevsasha.news.dagger.scopes.MainScope;
 import ru.merkulyevsasha.news.dagger.components.MainComponent;
-import ru.merkulyevsasha.news.data.db.DatabaseHelper;
-import ru.merkulyevsasha.news.data.db.NewsDbRepository;
-import ru.merkulyevsasha.news.data.db.NewsDbRepositoryImpl;
+import ru.merkulyevsasha.news.data.NewsDbRepository;
+import ru.merkulyevsasha.news.data.NewsDbRepositoryImpl;
 import ru.merkulyevsasha.news.data.db.NewsDbRoom;
 import ru.merkulyevsasha.news.data.http.HttpReader;
+import ru.merkulyevsasha.news.data.http.HttpReaderImpl;
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences;
+import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferencesImpl;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.domain.NewsInteractor;
+import ru.merkulyevsasha.news.domain.NewsInteractorImpl;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.newsjobs.NewsJobCreator;
 import ru.merkulyevsasha.news.presentation.main.MainActivity;
@@ -35,14 +37,14 @@ public abstract class AppModule {
 
     @Singleton
     @Provides
-    static NewsSharedPreferences providesNewsSharedPreferences(Context context) {
-        return new NewsSharedPreferences(context);
+    static NewsConstants providesConst(Context context) {
+        return new NewsConstants(context);
     }
 
     @Singleton
     @Provides
-    static NewsConstants providesConst(Context context) {
-        return new NewsConstants(context);
+    static OkHttpClient providesOkHttpClient(){
+        return new OkHttpClient();
     }
 
     @Singleton
@@ -56,13 +58,15 @@ public abstract class AppModule {
 
     @Singleton
     @Binds
+    abstract NewsSharedPreferences bindsNewsSharedPreferences(NewsSharedPreferencesImpl impl);
+
+    @Singleton
+    @Binds
     abstract NewsDbRepository providesNewsDbRepository(NewsDbRepositoryImpl newsDbRepository);
 
     @Singleton
-    @Provides
-    static HttpReader providesHttpReader() {
-        return new HttpReader();
-    }
+    @Binds
+    abstract HttpReader bindsHttpReader(HttpReaderImpl impl);
 
     @Singleton
     @Provides
@@ -71,10 +75,8 @@ public abstract class AppModule {
     }
 
     @Singleton
-    @Provides
-    static NewsInteractor providesNewsInteractor(NewsConstants newsConstants, HttpReader reader, NewsSharedPreferences prefs, NewsDbRepository db, BroadcastHelper broadcastHelper) {
-        return new NewsInteractor(newsConstants, reader, prefs, db, broadcastHelper);
-    }
+    @Binds
+    abstract NewsInteractor bindsNewsInteractor(NewsInteractorImpl impl);
 
     @Singleton
     @Binds
@@ -82,7 +84,7 @@ public abstract class AppModule {
 
     @Singleton
     @Provides
-    static MainPresenter providePres(NewsInteractor news) {
+    static MainPresenter providePres(NewsInteractorImpl news) {
         return new MainPresenter(news);
     }
 
