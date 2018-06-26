@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.content_main) View root;
 
+    @BindView(R.id.button_up) View buttonUp;
+
     private NewsViewAdapter adapter;
     private LinearLayoutManager layoutManager;
 
@@ -92,6 +94,8 @@ public class MainActivity extends AppCompatActivity
     private AppbarScrollExpander appbarScrollExpander;
 
     private BroadcastReceiver broadcastReceiver;
+
+    private int lastVisibleItemPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +150,29 @@ public class MainActivity extends AppCompatActivity
                 pres.onReceived(navId, updated, finished);
             }
         };
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (lastVisibleItemPosition >= layoutManager.findFirstVisibleItemPosition()) {
+                    lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                    if (lastVisibleItemPosition > 5 && !refreshLayout.isRefreshing()) {
+                        buttonUp.setVisibility(View.VISIBLE);
+                    } else {
+                        buttonUp.setVisibility(View.GONE);
+                    }
+                } else {
+                    lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition() - 1;
+                    buttonUp.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        buttonUp.setOnClickListener(view -> {
+            layoutManager.scrollToPosition(0);
+            lastVisibleItemPosition = 0;
+            buttonUp.setVisibility(View.GONE);
+        });
     }
 
     @Override

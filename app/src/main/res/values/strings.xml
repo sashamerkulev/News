@@ -45,6 +45,7 @@
     <string name="news_dp">Деловой Петербург</string>
     <string name="news_unas">Сделано у нас</string>
     <string name="something_went_wrong_message">Произошла ошибка при чтении новостей</string>
+    <string name="button_up_title">Наверх</string>
 
 
 </resources>
