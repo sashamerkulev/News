@@ -41,9 +41,8 @@ public class NewsJob extends Job {
         if (newsInteractor.needUpdate()) {
             newsInteractor.readNewsAndSaveToDb(R.id.nav_all)
                     .subscribe((articles, throwable) -> {
-
+                        sendNotification(getContext());
                     });
-            sendNotification(getContext());
         }
         return Result.SUCCESS;
     }
@@ -60,7 +59,7 @@ public class NewsJob extends Job {
 
     private void sendNotification(Context context) {
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, "news_chanell_993")
+                new NotificationCompat.Builder(context, getContext().getString(R.string.notification_channell_id))
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText("Есть свежие новости!")
