@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.news.data.http;
 
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.util.Xml;
 
@@ -20,7 +21,7 @@ import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import ru.merkulyevsasha.news.pojos.Article;
+import ru.merkulyevsasha.news.models.Article;
 
 public class HttpReaderImpl implements HttpReader {
 
@@ -131,8 +132,9 @@ public class HttpReaderImpl implements HttpReader {
 
     }
 
+    @NonNull
     @Override
-    public List<Article> GetHttpData(int navId, String url)
+    public List<Article> getHttpData(int navId, @NonNull String url)
     {
         List<Article> result = new ArrayList<>();
 

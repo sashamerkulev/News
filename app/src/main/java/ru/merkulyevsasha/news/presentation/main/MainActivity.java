@@ -53,7 +53,7 @@ import ru.merkulyevsasha.news.R;
 import ru.merkulyevsasha.news.data.utils.NewsConstants;
 import ru.merkulyevsasha.news.helpers.BroadcastHelper;
 import ru.merkulyevsasha.news.newsjobs.NewsJob;
-import ru.merkulyevsasha.news.pojos.Article;
+import ru.merkulyevsasha.news.models.Article;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showDetailScreen(Article item) {
+    public void showDetailScreen(@NonNull Article item) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         CustomTabsIntent customTabsIntent = builder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary)).build();
         customTabsIntent.launchUrl(this, Uri.parse(item.getLink()));
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showItems(List<Article> result) {
+    public void showItems(@NonNull List<? extends Article> result) {
         adapter.setItems(result);
     }
 
@@ -398,7 +398,7 @@ public class MainActivity extends AppCompatActivity
             return items.size();
         }
 
-        void setItems(List<Article> items) {
+        void setItems(List<? extends Article> items) {
             this.items.clear();
             this.items.addAll(items);
             this.notifyDataSetChanged();

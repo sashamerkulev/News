@@ -2,7 +2,7 @@ package ru.merkulyevsasha.news.data.db.mappers;
 
 import ru.merkulyevsasha.news.data.Mapper;
 import ru.merkulyevsasha.news.data.db.entities.ArticleEntity;
-import ru.merkulyevsasha.news.pojos.Article;
+import ru.merkulyevsasha.news.models.Article;
 
 public class ArticleMapper implements Mapper<Article, ArticleEntity> {
     @Override
