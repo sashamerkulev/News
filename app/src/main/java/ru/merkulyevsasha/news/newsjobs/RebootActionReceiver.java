@@ -18,7 +18,7 @@ public class RebootActionReceiver extends BroadcastReceiver {
                 || action.equals("android.intent.action.QUICKBOOT_POWERON")
                 || action.equals("com.htc.intent.action.QUICKBOOT_POWERON") )) {
 
-            NewsJob.scheduleJob();
+            NewsJob.Companion.scheduleJob();
         }
 
     }

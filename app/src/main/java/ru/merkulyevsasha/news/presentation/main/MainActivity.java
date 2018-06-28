@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void scheduleJob() {
-        NewsJob.scheduleJob();
+        NewsJob.Companion.scheduleJob();
     }
 
     private interface OnNewsItemClickListener {
