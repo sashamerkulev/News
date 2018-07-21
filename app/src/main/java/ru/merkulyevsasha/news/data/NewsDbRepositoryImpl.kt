@@ -18,8 +18,8 @@ constructor(private val room: NewsDbRoom) : NewsDbRepository {
     override val lastPubDate: Date?
         get() {
             val dao = room.articleDao
-            val article = dao.lastArticle
-            return article?.pubDate
+            val article = dao.getLastArticle()
+            return article.pubDate
         }
 
     init {

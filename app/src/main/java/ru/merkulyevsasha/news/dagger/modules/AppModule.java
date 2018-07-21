@@ -57,22 +57,28 @@ public abstract class AppModule {
     }
 
     @Singleton
+    @Provides
+    static BroadcastHelper providesBroadcastHelper(Context context) {
+        return new BroadcastHelper(context);
+    }
+
+    @Singleton
+    @Provides
+    static MainPresenter providePres(NewsInteractorImpl news) {
+        return new MainPresenter(news);
+    }
+
+    @Singleton
     @Binds
     abstract NewsSharedPreferences bindsNewsSharedPreferences(NewsSharedPreferencesImpl impl);
 
     @Singleton
     @Binds
-    abstract NewsDbRepository providesNewsDbRepository(NewsDbRepositoryImpl newsDbRepository);
+    abstract NewsDbRepository bindsNewsDbRepository(NewsDbRepositoryImpl newsDbRepository);
 
     @Singleton
     @Binds
     abstract HttpReader bindsHttpReader(HttpReaderImpl impl);
-
-    @Singleton
-    @Provides
-    static BroadcastHelper providesBroadcastHelper(Context context) {
-        return new BroadcastHelper(context);
-    }
 
     @Singleton
     @Binds
@@ -80,13 +86,7 @@ public abstract class AppModule {
 
     @Singleton
     @Binds
-    abstract JobCreator providesJobCreator(NewsJobCreator jobCreator);
-
-    @Singleton
-    @Provides
-    static MainPresenter providePres(NewsInteractorImpl news) {
-        return new MainPresenter(news);
-    }
+    abstract JobCreator bindsJobCreator(NewsJobCreator jobCreator);
 
     @MainScope
     @ContributesAndroidInjector(modules = MainModule.class)

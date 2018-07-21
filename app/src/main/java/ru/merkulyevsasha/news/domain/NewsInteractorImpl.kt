@@ -17,16 +17,24 @@ import ru.merkulyevsasha.news.helpers.BroadcastHelper
 import ru.merkulyevsasha.news.models.Article
 
 class NewsInteractorImpl @Inject
-constructor(private val newsConstants: NewsConstants, private val reader: HttpReader,
-            private val prefs: NewsSharedPreferences, private val db: NewsDbRepository, private val broadcastHelper: BroadcastHelper) : NewsInteractor {
+constructor(
+        private val newsConstants: NewsConstants,
+        private val reader: HttpReader,
+        private val prefs: NewsSharedPreferences,
+        private val db: NewsDbRepository,
+        private val broadcastHelper: BroadcastHelper
+) : NewsInteractor {
 
-    override val firstRunFlag: Single<Boolean>
-        @Override
-        get() = prefs
-                .firstRunFlag
+    override fun getFirstRun(): Single<Boolean> {
+        return prefs
+                .getFirstRun()
                 .subscribeOn(Schedulers.io())
+    }
 
-    @Override
+    override fun setFirstRunFlag() {
+        prefs.setFirstRun()
+    }
+
     override fun readNewsAndSaveToDb(navId: Int): Single<List<Article>> {
         return Single.fromCallable {
             var items = mutableListOf<Article>()
@@ -56,30 +64,21 @@ constructor(private val newsConstants: NewsConstants, private val reader: HttpRe
                 .subscribeOn(Schedulers.io())
     }
 
-    @Override
-    override fun setFirstRunFlag() {
-        prefs.setFirstRunFlag()
-    }
-
-    @Override
     override fun selectAll(): Single<List<Article>> {
         return db.selectAll()
                 .subscribeOn(Schedulers.io())
     }
 
-    @Override
     override fun selectNavId(navId: Int): Single<List<Article>> {
         return db.selectNavId(navId)
                 .subscribeOn(Schedulers.io())
     }
 
-    @Override
     override fun search(searchTtext: String): Single<List<Article>> {
         return db.search(searchTtext)
                 .subscribeOn(Schedulers.io())
     }
 
-    @Override
     override fun needUpdate(): Boolean {
         val lastpubDate = db.lastPubDate ?: return true
         val nowdate = Date()

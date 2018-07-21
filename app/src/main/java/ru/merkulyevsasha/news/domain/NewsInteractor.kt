@@ -5,7 +5,7 @@ import ru.merkulyevsasha.news.models.Article
 
 interface NewsInteractor {
 
-    val firstRunFlag: Single<Boolean>
+    fun getFirstRun(): Single<Boolean>
     fun readNewsAndSaveToDb(navId: Int): Single<List<Article>>
 
     fun setFirstRunFlag()

@@ -15,7 +15,7 @@ class AppbarScrollExpander internal constructor(view: View, appbarlayout: AppBar
 
     init {
         touchPoint = TouchPoint()
-        view.setOnTouchListener { v, event ->
+        view.setOnTouchListener { _, event ->
             val action = event.action
             when (action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -24,7 +24,6 @@ class AppbarScrollExpander internal constructor(view: View, appbarlayout: AppBar
                 }
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                     val y = event.y
-                    val x = event.x
                     expanded = y - touchPoint.y > 0
                     appbarlayout.setExpanded(expanded)
                 }
