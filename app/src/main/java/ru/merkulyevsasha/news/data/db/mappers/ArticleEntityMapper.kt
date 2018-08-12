@@ -4,17 +4,18 @@ import ru.merkulyevsasha.news.data.Mapper
 import ru.merkulyevsasha.news.data.db.entities.ArticleEntity
 import ru.merkulyevsasha.news.models.Article
 
-class ArticleMapper : Mapper<Article, ArticleEntity> {
-    override fun map(item: Article): ArticleEntity {
-        return ArticleEntity(
+class ArticleEntityMapper : Mapper<ArticleEntity, Article> {
+    override fun map(item: ArticleEntity): Article {
+        return Article(
+                item.id,
                 item.sourceNavId,
                 item.title,
                 item.link,
-                item.description ?: "",
+                item.description,
                 item.pubDate,
-                item.category ?: "",
+                item.category,
                 item.search,
-                item.pictureUrl ?: ""
+                item.pictureUrl
         )
     }
 }

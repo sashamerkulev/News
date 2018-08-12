@@ -8,15 +8,15 @@ import android.arch.persistence.room.PrimaryKey
 import java.util.Date
 
 @Entity(tableName = "articles", indices = [Index("sourceNavId"), Index("search")])
-class ArticleEntity {
+class ArticleEntity (
+    val sourceNavId: Int,
+    val title: String,
+    val link: String,
+    val description: String,
+    val pubDate: Date,
+    val category: String,
+    val search: String,
+    val pictureUrl: String,
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-    var sourceNavId: Int = 0
-    var title: String = ""
-    var link: String = ""
-    var description: String = ""
-    var pubDate: Date = Date()
-    var category: String = ""
-    var search: String = ""
-    var pictureUrl: String = ""
-}
+    val id: Int = 0
+)
