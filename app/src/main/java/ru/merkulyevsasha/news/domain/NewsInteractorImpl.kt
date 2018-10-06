@@ -18,11 +18,11 @@ import ru.merkulyevsasha.news.models.Article
 
 class NewsInteractorImpl @Inject
 constructor(
-        private val newsConstants: NewsConstants,
-        private val reader: HttpReader,
-        private val prefs: NewsSharedPreferences,
-        private val db: NewsDbRepository,
-        private val broadcastHelper: BroadcastHelper
+    private val newsConstants: NewsConstants,
+    private val reader: HttpReader,
+    private val prefs: NewsSharedPreferences,
+    private val newsDbRepository: NewsDbRepository,
+    private val broadcastHelper: BroadcastHelper
 ) : NewsInteractor {
 
     override fun getFirstRun(): Single<Boolean> {
@@ -65,22 +65,22 @@ constructor(
     }
 
     override fun selectAll(): Single<List<Article>> {
-        return db.selectAll()
+        return newsDbRepository.selectAll()
                 .subscribeOn(Schedulers.io())
     }
 
     override fun selectNavId(navId: Int): Single<List<Article>> {
-        return db.selectNavId(navId)
+        return newsDbRepository.selectNavId(navId)
                 .subscribeOn(Schedulers.io())
     }
 
     override fun search(searchTtext: String): Single<List<Article>> {
-        return db.search(searchTtext)
+        return newsDbRepository.search(searchTtext)
                 .subscribeOn(Schedulers.io())
     }
 
     override fun needUpdate(): Boolean {
-        val lastpubDate = db.lastPubDate ?: return true
+        val lastpubDate = newsDbRepository.getLastPubDate() ?: return true
         val nowdate = Date()
         val diffMinutes = (nowdate.time / 60000 - lastpubDate.time / 60000)
         return diffMinutes > 30
@@ -91,8 +91,8 @@ constructor(
         try {
             items = reader.getHttpData(id, url)
             if (items.isNotEmpty()) {
-                db.delete(id)
-                db.addListNews(items)
+                newsDbRepository.delete(id)
+                newsDbRepository.addListNews(items)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -102,8 +102,8 @@ constructor(
     }
 
     private fun updaDbAndSendNotification(articles: List<Article>, key: Int) {
-        db.delete(key)
-        db.addListNews(articles)
+        newsDbRepository.delete(key)
+        newsDbRepository.addListNews(articles)
         broadcastHelper.sendUpdateBroadcast()
     }
 }
