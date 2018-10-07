@@ -15,24 +15,14 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class android.support.v4.app.** { *; }
--keep interface android.support.v4.app.** { *; }
 -keep class android.support.v7.app.** { *; }
 -keep interface android.support.v7.app.** { *; }
 -keep class android.support.v7.widget.** { *; }
 
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewInjector { *; }
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
-
--dontwarn com.squareup.okhttp.**
-
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.* { *;}
 -dontwarn okio.**
 
 -dontwarn dagger.android.**
+
+-dontwarn org.conscrypt.**
