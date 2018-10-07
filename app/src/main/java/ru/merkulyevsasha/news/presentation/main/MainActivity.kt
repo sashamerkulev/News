@@ -132,21 +132,21 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
             }
         }
 
-//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-//                if (lastVisibleItemPosition >= layoutManager.findFirstVisibleItemPosition()) {
-//                    lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-//                    if (lastVisibleItemPosition > 5 && !refreshLayout.isRefreshing) {
-//                        button_up.visibility = View.VISIBLE
-//                    } else {
-//                        button_up.visibility = View.GONE
-//                    }
-//                } else {
-//                    lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition() - 1
-//                    button_up.visibility = View.GONE
-//                }
-//            }
-//        })
+        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (lastVisibleItemPosition >= layoutManager.findFirstVisibleItemPosition()) {
+                    lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                    if (lastVisibleItemPosition > 5 && !refreshLayout.isRefreshing) {
+                        button_up.visibility = View.VISIBLE
+                    } else {
+                        button_up.visibility = View.GONE
+                    }
+                } else {
+                    lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition() - 1
+                    button_up.visibility = View.GONE
+                }
+            }
+        })
 
         button_up.setOnClickListener { _ ->
             layoutManager.scrollToPosition(0)
