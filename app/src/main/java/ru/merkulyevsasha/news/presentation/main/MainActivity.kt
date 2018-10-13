@@ -38,37 +38,20 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
-    @Inject
-    lateinit var newsConsts: NewsConstants
-    @Inject
-    lateinit var pres: MainPresenter
-
-//    @BindView(R.id.appbar_layout) internal var appbarLayout: AppBarLayout? = null
-//    @BindView(R.id.collapsinng_toolbar_layout) internal var collapsToolbar: CollapsingToolbarLayout? = null
-//    @BindView(R.id.refreshLayout) internal var refreshLayout: SwipeRefreshLayout? = null
-//    @BindView(R.id.drawer_layout) internal var drawer: DrawerLayout? = null
-//    @BindView(R.id.nav_view) internal var navigationView: NavigationView? = null
-//    @BindView(R.id.recyclerView) internal var recyclerView: RecyclerView? = null
-//    @BindView(R.id.toolbar) internal var toolbar: Toolbar? = null
-//    @BindView(R.id.adView) internal var adView: AdView? = null
-//    @BindView(R.id.content_main) internal var root: View? = null
-//    @BindView(R.id.button_up) internal var buttonUp: View? = null
+    @Inject lateinit var newsConsts: NewsConstants
+    @Inject lateinit var pres: MainPresenter
 
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
-
     private lateinit var searchItem: MenuItem
     private lateinit var searchView: SearchView
-
     private lateinit var appbarScrollExpander: AppbarScrollExpander
     private lateinit var broadcastReceiver: BroadcastReceiver
 
     private var expanded = true
     private var position: Int = 0
-
     private var navId: Int = 0
     private var searchText: String = ""
-
     private var lastVisibleItemPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -187,7 +170,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
     public override fun onResume() {
         super.onResume()
         pres.bindView(this)
-        pres.onResume(refreshLayout.isRefreshing, navId, searchText)
+        pres.onResume(navId, searchText)
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter(BroadcastHelper.ACTION_LOADING))
         if (adView != null) {
             adView.resume()

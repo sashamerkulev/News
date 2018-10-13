@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit
 
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.domain.NewsInteractorImpl
+import ru.merkulyevsasha.news.domain.NoNeedRefreshException
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 
 
@@ -27,19 +28,20 @@ class NewsJob internal constructor(private val newsInteractor: NewsInteractorImp
 
     @SuppressLint("CheckResult")
     override fun onRunJob(params: Job.Params): Job.Result {
-        if (newsInteractor.needUpdate()) {
-            newsInteractor.readNewsAndSaveToDb(R.id.nav_all)
-                    .subscribe { _, _ -> sendNotification(context) }
-        }
+        newsInteractor.refreshArticlesIfNeed(R.id.nav_all)
+            .subscribe { _, throwable ->
+                if (throwable is NoNeedRefreshException)
+                else sendNotification(context)
+            }
         return Job.Result.SUCCESS
     }
 
     private fun sendNotification(context: Context) {
         val builder = NotificationCompat.Builder(context, getContext().getString(R.string.notification_channell_id))
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(context.getString(R.string.app_name))
-                .setContentText("Есть свежие новости!")
-                .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(context.getString(R.string.app_name))
+            .setContentText("Есть свежие новости!")
+            .setAutoCancel(true)
         // Creates an explicit intent for an Activity in your app
         val resultIntent = Intent(context, MainActivity::class.java)
         //        resultIntent.putExtra(KeysBundleHolder.KEY_ID, id);
@@ -68,12 +70,12 @@ class NewsJob internal constructor(private val newsInteractor: NewsInteractorImp
 
         fun scheduleJob() {
             JobRequest.Builder(NewsJob.TAG)
-                    .setPeriodic(TimeUnit.MINUTES.toMillis(60))
-                    .setRequiresCharging(false)
-                    .setRequiresDeviceIdle(false)
-                    .setRequiredNetworkType(JobRequest.NetworkType.ANY)
-                    .build()
-                    .schedule()
+                .setPeriodic(TimeUnit.MINUTES.toMillis(60))
+                .setRequiresCharging(false)
+                .setRequiresDeviceIdle(false)
+                .setRequiredNetworkType(JobRequest.NetworkType.ANY)
+                .build()
+                .schedule()
         }
     }
 

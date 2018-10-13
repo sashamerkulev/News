@@ -17,19 +17,19 @@ class NewsSharedPreferencesImpl
     }
 
     override fun setFirstRun() {
-        val editor = prefs.edit()
-        editor.putBoolean(KEY_FIRST_RUN, false)
-        editor.apply()
+        prefs.edit()
+            .putBoolean(KEY_FIRST_RUN, false)
+            .apply()
     }
 
     override fun getProgress(): Single<Boolean> {
-        return Single.fromCallable { prefs.getBoolean(KEY_PROGRESS, true) }
+        return Single.fromCallable { prefs.getBoolean(KEY_PROGRESS, false) }
     }
 
     override fun setProgress(progress: Boolean) {
-        val editor = prefs.edit()
-        editor.putBoolean(KEY_PROGRESS, progress)
-        editor.apply()
+        prefs.edit()
+            .putBoolean(KEY_PROGRESS, progress)
+            .apply()
     }
 
     companion object {

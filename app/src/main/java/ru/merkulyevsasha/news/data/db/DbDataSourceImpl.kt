@@ -36,11 +36,11 @@ constructor(room: NewsDbRoom) : DbDataSource {
         dao.deleteAll()
     }
 
-    override fun getAllArticles(): Single<List<Article>> {
+    override fun readAllArticles(): Single<List<Article>> {
         return dao.selectAll().flattenAsFlowable { t -> t }.map<Article> { articleEntityMapper.map(it) }.toList()
     }
 
-    override fun getArticlesByNavId(navId: Int): Single<List<Article>> {
+    override fun readArticlesByNavId(navId: Int): Single<List<Article>> {
         return dao.selectNavId(navId).flattenAsFlowable { t -> t }.map<Article> { articleEntityMapper.map(it) }.toList()
     }
 

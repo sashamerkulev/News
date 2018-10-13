@@ -10,8 +10,8 @@ interface NewsRepository {
     fun addListNews(items: List<Article>)
     fun delete(navId: Int)
     fun deleteAll()
-    fun getAllArticles(): Single<List<Article>>
-    fun getArticlesByNavId(navId: Int): Single<List<Article>>
+    fun readAllArticles(): Single<List<Article>>
+    fun readArticlesByNavId(navId: Int): Single<List<Article>>
     fun search(searchTtext: String): Single<List<Article>>
 
     fun getFirstRun(): Single<Boolean>
