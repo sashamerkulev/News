@@ -35,13 +35,13 @@ constructor(
         dbDataSource.deleteAll()
     }
 
-    override fun selectAll(): Single<List<Article>> {
-        return dbDataSource.selectAll()
+    override fun getAllArticles(): Single<List<Article>> {
+        return dbDataSource.getAllArticles()
             .subscribeOn(Schedulers.io())
     }
 
-    override fun selectNavId(navId: Int): Single<List<Article>> {
-        return dbDataSource.selectNavId(navId)
+    override fun getArticlesByNavId(navId: Int): Single<List<Article>> {
+        return dbDataSource.getArticlesByNavId(navId)
             .subscribeOn(Schedulers.io())
     }
 

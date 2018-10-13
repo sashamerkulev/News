@@ -10,9 +10,9 @@ interface NewsInteractor {
 
     fun setFirstRunFlag()
 
-    fun selectAll(): Single<List<Article>>
+    fun getAllArticles(): Single<List<Article>>
 
-    fun selectNavId(navId: Int): Single<List<Article>>
+    fun getArticlesByNavId(navId: Int): Single<List<Article>>
 
     fun search(searchTtext: String): Single<List<Article>>
 

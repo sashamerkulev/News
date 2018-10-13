@@ -24,12 +24,12 @@ constructor(
         return newsRepository.readNewsAndSaveToDb(navId)
     }
 
-    override fun selectAll(): Single<List<Article>> {
-        return newsRepository.selectAll()
+    override fun getAllArticles(): Single<List<Article>> {
+        return newsRepository.getAllArticles()
     }
 
-    override fun selectNavId(navId: Int): Single<List<Article>> {
-        return newsRepository.selectNavId(navId)
+    override fun getArticlesByNavId(navId: Int): Single<List<Article>> {
+        return newsRepository.getArticlesByNavId(navId)
     }
 
     override fun search(searchTtext: String): Single<List<Article>> {
