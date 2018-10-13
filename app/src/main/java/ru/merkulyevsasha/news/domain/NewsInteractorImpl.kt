@@ -30,7 +30,7 @@ constructor(
     }
 
     override fun search(searchTtext: String): Single<List<Article>> {
-        return newsRepository.search(searchTtext)
+        return newsRepository.search("%$searchTtext%")
     }
 
     override fun refreshArticlesIfNeed(navId: Int): Single<List<Article>> {
