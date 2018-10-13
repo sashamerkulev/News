@@ -17,11 +17,13 @@ import okhttp3.OkHttpClient
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.dagger.scopes.MainScope
 import ru.merkulyevsasha.news.dagger.components.MainComponent
-import ru.merkulyevsasha.news.data.NewsDbRepository
-import ru.merkulyevsasha.news.data.NewsDbRepositoryImpl
+import ru.merkulyevsasha.news.data.NewsRepository
+import ru.merkulyevsasha.news.data.NewsRepositoryImpl
+import ru.merkulyevsasha.news.data.db.DbDataSource
+import ru.merkulyevsasha.news.data.db.DbDataSourceImpl
 import ru.merkulyevsasha.news.data.db.NewsDbRoom
-import ru.merkulyevsasha.news.data.http.HttpReader
-import ru.merkulyevsasha.news.data.http.HttpReaderImpl
+import ru.merkulyevsasha.news.data.http.HttpDataSource
+import ru.merkulyevsasha.news.data.http.HttpDataSourceImpl
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferencesImpl
 import ru.merkulyevsasha.news.data.utils.NewsConstants
@@ -41,11 +43,15 @@ abstract class AppModule {
 
     @Singleton
     @Binds
-    internal abstract fun bindsNewsDbRepository(newsDbRepository: NewsDbRepositoryImpl): NewsDbRepository
+    internal abstract fun bindsNewsRepository(ompl: NewsRepositoryImpl): NewsRepository
 
     @Singleton
     @Binds
-    internal abstract fun bindsHttpReader(impl: HttpReaderImpl): HttpReader
+    internal abstract fun bindsHttpDataSource(impl: HttpDataSourceImpl): HttpDataSource
+
+    @Singleton
+    @Binds
+    internal abstract fun bindsDbDataSource(impl: DbDataSourceImpl): DbDataSource
 
     @Singleton
     @Binds
