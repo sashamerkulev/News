@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.news.presentation.main
 
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.news.R
@@ -13,9 +14,9 @@ class MainPresenter @Inject constructor(private val newsInteractor: NewsInteract
 
     fun onResume(navId: Int, searchText: String?) {
         if (searchText == null || searchText.isEmpty()) {
-            procceed(getArticlesByNavId(navId), false)
+            proceed(getArticlesByNavId(navId, searchText), false)
         } else {
-            procceed(newsInteractor.search(searchText), true)
+            proceed(newsInteractor.search(searchText), true)
         }
     }
 
@@ -27,63 +28,50 @@ class MainPresenter @Inject constructor(private val newsInteractor: NewsInteract
         view?.showDetailScreen(item)
     }
 
-    fun onReceived(navId: Int, updated: Boolean, finished: Boolean) {
-        if (updated) {
-            compositeDisposable.add(
-                getArticlesByNavId(navId)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { items ->
-                        view?.showItems(items)
-                    })
-        }
-        if (finished) {
-            view?.hideProgress()
-        }
-    }
-
-    fun onRefresh(navId: Int) {
-        procceed(newsInteractor.refreshArticles(navId), false)
-    }
-
-    fun onSearch(searchText: String) {
-        procceed(newsInteractor.search(searchText), true)
-    }
-
-    fun onCancelSearch(navId: Int) {
-        procceed(getArticlesByNavId(navId), false)
-    }
-
-    fun onSelectSource(navId: Int) {
-        procceed(getArticlesByNavId(navId), false)
-    }
-
-    fun onCreateView() {
-        compositeDisposable.add(
-            newsInteractor
-                .getFirstRun()
-                .doFinally { newsInteractor.setFirstRunFlag() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { first ->
-                    if (first) {
-                        view?.scheduleJob()
-                    }
-                }
-        )
-    }
-
-    private fun getArticlesByNavId(navId: Int): Single<List<Article>> {
-        return if (navId == R.id.nav_all) newsInteractor.readOrGetArticles(navId)
-        else newsInteractor.readArticlesByNavId(navId)
-    }
-
-    private fun procceed(articles: Single<List<Article>>, isSearch: Boolean) {
-        compositeDisposable.add(
-            articles
+    fun onRefresh(navId: Int, searchText: String?) {
+        proceed(
+            newsInteractor.refreshArticles(navId, searchText)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { _ -> view?.showProgress() }
                 .doFinally {
                     view?.hideProgress()
                 }
+            , false)
+    }
+
+    fun onSearch(searchText: String) {
+        proceed(newsInteractor.search(searchText), true)
+    }
+
+    fun onCancelSearch(navId: Int) {
+        proceed(getArticlesByNavId(navId, null), false)
+    }
+
+    fun onSelectSource(navId: Int, searchText: String?) {
+        proceed(getArticlesByNavId(navId, searchText), false)
+    }
+
+    private fun getArticlesByNavId(navId: Int, searchText: String?): Single<List<Article>> {
+        // TODO sorry for that: it is necessary for understanding when progress will be show
+        val readOrGet = newsInteractor.readAllArticles()
+            .flattenAsFlowable { t -> t }
+            .switchIfEmpty(Flowable.defer {
+                newsInteractor.refreshArticles(navId, searchText).flattenAsFlowable { t -> t }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { _ -> view?.showProgress() }
+                    .doFinally {
+                        view?.hideProgress()
+                    }
+            })
+            .toList()
+        return if (navId == R.id.nav_all) readOrGet
+        else newsInteractor.readArticlesByNavId(navId)
+    }
+
+    private fun proceed(articles: Single<List<Article>>, isSearch: Boolean) {
+        compositeDisposable.add(
+            articles
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ items ->
                     if (isSearch && items.isEmpty()) {
                         view?.showNoSearchResultMessage()

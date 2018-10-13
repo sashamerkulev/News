@@ -21,7 +21,7 @@ constructor(room: NewsDbRoom) : DbDataSource {
 
     override fun getLastPubDate(): Date? {
         val article = dao.getLastArticle()
-        return article.pubDate
+        return article?.pubDate
     }
 
     override fun addListNews(items: List<Article>) {

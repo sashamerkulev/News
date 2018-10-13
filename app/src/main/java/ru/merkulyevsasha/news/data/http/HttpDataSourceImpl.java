@@ -28,7 +28,7 @@ public class HttpDataSourceImpl implements HttpDataSource {
     private final OkHttpClient okHttpClient;
 
     @Inject
-    HttpDataSourceImpl(OkHttpClient okHttpClient) {
+    public HttpDataSourceImpl(OkHttpClient okHttpClient) {
         this.okHttpClient = okHttpClient;
     }
 

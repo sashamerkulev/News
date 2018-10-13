@@ -1,6 +1,5 @@
 package ru.merkulyevsasha.news.domain
 
-import io.reactivex.Flowable
 import io.reactivex.Single
 import ru.merkulyevsasha.news.data.NewsRepository
 import ru.merkulyevsasha.news.models.Article
@@ -44,27 +43,24 @@ constructor(
             }
         }
         return needUpdate.flatMap { need ->
-            if (need) refreshArticles(navId)
+            if (need) refreshArticles(navId, null)
             else throw NoNeedRefreshException()
         }
     }
 
-    override fun refreshArticles(navId: Int): Single<List<Article>> {
+    override fun refreshArticles(navId: Int, searchText: String?): Single<List<Article>> {
         return newsRepository.getProgress()
             .flatMap { refreshing ->
                 if (refreshing) throw AlreadyRefreshException()
                 newsRepository.setProgress(true)
                 newsRepository.readNewsAndSaveToDb(navId)
+                    .flatMap { items ->
+                        if (searchText.isNullOrEmpty()) Single.just(items)
+                        else search(searchText!!)
+                    }
                     .doFinally {
                         newsRepository.setProgress(false)
                     }
             }
-    }
-
-    override fun readOrGetArticles(navId: Int): Single<List<Article>> {
-        return readAllArticles()
-            .flattenAsFlowable { t -> t }
-            .switchIfEmpty(Flowable.defer { refreshArticles(navId).flattenAsFlowable { t -> t } })
-            .toList()
     }
 }

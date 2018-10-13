@@ -4,8 +4,6 @@ package ru.merkulyevsasha.news.dagger.modules
 import android.arch.persistence.room.Room
 import android.content.Context
 
-import com.evernote.android.job.JobCreator
-
 import javax.inject.Singleton
 
 import dagger.Binds
@@ -30,7 +28,6 @@ import ru.merkulyevsasha.news.data.utils.NewsConstants
 import ru.merkulyevsasha.news.domain.NewsInteractor
 import ru.merkulyevsasha.news.domain.NewsInteractorImpl
 import ru.merkulyevsasha.news.helpers.BroadcastHelper
-import ru.merkulyevsasha.news.newsjobs.NewsJobCreator
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import ru.merkulyevsasha.news.presentation.main.MainPresenter
 
@@ -57,10 +54,6 @@ abstract class AppModule {
     @Binds
     internal abstract fun bindsNewsInteractor(impl: NewsInteractorImpl): NewsInteractor
 
-    @Singleton
-    @Binds
-    internal abstract fun bindsJobCreator(jobCreator: NewsJobCreator): JobCreator
-
     @MainScope
     @ContributesAndroidInjector(modules = arrayOf(MainModule::class))
     internal abstract fun injectorActivity(): MainActivity
@@ -84,9 +77,9 @@ class AppProvidesModule {
     @Provides
     internal fun providesNewsDbRoom(context: Context): NewsDbRoom {
         return Room
-                .databaseBuilder(context, NewsDbRoom::class.java, BuildConfig.DB_NAME)
-                .fallbackToDestructiveMigration()
-                .build()
+            .databaseBuilder(context, NewsDbRoom::class.java, BuildConfig.DB_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Singleton

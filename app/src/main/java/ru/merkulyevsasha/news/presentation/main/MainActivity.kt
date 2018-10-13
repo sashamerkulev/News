@@ -1,17 +1,14 @@
 package ru.merkulyevsasha.news.presentation.main
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -29,9 +26,8 @@ import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.data.utils.NewsConstants
-import ru.merkulyevsasha.news.helpers.BroadcastHelper
 import ru.merkulyevsasha.news.models.Article
-import ru.merkulyevsasha.news.newsjobs.NewsJob
+import ru.merkulyevsasha.news.newsjobs.NewsWorkerRunner
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -46,7 +42,6 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
     private lateinit var searchItem: MenuItem
     private lateinit var searchView: SearchView
     private lateinit var appbarScrollExpander: AppbarScrollExpander
-    private lateinit var broadcastReceiver: BroadcastReceiver
 
     private var expanded = true
     private var position: Int = 0
@@ -65,7 +60,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         collapsinng_toolbar_layout.isTitleEnabled = false
 
         val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -75,17 +70,17 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
         adapter = NewsViewAdapter(
-                this,
-                ArrayList(),
-                object : OnNewsItemClickListener {
-                    override fun onItemClick(item: Article) {
-                        pres.onItemClicked(item)
-                    }
+            this,
+            ArrayList(),
+            object : OnNewsItemClickListener {
+                override fun onItemClick(item: Article) {
+                    pres.onItemClicked(item)
                 }
+            }
         )
         recyclerView.adapter = adapter
 
-        refreshLayout.setOnRefreshListener { pres.onRefresh(navId) }
+        refreshLayout.setOnRefreshListener { pres.onRefresh(navId, searchText) }
         refreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(this, R.color.colorAccent))
         refreshLayout.setColorSchemeResources(R.color.white)
 
@@ -103,19 +98,9 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
             AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
         adView.loadAd(adRequest)
 
-        pres.bindView(this)
-        pres.onCreateView()
+        recyclerView.postDelayed({ NewsWorkerRunner().run() }, 300)
 
-        broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false)
-                val updated = intent.getBooleanExtra(BroadcastHelper.KEY_UPDATE_NAME, false)
-
-                pres.onReceived(navId, updated, finished)
-            }
-        }
-
-        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (lastVisibleItemPosition >= layoutManager.findFirstVisibleItemPosition()) {
                     lastVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
@@ -159,7 +144,6 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
 
     public override fun onPause() {
         position = layoutManager.findFirstVisibleItemPosition()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         if (adView != null) {
             adView.pause()
         }
@@ -169,12 +153,9 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
 
     public override fun onResume() {
         super.onResume()
+        adView.resume()
         pres.bindView(this)
         pres.onResume(navId, searchText)
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter(BroadcastHelper.ACTION_LOADING))
-        if (adView != null) {
-            adView.resume()
-        }
         appbar_layout.setExpanded(expanded)
         if (position > 0) layoutManager.scrollToPosition(position)
     }
@@ -209,7 +190,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         val refreshItem = menu.findItem(R.id.action_refresh)
         refreshItem.setOnMenuItemClickListener { _ ->
             if (!refreshLayout.isRefreshing) {
-                pres.onRefresh(navId)
+                pres.onRefresh(navId, searchText)
             }
             false
         }
@@ -240,7 +221,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         title = item.title
         navId = item.itemId
 
-        pres.onSelectSource(navId)
+        pres.onSelectSource(navId, searchText)
 
         return true
     }
@@ -276,18 +257,14 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         Snackbar.make(content_main, R.string.something_went_wrong_message, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun scheduleJob() {
-        NewsJob.scheduleJob()
-    }
-
     private interface OnNewsItemClickListener {
         fun onItemClick(item: Article)
     }
 
     private inner class NewsViewAdapter constructor(
-            private val context: Context,
-            private val items: MutableList<Article>,
-            private val onNewsItemClickListener: OnNewsItemClickListener
+        private val context: Context,
+        private val items: MutableList<Article>,
+        private val onNewsItemClickListener: OnNewsItemClickListener
     ) : RecyclerView.Adapter<ItemViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
