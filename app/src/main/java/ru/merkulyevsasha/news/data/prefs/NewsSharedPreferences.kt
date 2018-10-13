@@ -3,7 +3,8 @@ package ru.merkulyevsasha.news.data.prefs
 import io.reactivex.Single
 
 interface NewsSharedPreferences {
-    val firstRunFlag: Single<Boolean>
-
-    fun setFirstRunFlag()
+    fun getFirstRun(): Single<Boolean>
+    fun setFirstRun()
+    fun getProgress(): Single<Boolean>
+    fun setProgress(progress: Boolean)
 }

@@ -7,7 +7,7 @@ import ru.merkulyevsasha.news.models.Article
 
 interface NewsDbRepository {
 
-    val lastPubDate: Date?
+    fun getLastPubDate(): Date?
 
     fun addListNews(items: List<Article>)
 

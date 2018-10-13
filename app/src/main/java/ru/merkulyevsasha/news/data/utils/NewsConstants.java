@@ -6,6 +6,8 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import ru.merkulyevsasha.news.R;
 
 public final class NewsConstants {
@@ -19,6 +21,7 @@ public final class NewsConstants {
 
     private final Context context;
 
+    @Inject
     public NewsConstants(Context context){
 
         this.context = context;

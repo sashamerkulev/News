@@ -29,7 +29,7 @@ class NewsJob internal constructor(private val newsInteractor: NewsInteractorImp
     override fun onRunJob(params: Job.Params): Job.Result {
         if (newsInteractor.needUpdate()) {
             newsInteractor.readNewsAndSaveToDb(R.id.nav_all)
-                    .subscribe { articles, throwable -> sendNotification(context) }
+                    .subscribe { _, _ -> sendNotification(context) }
         }
         return Job.Result.SUCCESS
     }
@@ -59,7 +59,7 @@ class NewsJob internal constructor(private val newsInteractor: NewsInteractorImp
         builder.setContentIntent(resultPendingIntent)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // mId allows you to update the notification later on.
-        notificationManager?.notify(993, builder.build())
+        notificationManager.notify(993, builder.build())
     }
 
     companion object {

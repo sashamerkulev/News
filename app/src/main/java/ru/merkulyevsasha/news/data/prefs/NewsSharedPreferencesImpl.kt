@@ -7,27 +7,35 @@ import javax.inject.Inject
 
 import io.reactivex.Single
 
-/**
- * Created by sasha_merkulev on 21.09.2017.
- */
-
 class NewsSharedPreferencesImpl
 @Inject constructor(context: Context) : NewsSharedPreferences {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
 
-    override val firstRunFlag: Single<Boolean>
-        get() = Single.fromCallable { prefs.getBoolean(KEY_FIRST_RUN, true) }
+    override fun getFirstRun(): Single<Boolean> {
+        return Single.fromCallable { prefs.getBoolean(KEY_FIRST_RUN, true) }
+    }
 
-    override fun setFirstRunFlag() {
+    override fun setFirstRun() {
         val editor = prefs.edit()
         editor.putBoolean(KEY_FIRST_RUN, false)
         editor.apply()
     }
 
+    override fun getProgress(): Single<Boolean> {
+        return Single.fromCallable { prefs.getBoolean(KEY_PROGRESS, true) }
+    }
+
+    override fun setProgress(progress: Boolean) {
+        val editor = prefs.edit()
+        editor.putBoolean(KEY_PROGRESS, progress)
+        editor.apply()
+    }
+
     companion object {
-        private val SHARED_PREF_NAME = "news_pref"
-        private val KEY_FIRST_RUN = "ru.merkulyevsasha.news.prefs_key_run_flag"
+        private const val SHARED_PREF_NAME = "news_pref"
+        private const val KEY_FIRST_RUN = "prefs_key_run_flag"
+        private const val KEY_PROGRESS = "prefs_key_progress_flag"
     }
 
 }

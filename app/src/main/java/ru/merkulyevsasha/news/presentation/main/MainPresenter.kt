@@ -73,7 +73,7 @@ class MainPresenter @Inject constructor(private val news: NewsInteractor) : Base
         view?.showItems(cached)
         compositeDisposable.add(
                 news
-                        .firstRunFlag
+                        .getFirstRun()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { first ->
                             if (first) {
