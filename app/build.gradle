@@ -6,6 +6,7 @@ apply plugin: 'kotlin-kapt'
 //noinspection GroovyMissingReturnStatement
 android {
     compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     def appId = findProperty("newsAppId")
     def appUnitId = findProperty("newsAppUnitId")
     defaultConfig {
