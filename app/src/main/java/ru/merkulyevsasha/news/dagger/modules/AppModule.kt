@@ -4,8 +4,6 @@ package ru.merkulyevsasha.news.dagger.modules
 import android.arch.persistence.room.Room
 import android.content.Context
 
-import com.evernote.android.job.JobCreator
-
 import javax.inject.Singleton
 
 import dagger.Binds
@@ -17,18 +15,19 @@ import okhttp3.OkHttpClient
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.dagger.scopes.MainScope
 import ru.merkulyevsasha.news.dagger.components.MainComponent
-import ru.merkulyevsasha.news.data.NewsDbRepository
-import ru.merkulyevsasha.news.data.NewsDbRepositoryImpl
+import ru.merkulyevsasha.news.data.NewsRepository
+import ru.merkulyevsasha.news.data.NewsRepositoryImpl
+import ru.merkulyevsasha.news.data.db.DbDataSource
+import ru.merkulyevsasha.news.data.db.DbDataSourceImpl
 import ru.merkulyevsasha.news.data.db.NewsDbRoom
-import ru.merkulyevsasha.news.data.http.HttpReader
-import ru.merkulyevsasha.news.data.http.HttpReaderImpl
+import ru.merkulyevsasha.news.data.http.HttpDataSource
+import ru.merkulyevsasha.news.data.http.HttpDataSourceImpl
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferencesImpl
 import ru.merkulyevsasha.news.data.utils.NewsConstants
 import ru.merkulyevsasha.news.domain.NewsInteractor
 import ru.merkulyevsasha.news.domain.NewsInteractorImpl
 import ru.merkulyevsasha.news.helpers.BroadcastHelper
-import ru.merkulyevsasha.news.newsjobs.NewsJobCreator
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import ru.merkulyevsasha.news.presentation.main.MainPresenter
 
@@ -41,19 +40,19 @@ abstract class AppModule {
 
     @Singleton
     @Binds
-    internal abstract fun bindsNewsDbRepository(newsDbRepository: NewsDbRepositoryImpl): NewsDbRepository
+    internal abstract fun bindsNewsRepository(ompl: NewsRepositoryImpl): NewsRepository
 
     @Singleton
     @Binds
-    internal abstract fun bindsHttpReader(impl: HttpReaderImpl): HttpReader
+    internal abstract fun bindsHttpDataSource(impl: HttpDataSourceImpl): HttpDataSource
+
+    @Singleton
+    @Binds
+    internal abstract fun bindsDbDataSource(impl: DbDataSourceImpl): DbDataSource
 
     @Singleton
     @Binds
     internal abstract fun bindsNewsInteractor(impl: NewsInteractorImpl): NewsInteractor
-
-    @Singleton
-    @Binds
-    internal abstract fun bindsJobCreator(jobCreator: NewsJobCreator): JobCreator
 
     @MainScope
     @ContributesAndroidInjector(modules = arrayOf(MainModule::class))
@@ -78,9 +77,9 @@ class AppProvidesModule {
     @Provides
     internal fun providesNewsDbRoom(context: Context): NewsDbRoom {
         return Room
-                .databaseBuilder(context, NewsDbRoom::class.java, BuildConfig.DB_NAME)
-                .fallbackToDestructiveMigration()
-                .build()
+            .databaseBuilder(context, NewsDbRoom::class.java, BuildConfig.DB_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Singleton

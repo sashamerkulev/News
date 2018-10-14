@@ -14,7 +14,4 @@ interface MainView {
     fun showItems(result: List<Article>)
     fun showNoSearchResultMessage()
     fun showMessageError()
-
-    fun scheduleJob()
-
 }

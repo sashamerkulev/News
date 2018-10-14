@@ -1,7 +1,7 @@
-package ru.merkulyevsasha.news.data
+package ru.merkulyevsasha.news.data.db
 
 import io.reactivex.Single
-import ru.merkulyevsasha.news.data.db.NewsDbRoom
+import ru.merkulyevsasha.news.data.MappersUtils
 import ru.merkulyevsasha.news.data.db.entities.ArticleEntity
 import ru.merkulyevsasha.news.data.db.mappers.ArticleEntityMapper
 import ru.merkulyevsasha.news.data.db.mappers.ArticleMapper
@@ -9,8 +9,8 @@ import ru.merkulyevsasha.news.models.Article
 import java.util.*
 import javax.inject.Inject
 
-class NewsDbRepositoryImpl @Inject
-constructor(room: NewsDbRoom) : NewsDbRepository {
+class DbDataSourceImpl @Inject
+constructor(room: NewsDbRoom) : DbDataSource {
 
     private val articleMapper: ArticleMapper = ArticleMapper()
     private val articleEntityMapper: ArticleEntityMapper = ArticleEntityMapper()
@@ -21,7 +21,7 @@ constructor(room: NewsDbRoom) : NewsDbRepository {
 
     override fun getLastPubDate(): Date? {
         val article = dao.getLastArticle()
-        return article.pubDate
+        return article?.pubDate
     }
 
     override fun addListNews(items: List<Article>) {
@@ -36,16 +36,15 @@ constructor(room: NewsDbRoom) : NewsDbRepository {
         dao.deleteAll()
     }
 
-    override fun selectAll(): Single<List<Article>> {
+    override fun readAllArticles(): Single<List<Article>> {
         return dao.selectAll().flattenAsFlowable { t -> t }.map<Article> { articleEntityMapper.map(it) }.toList()
     }
 
-    override fun selectNavId(navId: Int): Single<List<Article>> {
+    override fun readArticlesByNavId(navId: Int): Single<List<Article>> {
         return dao.selectNavId(navId).flattenAsFlowable { t -> t }.map<Article> { articleEntityMapper.map(it) }.toList()
     }
 
     override fun search(searchTtext: String): Single<List<Article>> {
         return dao.search(searchTtext).flattenAsFlowable { t -> t }.map<Article> { articleEntityMapper.map(it) }.toList()
     }
-
 }

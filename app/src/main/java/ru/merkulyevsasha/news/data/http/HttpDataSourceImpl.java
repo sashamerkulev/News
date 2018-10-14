@@ -23,12 +23,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import ru.merkulyevsasha.news.models.Article;
 
-public class HttpReaderImpl implements HttpReader {
+public class HttpDataSourceImpl implements HttpDataSource {
 
     private final OkHttpClient okHttpClient;
 
     @Inject
-    public HttpReaderImpl(OkHttpClient okHttpClient) {
+    public HttpDataSourceImpl(OkHttpClient okHttpClient) {
         this.okHttpClient = okHttpClient;
     }
 

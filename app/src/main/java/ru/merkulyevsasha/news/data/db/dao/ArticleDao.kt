@@ -11,7 +11,7 @@ import ru.merkulyevsasha.news.data.db.entities.ArticleEntity
 interface ArticleDao {
 
     @Query("select * from articles order by pubDate desc limit 1")
-    fun getLastArticle(): ArticleEntity
+    fun getLastArticle(): ArticleEntity?
 
     @Insert
     fun addListNews(vararg items: ArticleEntity)
