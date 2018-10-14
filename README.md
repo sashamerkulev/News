@@ -5,15 +5,16 @@
 
 https://play.google.com/store/apps/details?id=ru.merkulyevsasha.news
 
-Главная Activity отображает список новостей (android.support.v7.widget.RecyclerView).
-Статьи сохраняются в БД, и есть поиск по сохраненным данным, используется android.support.v7.widget.SearchView.
-А с помощью android.support.v4.widget.SwipeRefreshLayout реализован pull-to-refresh (впрочем, кнопка обновить присутствует в ActionToolBar).
+- Главная Activity отображает список новостей (android.support.v7.widget.RecyclerView).
+- Статьи сохраняются в БД (для работы с Sqlite используется Room), и есть поиск по сохраненным данным, используется android.support.v7.widget.SearchView.
+- А с помощью android.support.v4.widget.SwipeRefreshLayout реализован pull-to-refresh (впрочем, кнопка обновить присутствует и в ActionToolBar).
 
 Новость более подробно, по ссылке, отображается с помощью CustomTabsIntent. 
 
 ### Архитектура MVP + Clean 
 - MVP - как можно более пассивная вьюха, которой, управляет презентер, он же взаимодействует с моделью;
-- модель реализована по мотивам Clean Architecture, есть интерактор, взаимодействующий с репозиторием, который, в свою очередь взаимодействует с БД (Room) и сетью, о чем интерактор не знает и не хочет знать.
+- модель реализована по мотивам Clean Architecture, есть интерактор, взаимодействующий с репозиторием, который, в свою очередь взаимодействует с БД и сетью, о чем интерактор не знает и не хочет знать.
+- для маппига используется [MapperJ](https://github.com/sashamerkulev/MapperJ)
 
 ### OkHttp3
 - Для чтения rss-файлов с новостями используется OkHttp3.

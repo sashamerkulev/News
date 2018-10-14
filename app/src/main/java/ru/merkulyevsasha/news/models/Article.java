@@ -1,23 +1,30 @@
 package ru.merkulyevsasha.news.models;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Date;
 
+import merkulyevsasha.ru.annotations.Mapper;
+import merkulyevsasha.ru.annotations.params.Source;
+import ru.merkulyevsasha.news.data.db.entities.ArticleEntity;
+
+@Mapper(source = Source.Kotlin, twoWayMapClasses = ArticleEntity.class)
 public class Article {
 
     private int id;
     private int sourceNavId;
     private String title;
     private String link;
-    private String description;
+    @Nullable private String description;
     private Date pubDate;
-    private String category;
+    @Nullable private String category;
     private String search;
-    private String pictureUrl;
+    @Nullable private String pictureUrl;
 
     public Article() {
     }
 
-    public Article(int id, int sourceNavId, String title, String link, String description, Date pubDate, String category, String search, String pictureUrl) {
+    public Article(int id, int sourceNavId, String title, String link, @Nullable String description, Date pubDate, @Nullable String category, String search, @Nullable String pictureUrl) {
         this.id = id;
         this.sourceNavId = sourceNavId;
         this.title = title;

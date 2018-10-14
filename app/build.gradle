@@ -48,11 +48,14 @@ dependencies {
 
     implementation project(path: ':apprate')
 
+    implementation 'com.github.sashamerkulev:MapperJ-annotations:1.0.6'
+    kapt 'com.github.sashamerkulev:MapperJ-processors:1.0.6'
+    annotationProcessor 'com.github.sashamerkulev:MapperJ-processors:1.0.6'
+
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     kapt 'android.arch.persistence.room:compiler:1.1.1'
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
     implementation 'android.arch.work:work-runtime-ktx:1.0.0-alpha10'
-
 
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'

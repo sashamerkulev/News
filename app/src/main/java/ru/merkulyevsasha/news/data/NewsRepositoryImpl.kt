@@ -4,12 +4,11 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.data.db.DbDataSource
-import ru.merkulyevsasha.news.data.db.mappers.ArticleEntityMapper
-import ru.merkulyevsasha.news.data.db.mappers.ArticleMapper
 import ru.merkulyevsasha.news.data.http.HttpDataSource
 import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferences
 import ru.merkulyevsasha.news.data.utils.NewsConstants
 import ru.merkulyevsasha.news.models.Article
+import ru.merkulyevsasha.news.models.ArticleMapper
 import java.util.*
 import javax.inject.Inject
 
@@ -21,16 +20,14 @@ constructor(
     private val newsConstants: NewsConstants
 ) : NewsRepository {
 
-    private val articleMapper: ArticleMapper = ArticleMapper()
-    private val articleEntityMapper: ArticleEntityMapper = ArticleEntityMapper()
-
+    private val mapper: ArticleMapper = ArticleMapper()
 
     override fun getLastPubDate(): Date? {
         return dbDataSource.getLastPubDate()
     }
 
     override fun addListNews(items: List<Article>) {
-        dbDataSource.addListNews(items.map { articleMapper.map(it) })
+        dbDataSource.addListNews(items.map { mapper.mapToArticleEntity(it) })
     }
 
     override fun delete(navId: Int) {
@@ -44,7 +41,7 @@ constructor(
     override fun readAllArticles(): Single<List<Article>> {
         return dbDataSource.readAllArticles()
             .flattenAsFlowable { t -> t }
-            .map<Article> { articleEntityMapper.map(it) }
+            .map<Article> { mapper.mapToArticle(it) }
             .toList()
             .subscribeOn(Schedulers.io())
     }
@@ -52,14 +49,14 @@ constructor(
     override fun readArticlesByNavId(navId: Int): Single<List<Article>> {
         return dbDataSource.readArticlesByNavId(navId)
             .flattenAsFlowable { t -> t }
-            .map<Article> { articleEntityMapper.map(it) }.toList()
+            .map<Article> { mapper.mapToArticle(it) }.toList()
             .subscribeOn(Schedulers.io())
     }
 
     override fun search(searchTtext: String): Single<List<Article>> {
         return dbDataSource.search(searchTtext)
             .flattenAsFlowable { t -> t }
-            .map<Article> { articleEntityMapper.map(it) }
+            .map<Article> { mapper.mapToArticle(it) }
             .toList()
             .subscribeOn(Schedulers.io())
     }
