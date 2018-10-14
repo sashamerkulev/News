@@ -14,7 +14,7 @@ interface ArticleDao {
     fun getLastArticle(): ArticleEntity?
 
     @Insert
-    fun addListNews(vararg items: ArticleEntity)
+    fun addListNews(items: List<ArticleEntity>)
 
     @Query("delete from articles where sourceNavId = :navId")
     fun delete(navId: Int)
