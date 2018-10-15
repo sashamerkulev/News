@@ -25,7 +25,6 @@ class NewsWorker constructor(
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
-    private val reentrantLock = ReentrantLock()
     private val app = AppProvidesModule()
     private val newsInteractor: NewsInteractor = NewsInteractorImpl(
         NewsRepositoryImpl(
@@ -80,6 +79,10 @@ class NewsWorker constructor(
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // mId allows you to update the notification later on.
         notificationManager.notify(993, builder.build())
+    }
+
+    companion object {
+        private val reentrantLock = ReentrantLock()
     }
 
 }
