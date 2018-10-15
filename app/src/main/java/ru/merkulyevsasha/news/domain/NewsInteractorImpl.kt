@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.news.domain
 
 import io.reactivex.Single
+import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.data.NewsRepository
 import ru.merkulyevsasha.news.models.Article
 import java.util.*
@@ -51,16 +52,26 @@ constructor(
     override fun refreshArticles(navId: Int, searchText: String?): Single<List<Article>> {
         return newsRepository.getProgress()
             .flatMap { refreshing ->
-                if (refreshing) throw AlreadyRefreshException()
-                newsRepository.setProgress(true)
-                newsRepository.readNewsAndSaveToDb(navId)
-                    .flatMap { items ->
-                        if (searchText.isNullOrEmpty()) Single.just(items)
-                        else search(searchText!!)
+                if (refreshing) {
+                    when {
+                        searchText.isNullOrEmpty() ->
+                            when (navId) {
+                                R.id.nav_all -> readAllArticles()
+                                else -> readArticlesByNavId(navId)
+                            }
+                        else -> search(searchText!!)
                     }
-                    .doFinally {
-                        newsRepository.setProgress(false)
-                    }
+                } else {
+                    newsRepository.setProgress(true)
+                    newsRepository.readNewsAndSaveToDb(navId)
+                        .flatMap { items ->
+                            if (searchText.isNullOrEmpty()) Single.just(items)
+                            else search(searchText!!)
+                        }
+                        .doFinally {
+                            newsRepository.setProgress(false)
+                        }
+                }
             }
     }
 }

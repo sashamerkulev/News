@@ -4,7 +4,6 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.domain.AlreadyRefreshException
 import ru.merkulyevsasha.news.domain.NewsInteractor
 import ru.merkulyevsasha.news.models.Article
 import ru.merkulyevsasha.news.presentation.BasePresenter
@@ -79,9 +78,8 @@ class MainPresenter @Inject constructor(private val newsInteractor: NewsInteract
                         view?.showItems(items)
                     }
                 },
-                    { throwable ->
-                        if (throwable is AlreadyRefreshException)
-                        else view?.showMessageError()
+                    { _ ->
+                        view?.showMessageError()
                     }))
     }
 }
