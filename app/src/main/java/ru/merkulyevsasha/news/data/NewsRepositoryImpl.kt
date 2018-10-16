@@ -79,7 +79,6 @@ constructor(
                 items = getArticles(navId, newsConstants.getLinkByNavId(navId)) as MutableList<Article>
                 updaDbAndSendNotification(items, navId)
             }
-            //broadcastHelper.sendFinishBroadcast()
 
             items
         }
@@ -115,7 +114,6 @@ constructor(
     private fun updaDbAndSendNotification(articles: List<Article>, key: Int) {
         delete(key)
         addListNews(articles)
-        //broadcastHelper.sendUpdateBroadcast()
     }
 
     private fun getArticles(id: Int, url: String): List<Article> {

@@ -3,9 +3,6 @@ package ru.merkulyevsasha.news.dagger.modules
 
 import android.arch.persistence.room.Room
 import android.content.Context
-
-import javax.inject.Singleton
-
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -13,8 +10,8 @@ import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import okhttp3.OkHttpClient
 import ru.merkulyevsasha.news.BuildConfig
-import ru.merkulyevsasha.news.dagger.scopes.MainScope
 import ru.merkulyevsasha.news.dagger.components.MainComponent
+import ru.merkulyevsasha.news.dagger.scopes.MainScope
 import ru.merkulyevsasha.news.data.NewsRepository
 import ru.merkulyevsasha.news.data.NewsRepositoryImpl
 import ru.merkulyevsasha.news.data.db.DbDataSource
@@ -28,8 +25,12 @@ import ru.merkulyevsasha.news.data.utils.NewsConstants
 import ru.merkulyevsasha.news.domain.NewsInteractor
 import ru.merkulyevsasha.news.domain.NewsInteractorImpl
 import ru.merkulyevsasha.news.helpers.BroadcastHelper
+import ru.merkulyevsasha.news.newsjobs.BackgroundPeriodicWorker
+import ru.merkulyevsasha.news.newsjobs.BackgroundWorker
+import ru.merkulyevsasha.news.newsjobs.NewsPeriodicWorkerRunner
+import ru.merkulyevsasha.news.newsjobs.NewsWorkerRunner
 import ru.merkulyevsasha.news.presentation.main.MainActivity
-import ru.merkulyevsasha.news.presentation.main.MainPresenter
+import javax.inject.Singleton
 
 @Module(includes = [(AndroidSupportInjectionModule::class)], subcomponents = [(MainComponent::class)])
 abstract class AppModule {
@@ -53,6 +54,14 @@ abstract class AppModule {
     @Singleton
     @Binds
     internal abstract fun bindsNewsInteractor(impl: NewsInteractorImpl): NewsInteractor
+
+    @Singleton
+    @Binds
+    internal abstract fun bindsNewsWorkerRunner(impl: NewsPeriodicWorkerRunner): BackgroundPeriodicWorker
+
+    @Singleton
+    @Binds
+    internal abstract fun bindsBackgroundWorker(impl: NewsWorkerRunner): BackgroundWorker
 
     @MainScope
     @ContributesAndroidInjector(modules = arrayOf(MainModule::class))
@@ -86,11 +95,5 @@ class AppProvidesModule {
     @Provides
     internal fun providesBroadcastHelper(context: Context): BroadcastHelper {
         return BroadcastHelper(context)
-    }
-
-    @Singleton
-    @Provides
-    internal fun providePres(news: NewsInteractorImpl): MainPresenter {
-        return MainPresenter(news)
     }
 }

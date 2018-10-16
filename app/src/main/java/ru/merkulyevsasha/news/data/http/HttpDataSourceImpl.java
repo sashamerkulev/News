@@ -39,7 +39,6 @@ public class HttpDataSourceImpl implements HttpDataSource {
             return true;
         }
         catch(ParseException e){
-            e.printStackTrace();
             return false;
         }
     }

@@ -6,10 +6,6 @@ import android.support.v4.content.LocalBroadcastManager
 
 import javax.inject.Inject
 
-/**
- * Created by sasha_merkulev on 22.09.2017.
- */
-
 class BroadcastHelper @Inject
 constructor(private val context: Context) {
 
@@ -20,12 +16,8 @@ constructor(private val context: Context) {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    fun sendFinishBroadcast() {
+    fun sendWorkerFinished() {
         sendBroadcast(false, true)
-    }
-
-    fun sendUpdateBroadcast() {
-        sendBroadcast(true, false)
     }
 
     companion object {

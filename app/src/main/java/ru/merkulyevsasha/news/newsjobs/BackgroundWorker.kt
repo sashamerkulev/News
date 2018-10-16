@@ -1,5 +1,5 @@
 package ru.merkulyevsasha.news.newsjobs
 
 interface BackgroundWorker {
-    fun run()
+    fun runWorker(navId: Int, searchText: String?)
 }

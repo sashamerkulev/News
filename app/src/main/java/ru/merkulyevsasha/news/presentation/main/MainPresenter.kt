@@ -1,22 +1,43 @@
 package ru.merkulyevsasha.news.presentation.main
 
-import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.domain.NewsInteractor
+import ru.merkulyevsasha.news.domain.NoNeedRefreshException
 import ru.merkulyevsasha.news.models.Article
 import ru.merkulyevsasha.news.presentation.BasePresenter
 import javax.inject.Inject
 
-class MainPresenter @Inject constructor(private val newsInteractor: NewsInteractor) : BasePresenter<MainView>() {
+
+class MainPresenter @Inject constructor(
+    private val newsInteractor: NewsInteractor
+) : BasePresenter<MainView>() {
 
     fun onResume(navId: Int, searchText: String?) {
-        if (searchText == null || searchText.isEmpty()) {
-            proceed(getArticlesByNavId(navId, searchText), false)
-        } else {
-            proceed(newsInteractor.search(searchText), true)
-        }
+        compositeDisposable.add(newsInteractor.getProgress()
+            .flatMap { progress ->
+                if (progress) view?.showProgress()
+                else view?.hideProgress()
+                if (searchText == null || searchText.isEmpty()) {
+                    newsInteractor.readArticlesByNavId(navId)
+                } else {
+                    newsInteractor.search(searchText)
+                }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ items ->
+                if ((searchText == null || searchText.isEmpty()) && items.isEmpty()) {
+                    view?.showProgress()
+                    newsInteractor.startRefreshWorker(navId, searchText)
+                } else if (items.isEmpty()) {
+                    view?.showNoSearchResultMessage()
+                } else {
+                    view?.showItems(items)
+                }
+            },
+                { throwable ->
+                    view?.showMessageError()
+                }))
     }
 
     fun onPrepareToSearch() {
@@ -27,15 +48,16 @@ class MainPresenter @Inject constructor(private val newsInteractor: NewsInteract
         view?.showDetailScreen(item)
     }
 
+    fun onCreateView() {
+        newsInteractor.startRefreshWorker()
+    }
+
     fun onRefresh(navId: Int, searchText: String?) {
-        proceed(
-            newsInteractor.refreshArticles(navId, searchText)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { _ -> view?.showProgress() }
-                .doFinally {
-                    view?.hideProgress()
-                }
-            , false)
+        newsInteractor.startRefreshWorker(navId, searchText)
+    }
+
+    fun onRefreshEnd(navId: Int, searchText: String?) {
+        proceed(newsInteractor.readArticlesByNavId(navId, searchText), true)
     }
 
     fun onSearch(searchText: String) {
@@ -43,28 +65,11 @@ class MainPresenter @Inject constructor(private val newsInteractor: NewsInteract
     }
 
     fun onCancelSearch(navId: Int) {
-        proceed(getArticlesByNavId(navId, null), false)
+        proceed(newsInteractor.readArticlesByNavId(navId), false)
     }
 
     fun onSelectSource(navId: Int, searchText: String?) {
-        proceed(getArticlesByNavId(navId, searchText), false)
-    }
-
-    private fun getArticlesByNavId(navId: Int, searchText: String?): Single<List<Article>> {
-        // TODO sorry for that: it is necessary for understanding when progress will be show
-        val readOrGet = newsInteractor.readAllArticles()
-            .flattenAsFlowable { t -> t }
-            .switchIfEmpty(Flowable.defer {
-                newsInteractor.refreshArticles(navId, searchText).flattenAsFlowable { t -> t }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe { _ -> view?.showProgress() }
-                    .doFinally {
-                        view?.hideProgress()
-                    }
-            })
-            .toList()
-        return if (navId == R.id.nav_all) readOrGet
-        else newsInteractor.readArticlesByNavId(navId)
+        proceed(newsInteractor.readArticlesByNavId(navId, searchText), false)
     }
 
     private fun proceed(articles: Single<List<Article>>, isSearch: Boolean) {
@@ -78,8 +83,10 @@ class MainPresenter @Inject constructor(private val newsInteractor: NewsInteract
                         view?.showItems(items)
                     }
                 },
-                    { _ ->
-                        view?.showMessageError()
+                    { throwable ->
+                        if (throwable is NoNeedRefreshException)
+                        else view?.showMessageError()
                     }))
     }
+
 }

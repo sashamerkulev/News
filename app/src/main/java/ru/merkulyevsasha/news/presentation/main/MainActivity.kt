@@ -1,21 +1,28 @@
 package ru.merkulyevsasha.news.presentation.main
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.res.Configuration
+import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.AdRequest
 import dagger.android.AndroidInjection
@@ -26,8 +33,8 @@ import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.data.utils.NewsConstants
+import ru.merkulyevsasha.news.helpers.BroadcastHelper
 import ru.merkulyevsasha.news.models.Article
-import ru.merkulyevsasha.news.newsjobs.NewsWorkerRunner
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -46,8 +53,18 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
     private var expanded = true
     private var position: Int = 0
     private var navId: Int = 0
-    private var searchText: String = ""
+    private var searchText: String? = null
     private var lastVisibleItemPosition = 0
+
+    private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false)
+            if (finished) {
+                pres.onRefreshEnd(navId, searchText)
+                hideProgress()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -98,7 +115,8 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
             AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
         adView.loadAd(adRequest)
 
-        recyclerView.postDelayed({ NewsWorkerRunner().run() }, 300)
+//        pres.bindView(this)
+//        pres.onCreateView()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -128,21 +146,22 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
 
         outState.putInt(KEY_NAV_ID, navId)
         outState.putInt(KEY_POSITION, layoutManager.findFirstVisibleItemPosition())
-        outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing)
+        //outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing)
         outState.putBoolean(KEY_EXPANDED, appbarScrollExpander.expanded)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        val isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false)
+        //val isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false)
         position = savedInstanceState.getInt(KEY_POSITION, -1)
         navId = savedInstanceState.getInt(KEY_NAV_ID, R.id.nav_all)
         expanded = savedInstanceState.getBoolean(KEY_EXPANDED, true)
-        refreshLayout.isRefreshing = isRefreshing
+        //refreshLayout.isRefreshing = isRefreshing
     }
 
     public override fun onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         position = layoutManager.findFirstVisibleItemPosition()
         if (adView != null) {
             adView.pause()
@@ -154,10 +173,14 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
     public override fun onResume() {
         super.onResume()
         adView.resume()
+        appbar_layout.setExpanded(expanded)
+
+        val filter = IntentFilter()
+        filter.addAction(BroadcastHelper.ACTION_LOADING)
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter)
+
         pres.bindView(this)
         pres.onResume(navId, searchText)
-        appbar_layout.setExpanded(expanded)
-        if (position > 0) layoutManager.scrollToPosition(position)
     }
 
     public override fun onDestroy() {
@@ -181,7 +204,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         searchItem = menu.findItem(R.id.action_search)
         searchView = searchItem.actionView as SearchView
 
-        if (!searchText.isEmpty()) {
+        if (searchText != null && !searchText!!.isEmpty()) {
             pres.onPrepareToSearch()
         }
 
@@ -203,7 +226,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
             return false
         }
         searchText = query
-        pres.onSearch(searchText)
+        pres.onSearch(searchText!!)
         return false
     }
 
@@ -238,15 +261,15 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
     }
 
     override fun showProgress() {
-        refreshLayout.isRefreshing = true
+        runOnUiThread { refreshLayout.isRefreshing = true }
     }
 
     override fun hideProgress() {
-        refreshLayout.isRefreshing = false
+        runOnUiThread { refreshLayout.isRefreshing = false }
     }
 
     override fun showItems(result: List<Article>) {
-        adapter.setItems(result)
+        runOnUiThread { adapter.setItems(result) }
     }
 
     override fun showNoSearchResultMessage() {
@@ -313,6 +336,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
             this.items.clear()
             this.items.addAll(items)
             this.notifyDataSetChanged()
+            if (position > 0) layoutManager.scrollToPosition(position)
         }
 
     }
