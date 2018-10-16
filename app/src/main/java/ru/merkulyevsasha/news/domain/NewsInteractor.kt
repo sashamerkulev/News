@@ -13,4 +13,5 @@ interface NewsInteractor {
     fun startRefreshWorker()
     fun getProgress(): Single<Boolean>
     fun setProgress(progress: Boolean)
+    fun refreshArticlesIfNeed(navId: Int): Single<List<Article>>
 }

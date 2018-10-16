@@ -9,10 +9,10 @@ import javax.inject.Inject
 class BroadcastHelper @Inject
 constructor(private val context: Context) {
 
-    private fun sendBroadcast(updated: Boolean, finished: Boolean) {
+    private fun sendBroadcast(start: Boolean, finished: Boolean) {
         val intent = Intent(ACTION_LOADING)
-        intent.putExtra(KEY_UPDATE_NAME, updated)
-        intent.putExtra(KEY_FINISH_NAME, finished)
+        intent.putExtra(KEY_START_WORKER, start)
+        intent.putExtra(KEY_FINISH_WORKER, finished)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
@@ -20,10 +20,14 @@ constructor(private val context: Context) {
         sendBroadcast(false, true)
     }
 
+    fun sendWorkerStart() {
+        sendBroadcast(true, false)
+    }
+
     companion object {
 
         const val ACTION_LOADING = "ru.merkulyevsasha.news.DATA_LOADING"
-        const val KEY_FINISH_NAME = "ru.merkulyevsasha.news.key_finished"
-        const val KEY_UPDATE_NAME = "ru.merkulyevsasha.news.key_updated"
+        const val KEY_FINISH_WORKER = "ru.merkulyevsasha.news.key_finished"
+        const val KEY_START_WORKER = "ru.merkulyevsasha.news.key_start"
     }
 }

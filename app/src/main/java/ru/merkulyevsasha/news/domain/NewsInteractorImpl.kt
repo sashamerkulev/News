@@ -6,6 +6,7 @@ import ru.merkulyevsasha.news.data.NewsRepository
 import ru.merkulyevsasha.news.models.Article
 import ru.merkulyevsasha.news.newsjobs.BackgroundPeriodicWorker
 import ru.merkulyevsasha.news.newsjobs.BackgroundWorker
+import java.util.*
 import javax.inject.Inject
 
 class NewsInteractorImpl @Inject
@@ -45,6 +46,22 @@ constructor(
 
     override fun refreshArticles(navId: Int): Single<List<Article>> {
         return newsRepository.readNewsAndSaveToDb(navId)
+    }
+
+    override fun refreshArticlesIfNeed(navId: Int): Single<List<Article>> {
+        val needUpdate = Single.fromCallable {
+            val lastpubDate = newsRepository.getLastPubDate()
+            if (lastpubDate == null) true
+            else {
+                val nowdate = Date()
+                val diffMinutes = (nowdate.time / 60000 - lastpubDate.time / 60000)
+                diffMinutes > 30
+            }
+        }
+        return needUpdate.flatMap { need ->
+            if (need) refreshArticles(navId)
+            else throw NoNeedRefreshException()
+        }
     }
 
     private fun readAllArticles(): Single<List<Article>> {

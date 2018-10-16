@@ -58,10 +58,13 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_NAME, false)
+            val finished = intent.getBooleanExtra(BroadcastHelper.KEY_FINISH_WORKER, false)
+            val start = intent.getBooleanExtra(BroadcastHelper.KEY_START_WORKER, false)
             if (finished) {
                 pres.onRefreshEnd(navId, searchText)
                 hideProgress()
+            } else if (start) {
+                showProgress()
             }
         }
     }
