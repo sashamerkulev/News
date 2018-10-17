@@ -48,10 +48,6 @@ class MainPresenter @Inject constructor(
         view?.showDetailScreen(item)
     }
 
-    fun onCreateView() {
-        newsInteractor.startRefreshWorker()
-    }
-
     fun onRefresh(navId: Int, searchText: String?) {
         newsInteractor.startRefreshWorker(navId, searchText)
     }

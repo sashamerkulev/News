@@ -49,18 +49,18 @@ class NewsWorker constructor(
                 println("NewsWorker.doWork: progress: $progress singleRun: $singleRun")
                 if (!progress) {
                     newsInteractor.setProgress(true)
-                    broadcastHelper.sendWorkerStart()
+                    broadcastHelper.notifyWorkerStart()
                     val refreshQuery = if (singleRun) newsInteractor.refreshArticles(navId)
                     else newsInteractor.refreshArticlesIfNeed(navId)
                     val items = refreshQuery.blockingGet()
-                    println("NewsWorker.doWork: finish with: ${items.size}")
+                    println("NewsWorker.doWork: finished with: ${items.size}")
                     if (!singleRun) sendNotification(applicationContext)
                 }
             } catch (e: Exception) {
-                println("NewsWorker.doWork: finish with error: $e")
+                println("NewsWorker.doWork: finished with error: $e")
             } finally {
                 newsInteractor.setProgress(false)
-                broadcastHelper.sendWorkerFinished()
+                broadcastHelper.notifyWorkerFinished()
                 reentrantLock.unlock()
             }
         }

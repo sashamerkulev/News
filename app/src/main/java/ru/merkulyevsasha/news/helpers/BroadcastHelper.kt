@@ -16,11 +16,11 @@ constructor(private val context: Context) {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
-    fun sendWorkerFinished() {
+    fun notifyWorkerFinished() {
         sendBroadcast(false, true)
     }
 
-    fun sendWorkerStart() {
+    fun notifyWorkerStart() {
         sendBroadcast(true, false)
     }
 

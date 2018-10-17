@@ -118,9 +118,6 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
             AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
         adView.loadAd(adRequest)
 
-//        pres.bindView(this)
-//        pres.onCreateView()
-
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (lastVisibleItemPosition >= layoutManager.findFirstVisibleItemPosition()) {
@@ -149,18 +146,17 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
 
         outState.putInt(KEY_NAV_ID, navId)
         outState.putInt(KEY_POSITION, layoutManager.findFirstVisibleItemPosition())
-        //outState.putBoolean(KEY_REFRESHING, refreshLayout.isRefreshing)
+        outState.putString(KEY_SEARCHTEXT, searchText)
         outState.putBoolean(KEY_EXPANDED, appbarScrollExpander.expanded)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        //val isRefreshing = savedInstanceState.getBoolean(KEY_REFRESHING, false)
+        searchText = savedInstanceState.getString(KEY_SEARCHTEXT, null)
         position = savedInstanceState.getInt(KEY_POSITION, -1)
         navId = savedInstanceState.getInt(KEY_NAV_ID, R.id.nav_all)
         expanded = savedInstanceState.getBoolean(KEY_EXPANDED, true)
-        //refreshLayout.isRefreshing = isRefreshing
     }
 
     public override fun onPause() {
@@ -208,7 +204,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         searchView = searchItem.actionView as SearchView
 
         if (searchText != null && !searchText!!.isEmpty()) {
-            pres.onPrepareToSearch()
+            prepareToSearch()
         }
 
         searchView.setOnQueryTextListener(this)
@@ -347,7 +343,7 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     companion object {
-        private const val KEY_REFRESHING = "ru.merkulyevsasha.news.key_refreshing"
+        private const val KEY_SEARCHTEXT = "ru.merkulyevsasha.news.key_refreshing"
         private const val KEY_NAV_ID = "ru.merkulyevsasha.news.key_navId"
         private const val KEY_POSITION = "ru.merkulyevsasha.news.key_position"
         private const val KEY_EXPANDED = "ru.merkulyevsasha.news.key_expanded"
