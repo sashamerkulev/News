@@ -64,7 +64,7 @@ class NewsWorker constructor(
                 reentrantLock.unlock()
             }
         }
-        return Result.SUCCESS
+        return Result.success()
     }
 
     // TODO need to move in other class
