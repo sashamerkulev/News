@@ -28,7 +28,7 @@ constructor(
         if (searchText != null && searchText.isNotEmpty()) return search(searchText)
         return when (navId) {
             R.id.nav_all -> readAllArticles()
-            else -> readArticlesByNavId(navId)
+            else -> newsRepository.readArticlesByNavId(navId)
         }
     }
 
