@@ -21,7 +21,7 @@ import ru.merkulyevsasha.news.helpers.BroadcastHelper
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import java.util.concurrent.locks.ReentrantLock
 
-class NewsWorker constructor(
+class NewsWorker2 constructor(
     context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {

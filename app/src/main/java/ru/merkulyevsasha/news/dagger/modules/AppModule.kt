@@ -27,7 +27,7 @@ import ru.merkulyevsasha.news.domain.NewsInteractorImpl
 import ru.merkulyevsasha.news.helpers.BroadcastHelper
 import ru.merkulyevsasha.news.newsjobs.BackgroundPeriodicWorker
 import ru.merkulyevsasha.news.newsjobs.BackgroundWorker
-import ru.merkulyevsasha.news.newsjobs.NewsPeriodicWorkerRunner
+import ru.merkulyevsasha.news.newsjobs.NewsWorkerPeriodicRunner
 import ru.merkulyevsasha.news.newsjobs.NewsWorkerRunner
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import javax.inject.Singleton
@@ -57,7 +57,7 @@ abstract class AppModule {
 
     @Singleton
     @Binds
-    internal abstract fun bindsNewsWorkerRunner(impl: NewsPeriodicWorkerRunner): BackgroundPeriodicWorker
+    internal abstract fun bindsNewsWorkerRunner(impl: NewsWorkerPeriodicRunner): BackgroundPeriodicWorker
 
     @Singleton
     @Binds

@@ -8,7 +8,7 @@ import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class NewsPeriodicWorkerRunner @Inject constructor() : BackgroundPeriodicWorker {
+class NewsWorkerPeriodicRunner @Inject constructor() : BackgroundPeriodicWorker {
 
     override fun runWorker() {
         val constraints =
@@ -23,6 +23,7 @@ class NewsPeriodicWorkerRunner @Inject constructor() : BackgroundPeriodicWorker 
         }
         val worker = PeriodicWorkRequestBuilder<NewsWorker>(1, TimeUnit.HOURS)
             .setConstraints(constraints.build())
+            .addTag(NewsWorker::class.java.simpleName)
             .build()
         WorkManager.getInstance().enqueue(worker)
     }

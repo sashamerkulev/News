@@ -7,7 +7,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import ru.merkulyevsasha.news.dagger.components.DaggerAppComponent
-import ru.merkulyevsasha.news.newsjobs.NewsPeriodicWorkerRunner
+import ru.merkulyevsasha.news.newsjobs.NewsWorkerPeriodicRunner
 import javax.inject.Inject
 
 class NewsApp : Application(), HasActivityInjector {
@@ -25,7 +25,7 @@ class NewsApp : Application(), HasActivityInjector {
         component.inject(this)
 
         MobileAds.initialize(this, getString(R.string.APP_ID))
-        NewsPeriodicWorkerRunner().runWorker()
+        NewsWorkerPeriodicRunner().runWorker()
     }
 
     override fun activityInjector(): AndroidInjector<Activity>? {

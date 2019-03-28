@@ -12,7 +12,7 @@ class RebootActionReceiver : BroadcastReceiver() {
                 || action == "android.intent.action.QUICKBOOT_POWERON"
                 || action == "com.htc.intent.action.QUICKBOOT_POWERON")) {
 
-            NewsPeriodicWorkerRunner().runWorker()
+            NewsWorkerPeriodicRunner().runWorker()
         }
 
     }
