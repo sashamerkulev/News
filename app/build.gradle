@@ -21,9 +21,9 @@ android {
         resValue "string", "APP_UNIT_ID", appUnitId
         multiDexEnabled true
     }
-
     buildTypes {
         debug {
+            minifyEnabled false
             buildConfigField "Boolean", "DEBUG_MODE", "true"
             buildConfigField "String", "DB_NAME", "\"news\""
         }
