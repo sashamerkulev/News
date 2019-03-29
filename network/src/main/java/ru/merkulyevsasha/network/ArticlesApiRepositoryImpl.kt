@@ -8,11 +8,11 @@ import ru.merkulyevsasha.core.preferences.SharedPreferences
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.network.data.ArticlesApi
 import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
-import ru.merkulyevsasha.network.mappers.ArticlesMapper
+import ru.merkulyevsasha.network.mappers.ArticleMapper
 
 class ArticlesApiRepositoryImpl(sharedPreferences: SharedPreferences) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
 
-    private val articlesMapper = ArticlesMapper()
+    private val articlesMapper = ArticleMapper()
     private val articleCommentsMapper = ArticleCommentsMapper()
 
     private val api: ArticlesApi = retrofit.create(ArticlesApi::class.java)
