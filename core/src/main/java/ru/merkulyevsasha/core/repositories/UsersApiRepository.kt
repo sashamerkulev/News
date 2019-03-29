@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core
+package ru.merkulyevsasha.core.repositories
 
 import io.reactivex.Completable
 import io.reactivex.Single
