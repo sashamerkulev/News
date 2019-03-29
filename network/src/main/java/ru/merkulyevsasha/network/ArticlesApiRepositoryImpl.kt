@@ -1,45 +1,21 @@
 package ru.merkulyevsasha.network
 
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import io.reactivex.Completable
 import io.reactivex.Single
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import ru.merkulyevsasha.core.ArticlesApiRepository
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComments
+import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.network.data.ArticlesApi
 import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.network.mappers.ArticlesMapper
 
-class ArticlesApiRepositoryImpl() : ArticlesApiRepository {
+class ArticlesApiRepositoryImpl(sharedPreferences: SharedPreferences) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
 
     private val articlesMapper = ArticlesMapper()
     private val articleCommentsMapper = ArticleCommentsMapper()
 
-    private val api: ArticlesApi
-
-    init {
-        val builder = OkHttpClient.Builder()
-        if (BuildConfig.DEBUG_MODE) {
-//            val httpLoggingInterceptor = HttpLoggingInterceptor()
-//            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
-//            builder.addInterceptor(httpLoggingInterceptor)
-            builder.addNetworkInterceptor(StethoInterceptor())
-        }
-        builder.addNetworkInterceptor(LoggingInterceptor())
-        builder.addInterceptor(TokenInterceptor())
-        val client = builder.build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.API_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(client)
-            .build()
-
-        api = retrofit.create(ArticlesApi::class.java)
-    }
+    private val api: ArticlesApi = retrofit.create(ArticlesApi::class.java)
 
     override fun getArticles(): Single<List<Article>> {
         return api.getArticles()
