@@ -4,6 +4,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import ru.merkulyevsasha.core.preferences.SharedPreferences
 
 open class BaseApiRepository(sharedPreferences: SharedPreferences) {
@@ -25,6 +26,7 @@ open class BaseApiRepository(sharedPreferences: SharedPreferences) {
         retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.API_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
     }
