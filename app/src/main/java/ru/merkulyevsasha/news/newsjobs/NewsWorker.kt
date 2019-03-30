@@ -9,15 +9,6 @@ import android.support.v4.app.TaskStackBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.dagger.modules.AppProvidesModule
-import ru.merkulyevsasha.news.data.NewsRepositoryImpl
-import ru.merkulyevsasha.news.data.db.DbDataSourceImpl
-import ru.merkulyevsasha.news.data.http.HttpDataSourceImpl
-import ru.merkulyevsasha.news.data.prefs.NewsSharedPreferencesImpl
-import ru.merkulyevsasha.news.data.utils.NewsConstants
-import ru.merkulyevsasha.news.domain.NewsInteractor
-import ru.merkulyevsasha.news.domain.NewsInteractorImpl
-import ru.merkulyevsasha.news.helpers.BroadcastHelper
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import java.util.concurrent.locks.ReentrantLock
 
@@ -26,18 +17,6 @@ class NewsWorker constructor(
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
-    private val broadcastHelper = BroadcastHelper(applicationContext)
-    private val app = AppProvidesModule()
-    private val newsInteractor: NewsInteractor = NewsInteractorImpl(
-        NewsRepositoryImpl(
-            HttpDataSourceImpl(app.providesOkHttpClient()),
-            DbDataSourceImpl(app.providesNewsDbRoom(applicationContext)),
-            NewsSharedPreferencesImpl(applicationContext),
-            NewsConstants(applicationContext)),
-        NewsWorkerPeriodicRunner(),
-        NewsWorkerRunner()
-    )
-
     override fun doWork(): Result {
         println("NewsWorker.doWork: tryLock")
         if (reentrantLock.tryLock()) {
@@ -45,22 +24,22 @@ class NewsWorker constructor(
                 println("NewsWorker.doWork: lock")
                 val singleRun = inputData.getBoolean("singleRun", false)
                 val navId = inputData.getInt("navId", R.id.nav_all)
-                val progress = newsInteractor.getProgress().blockingGet()
-                println("NewsWorker.doWork: progress: $progress singleRun: $singleRun")
-                if (!progress) {
-                    newsInteractor.setProgress(true)
-                    broadcastHelper.notifyWorkerStart()
-                    val refreshQuery = if (singleRun) newsInteractor.refreshArticles(navId)
-                    else newsInteractor.refreshArticlesIfNeed(navId)
-                    val items = refreshQuery.blockingGet()
-                    println("NewsWorker.doWork: finished with: ${items.size}")
-                    if (!singleRun) sendNotification(applicationContext)
-                }
+//                val progress = newsInteractor.getProgress().blockingGet()
+//                println("NewsWorker.doWork: progress: $progress singleRun: $singleRun")
+//                if (!progress) {
+//                    newsInteractor.setProgress(true)
+//                    broadcastHelper.notifyWorkerStart()
+//                    val refreshQuery = if (singleRun) newsInteractor.refreshArticles(navId)
+//                    else newsInteractor.refreshArticlesIfNeed(navId)
+//                    val items = refreshQuery.blockingGet()
+//                    println("NewsWorker.doWork: finished with: ${items.size}")
+//                    if (!singleRun) sendNotification(applicationContext)
+//                }
             } catch (e: Exception) {
                 println("NewsWorker.doWork: finished with error: $e")
             } finally {
-                newsInteractor.setProgress(false)
-                broadcastHelper.notifyWorkerFinished()
+//                newsInteractor.setProgress(false)
+//                broadcastHelper.notifyWorkerFinished()
                 reentrantLock.unlock()
             }
         }

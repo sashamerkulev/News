@@ -8,7 +8,7 @@ import ru.merkulyevsasha.news.newsjobs.NewsWorkerPeriodicRunner
 
 class NewsApp : Application() {
 
-    private val serviceLocator = ServiceLocator(applicationContext)
+    private lateinit var serviceLocator : ServiceLocator
 
     override fun onCreate() {
         super.onCreate()
@@ -23,6 +23,7 @@ class NewsApp : Application() {
         if (BuildConfig.DEBUG_MODE) {
             Stetho.initializeWithDefaults(this)
         }
+        serviceLocator = ServiceLocator(this)
     }
 
     fun getServiceLocator() : ServiceLocator {
