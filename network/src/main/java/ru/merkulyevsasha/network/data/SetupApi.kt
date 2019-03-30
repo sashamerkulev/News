@@ -14,15 +14,3 @@ interface SetupApi {
     @POST("/setup/sources")
     fun getRssSources(): Single<List<RssSourceResponse>>
 }
-
-class SetupApiImpl(private val api: SetupApi) {
-
-    fun registerSetup(setupId: String, firebaseId: String): Single<TokenResponse> {
-        return api.registerSetup(setupId, firebaseId)
-    }
-
-    fun getRssSources(): Single<List<RssSourceResponse>> {
-        return api.getRssSources()
-    }
-
-}

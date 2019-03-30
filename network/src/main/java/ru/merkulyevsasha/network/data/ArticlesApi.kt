@@ -31,35 +31,3 @@ interface ArticlesApi {
     @GET("/articles/{articleId}/comments/{commentId}/dislike")
     fun dislikeArticleComment(@Path("articleId") articleId: Long, @Path("commentId") commentId: Long): Completable
 }
-
-class ArticlesApiImpl(private val api: ArticlesApi) {
-
-    fun getArticles(): Single<List<ArticleResponse>> {
-        return api.getArticles()
-    }
-
-    fun getFavoriteArticles(): Single<List<ArticleResponse>> {
-        return api.getFavoriteArticles()
-    }
-
-    fun likeArticle(articleId: Long): Completable {
-        return api.likeArticle(articleId)
-    }
-
-    fun dislikeArticle(articleId: Long): Completable {
-        return api.dislikeArticle(articleId)
-    }
-
-    fun getArticleComments(articleId: Long): Single<List<ArticleCommentsResponse>> {
-        return api.getArticleComments(articleId)
-    }
-
-    fun likeArticleComment(articleId: Long, commentId: Long): Completable {
-        return api.likeArticleComment(articleId, commentId)
-    }
-
-    fun dislikeArticleComment(articleId: Long, commentId: Long): Completable {
-        return api.dislikeArticleComment(articleId, commentId)
-    }
-
-}

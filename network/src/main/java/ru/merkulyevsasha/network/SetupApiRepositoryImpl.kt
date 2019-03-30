@@ -5,23 +5,25 @@ import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.models.Token
 import ru.merkulyevsasha.core.preferences.SharedPreferences
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
-import ru.merkulyevsasha.network.data.UsersApi
-import ru.merkulyevsasha.network.mappers.UserInfoMapper
-import ru.merkulyevsasha.network.mappers.UserRegisterMapper
+import ru.merkulyevsasha.network.data.SetupApi
+import ru.merkulyevsasha.network.mappers.RssSourceMapper
 
 class SetupApiRepositoryImpl(sharedPreferences: SharedPreferences) : BaseApiRepository(sharedPreferences), SetupApiRepository {
 
-    private val userInfoMapper = UserInfoMapper()
-    private val userRegisterMapper = UserRegisterMapper()
+    private val api: SetupApi = retrofit.create(SetupApi::class.java)
 
-    private val api: UsersApi = retrofit.create(UsersApi::class.java)
+    private val rssSourceMapper = RssSourceMapper()
 
     override fun registerSetup(setupId: String, firebaseId: String): Single<Token> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return api.registerSetup(setupId, firebaseId)
+            .map { Token(it.token) }
     }
 
     override fun getRssSources(): Single<List<RssSource>> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return api.getRssSources()
+            .flattenAsFlowable { it }
+            .map { rssSourceMapper.map(it) }
+            .toList()
     }
 
 }

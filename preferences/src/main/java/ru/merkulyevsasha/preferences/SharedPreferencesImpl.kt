@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.preferences
 
+import android.annotation.SuppressLint
 import android.content.Context
 import io.reactivex.Single
 import ru.merkulyevsasha.core.preferences.SharedPreferences
@@ -12,8 +13,9 @@ class SharedPreferencesImpl(context: Context) : SharedPreferences {
         return Single.fromCallable { prefs.getString("TOKEN", "") ?: "" }
     }
 
+    @SuppressLint("ApplySharedPref")
     override fun setAccessToken(token: String) {
-        prefs.edit().putString("TOKEN", token).apply()
+        prefs.edit().putString("TOKEN", token).commit()
     }
 
     override fun getSetupId(): Single<String> {

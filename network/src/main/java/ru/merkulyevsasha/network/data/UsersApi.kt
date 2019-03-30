@@ -19,19 +19,3 @@ interface UsersApi {
     @POST("/users/uploadphoto")
     fun uploadUserPhoto(): Completable
 }
-
-class UsersApiImpl(private val api: UsersApi) {
-
-    fun getUserInfo(): Single<UserInfoResponse> {
-        return api.getUserInfo()
-    }
-
-    fun updateUser(name: String, phone: String): Completable {
-        return api.updateUser(name, phone)
-    }
-
-    fun uploadUserPhoto(): Completable {
-        return api.uploadUserPhoto()
-    }
-
-}

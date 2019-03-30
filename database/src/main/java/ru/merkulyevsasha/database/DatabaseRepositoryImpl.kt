@@ -10,11 +10,13 @@ import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
 import ru.merkulyevsasha.database.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.database.mappers.ArticleMapper
+import ru.merkulyevsasha.database.mappers.RssSourceMapper
 
 class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
 
     private val articleMapper = ArticleMapper()
     private val articleCommentsMapper = ArticleCommentsMapper()
+    private val rssSourceMapper = RssSourceMapper()
 
     private val database = Room
         .databaseBuilder(context, Database::class.java, BuildConfig.DB_NAME)
@@ -36,7 +38,7 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
     }
 
     override fun saveRssSources(sources: List<RssSource>) {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        database.setupDao.saveRssSources(sources.map { rssSourceMapper.map(it) })
     }
 
 }

@@ -2,7 +2,6 @@ package ru.merkulyevsasha.domain
 
 import io.reactivex.Completable
 import io.reactivex.CompletableSource
-import io.reactivex.Single
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.preferences.SharedPreferences
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
@@ -17,10 +16,11 @@ class SetupInteractorImpl(
         return preferences.getSetupId()
             .flatMap { savedSetupId ->
                 if (savedSetupId.isEmpty()) setupApiRepository.registerSetup(setupId, getFirebaseId())
-                    .doOnSuccess { token -> preferences.setAccessToken(token.token)
+                    .doOnSuccess { token ->
+                        preferences.setAccessToken(token.token)
                         preferences.setSetupId(setupId)
                     }
-                else Single.just(savedSetupId)
+                else preferences.getAccessToken()
             }
             .flatMap { setupApiRepository.getRssSources() }
             .doOnSuccess { sources -> databaseRepository.saveRssSources(sources) }

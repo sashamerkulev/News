@@ -1,5 +1,5 @@
 package ru.merkulyevsasha.network.models
 
-class TokenResponse {
+import com.google.gson.annotations.SerializedName
 
-}
+class TokenResponse(@SerializedName("token") val token: String)

@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.presentation.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -17,6 +19,13 @@ import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 
 class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        fun show(context: Context) {
+            val intent = Intent(context, MainActivity::class.java)
+            context.startActivity(intent)
+        }
+    }
 
     private lateinit var pres: MainPresenter
 

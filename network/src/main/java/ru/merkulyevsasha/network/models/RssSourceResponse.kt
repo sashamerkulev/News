@@ -1,5 +1,8 @@
 package ru.merkulyevsasha.network.models
 
-class RssSourceResponse {
+import com.google.gson.annotations.SerializedName
 
-}
+data class RssSourceResponse(
+    @SerializedName("name") val name: String,
+    @SerializedName("title") val title: String
+)
