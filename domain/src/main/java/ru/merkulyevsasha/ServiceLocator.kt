@@ -1,12 +1,17 @@
 package ru.merkulyevsasha
 
 import android.content.Context
+import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
+import ru.merkulyevsasha.core.domain.ArticlesInteractor
+import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.preferences.SharedPreferences
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.database.DatabaseRepositoryImpl
-import ru.merkulyevsasha.domain.RssServiceInteractorImpl
+import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
+import ru.merkulyevsasha.domain.ArticlesInteractorImpl
+import ru.merkulyevsasha.domain.UsersInteractorImpl
 import ru.merkulyevsasha.network.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.network.UsersApiRepositoryImpl
 import ru.merkulyevsasha.preferences.SharedPreferencesImpl
@@ -25,15 +30,23 @@ class ServiceLocator(context: Context) {
 
     @Suppress("UNCHECKED_CAST")
     fun <T> get(clazz: Class<T>): T {
-
-        if (clazz == RssServiceInteractorImpl::class.java && !maps.containsKey(clazz)) {
-            maps[clazz] = RssServiceInteractorImpl(
+        if (maps.containsKey(clazz)) {
+            return maps[clazz] as T
+        }
+        when (clazz) {
+            ArticlesInteractor::class.java -> maps[clazz] = ArticlesInteractorImpl(
                 getArticlesApiRepository(),
+                getDatabaseRepository()
+            )
+            UsersInteractor::class.java -> maps[clazz] = UsersInteractorImpl(
                 getUsersApiRepository(),
                 getDatabaseRepository()
             )
+            ArticleCommentsInteractor::class.java -> maps[clazz] = ArticleCommentsInteractorImpl(
+                getArticlesApiRepository(),
+                getDatabaseRepository()
+            )
         }
-
         return maps[clazz] as T
     }
 
