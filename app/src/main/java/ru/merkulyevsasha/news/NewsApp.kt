@@ -1,34 +1,31 @@
 package ru.merkulyevsasha.news
 
-import android.app.Activity
 import android.app.Application
+import com.facebook.stetho.Stetho
 import com.google.android.gms.ads.MobileAds
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import ru.merkulyevsasha.news.dagger.components.DaggerAppComponent
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.news.newsjobs.NewsWorkerPeriodicRunner
-import javax.inject.Inject
 
-class NewsApp : Application(), HasActivityInjector {
+class NewsApp : Application() {
 
-    @Inject internal lateinit var activityInjector: DispatchingAndroidInjector<Activity>
+    private val serviceLocator = ServiceLocator(applicationContext)
 
     override fun onCreate() {
         super.onCreate()
 
-        val component = DaggerAppComponent
-            .builder()
-            .context(this)
-            .build()
-
-        component.inject(this)
+//        val clazz = serviceLocator.get(ArticlesInteractor::class.java)
+//        val clazz2 = serviceLocator.get(UsersInteractor::class.java)
+//        val clazz3 = serviceLocator.get(ArticleCommentsInteractor::class.java)
 
         MobileAds.initialize(this, getString(R.string.APP_ID))
         NewsWorkerPeriodicRunner().runWorker()
+
+        if (BuildConfig.DEBUG_MODE) {
+            Stetho.initializeWithDefaults(this)
+        }
     }
 
-    override fun activityInjector(): AndroidInjector<Activity>? {
-        return activityInjector
+    fun getServiceLocator() : ServiceLocator {
+        return serviceLocator
     }
 }
