@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
-import ru.merkulyevsasha.core.models.UserRegister
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 
@@ -13,10 +12,6 @@ class UsersInteractorImpl(
     private val databaseRepository: DatabaseRepository
 ) : UsersInteractor {
     override fun getUserInfo(): Single<UserInfo> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun registerUser(deviceId: String, firebaseId: String): Single<UserRegister> {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 

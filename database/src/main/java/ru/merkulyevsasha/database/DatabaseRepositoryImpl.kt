@@ -5,6 +5,7 @@ import android.content.Context
 import io.reactivex.Single
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComments
+import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
 import ru.merkulyevsasha.database.mappers.ArticleCommentsMapper
@@ -32,6 +33,10 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
             .flattenAsFlowable { it }
             .map { articleCommentsMapper.map(it) }
             .toList()
+    }
+
+    override fun saveRssSources(sources: List<RssSource>) {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
 }
