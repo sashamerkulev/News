@@ -3,86 +3,52 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply from: "$rootDir/android.gradle"
+
 //noinspection GroovyMissingReturnStatement
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
     def appId = findProperty("newsAppId")
     def appUnitId = findProperty("newsAppUnitId")
     defaultConfig {
         applicationId "ru.merkulyevsasha.news"
-        minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 36
-        versionName "1.4.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
         resValue "string", "APP_ID", appId
         resValue "string", "APP_UNIT_ID", appUnitId
         multiDexEnabled true
     }
-    buildTypes {
-        debug {
-            minifyEnabled false
-            buildConfigField "Boolean", "DEBUG_MODE", "true"
-            buildConfigField "String", "DB_NAME", "\"news\""
-        }
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "Boolean", "DEBUG_MODE", "false"
-            buildConfigField "String", "DB_NAME", "\"news\""
-        }
-    }
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
 }
 
-dependencies {
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+def work = "1.0.0"
+def firebaseCore = "16.0.8"
+def firebaseCrash = "16.2.1"
+def firebaseAds = "17.2.0"
+def glide = "4.6.1"
 
+dependencies {
     implementation project(path: ':apprate')
     implementation project(path: ':core')
     implementation project(path: ':domain')
 
-    implementation 'com.github.sashamerkulev:MapperJ-annotations:1.0.6'
-    kapt 'com.github.sashamerkulev:MapperJ-processors:1.0.6'
-    annotationProcessor 'com.github.sashamerkulev:MapperJ-processors:1.0.6'
-
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    kapt 'android.arch.persistence.room:compiler:1.1.1'
-    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
-    implementation 'android.arch.work:work-runtime-ktx:1.0.0'
+    implementation "android.arch.work:work-runtime-ktx:$work"
 
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:cardview-v7:28.0.0'
-    implementation 'com.android.support:customtabs:28.0.0'
+    implementation "com.android.support:appcompat-v7:$support7"
+    implementation "com.android.support:design:$support7"
+    implementation "com.android.support:cardview-v7:$support7"
+    implementation "com.android.support:customtabs:$support7"
 
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-crash:16.2.1'
-    implementation 'com.google.firebase:firebase-ads:17.2.0'
-
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-
-    implementation 'com.google.dagger:dagger:2.17'
-    kapt 'com.google.dagger:dagger-compiler:2.17'
-    implementation 'com.google.dagger:dagger-android:2.17'
-    kapt 'com.google.dagger:dagger-android-processor:2.17'
-    implementation 'com.google.dagger:dagger-android-support:2.17'
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
+    implementation "com.google.firebase:firebase-crash:$firebaseCrash"
+    implementation "com.google.firebase:firebase-ads:$firebaseAds"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2Android"
 
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    implementation "com.github.bumptech.glide:glide:$glide"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$junit"
+    androidTestImplementation "com.android.support.test:runner:$supportTest"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
