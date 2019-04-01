@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation
+package ru.merkulyevsasha.news.presentation.base
 
 import io.reactivex.disposables.CompositeDisposable
 

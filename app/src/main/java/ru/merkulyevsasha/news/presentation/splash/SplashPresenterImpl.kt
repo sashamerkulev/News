@@ -2,7 +2,7 @@ package ru.merkulyevsasha.news.presentation.splash
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.SetupInteractor
-import ru.merkulyevsasha.news.presentation.BasePresenter
+import ru.merkulyevsasha.news.presentation.base.BasePresenter
 import timber.log.Timber
 
 class SplashPresenterImpl(private val setupInteractor: SetupInteractor) : BasePresenter<SplashView>() {
