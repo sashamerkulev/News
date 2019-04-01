@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.base
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.OkHttpClient
@@ -6,6 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.network.BuildConfig
 
 open class BaseApiRepository(sharedPreferences: SharedPreferences) {
 

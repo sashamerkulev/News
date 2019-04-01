@@ -1,7 +1,8 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.articles
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComments
 import ru.merkulyevsasha.core.preferences.SharedPreferences

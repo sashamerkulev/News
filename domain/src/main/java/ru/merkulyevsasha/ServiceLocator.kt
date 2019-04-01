@@ -15,9 +15,9 @@ import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
-import ru.merkulyevsasha.network.ArticlesApiRepositoryImpl
-import ru.merkulyevsasha.network.SetupApiRepositoryImpl
-import ru.merkulyevsasha.network.UsersApiRepositoryImpl
+import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
+import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 import ru.merkulyevsasha.preferences.SharedPreferencesImpl
 
 class ServiceLocator(context: Context) {

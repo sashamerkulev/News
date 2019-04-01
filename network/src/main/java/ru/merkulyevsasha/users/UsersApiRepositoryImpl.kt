@@ -1,7 +1,8 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.users
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.preferences.SharedPreferences
 import ru.merkulyevsasha.core.repositories.UsersApiRepository

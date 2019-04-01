@@ -1,6 +1,7 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.setup
 
 import io.reactivex.Single
+import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.models.Token
 import ru.merkulyevsasha.core.preferences.SharedPreferences
