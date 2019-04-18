@@ -10,4 +10,6 @@ interface DatabaseRepository {
     fun getArticleComments(): Single<List<ArticleComments>>
 
     fun saveRssSources(sources: List<RssSource>)
+    fun getRssSources(): Single<List<RssSource>>
+    fun deleteRssSources()
 }

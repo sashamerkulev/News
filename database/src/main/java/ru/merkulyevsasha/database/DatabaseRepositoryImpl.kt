@@ -10,6 +10,7 @@ import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
 import ru.merkulyevsasha.database.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.database.mappers.ArticleMapper
+import ru.merkulyevsasha.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.database.mappers.RssSourceMapper
 
 class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
@@ -17,6 +18,7 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
     private val articleMapper = ArticleMapper()
     private val articleCommentsMapper = ArticleCommentsMapper()
     private val rssSourceMapper = RssSourceMapper()
+    private val rssSourceEntityMapper = RssSourceEntityMapper()
 
     private val database = Room
         .databaseBuilder(context, Database::class.java, BuildConfig.DB_NAME)
@@ -39,6 +41,17 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
 
     override fun saveRssSources(sources: List<RssSource>) {
         database.setupDao.saveRssSources(sources.map { rssSourceMapper.map(it) })
+    }
+
+    override fun deleteRssSources() {
+        database.setupDao.deleteRssSources()
+    }
+
+    override fun getRssSources(): Single<List<RssSource>> {
+        return database.setupDao.getRssSources()
+            .flattenAsFlowable { it }
+            .map { rssSourceEntityMapper.map(it) }
+            .toList()
     }
 
 }

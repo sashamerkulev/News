@@ -3,6 +3,6 @@ package ru.merkulyevsasha.network.models
 import com.google.gson.annotations.SerializedName
 
 data class RssSourceResponse(
-    @SerializedName("name") val name: String,
-    @SerializedName("title") val title: String
+    @SerializedName("Name") val name: String,
+    @SerializedName("Title") val title: String
 )

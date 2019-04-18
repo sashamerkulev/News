@@ -13,13 +13,13 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "Boolean", "DEBUG_MODE", "true"
-            buildConfigField "String", "API_URL", "\"http://92.100.37.75\""
+            buildConfigField "String", "API_URL", "\"http://92.100.37.75:9000\""
             buildConfigField "String", "DB_NAME", "\"rssnews\""
         }
         release {
             minifyEnabled true
             buildConfigField "Boolean", "DEBUG_MODE", "false"
-            buildConfigField "String", "API_URL", "\"http://92.100.37.75\""
+            buildConfigField "String", "API_URL", "\"http://92.100.37.75:9000\""
             buildConfigField "String", "DB_NAME", "\"rssnews\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -35,9 +35,16 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2Android"
 
     implementation "com.android.support:appcompat-v7:$support7"
-    testImplementation "junit:junit:$junit"
+
+    testImplementation "junit:junit:${junit}"
+    testImplementation "org.assertj:assertj-core:${assertJ}"
+    testImplementation "org.mockito:mockito-core:${mockito}"
+    androidTestImplementation "junit:junit:${junit}"
+    androidTestImplementation "org.assertj:assertj-core:${assertJ}"
+    androidTestImplementation "org.mockito:mockito-core:${mockito}"
     androidTestImplementation "com.android.support.test:runner:$supportTest"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 

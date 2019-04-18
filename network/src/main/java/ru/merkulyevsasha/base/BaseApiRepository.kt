@@ -5,10 +5,10 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.network.BuildConfig
 
-open class BaseApiRepository(sharedPreferences: SharedPreferences) {
+open class BaseApiRepository(sharedPreferences: KeyValueStorage) {
 
     internal val retrofit : Retrofit
 

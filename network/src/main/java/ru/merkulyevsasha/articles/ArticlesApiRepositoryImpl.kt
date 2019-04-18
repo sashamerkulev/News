@@ -5,13 +5,13 @@ import io.reactivex.Single
 import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComments
-import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.network.data.ArticlesApi
 import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.network.mappers.ArticleMapper
 
-class ArticlesApiRepositoryImpl(sharedPreferences: SharedPreferences) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
+class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
 
     private val articlesMapper = ArticleMapper()
     private val articleCommentsMapper = ArticleCommentsMapper()
