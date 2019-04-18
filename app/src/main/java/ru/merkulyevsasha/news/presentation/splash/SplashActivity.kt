@@ -33,6 +33,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
     override fun showFatalError() {
         Toast.makeText(this, "Oops!", Toast.LENGTH_LONG).show()
+        finish()
     }
 
     override fun onResume() {

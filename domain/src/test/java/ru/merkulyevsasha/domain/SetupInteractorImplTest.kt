@@ -23,7 +23,7 @@ class SetupInteractorImplTest {
 
     @Rule
     @JvmField
-    val rxSchedulerRule = RxSchedulerRule()
+    val rxSchedulerRule = RxSchedulerRule2()
 
     private val preferences = Mockito.mock(KeyValueStorage::class.java)
     private val databaseRepository = Mockito.mock(DatabaseRepository::class.java)
