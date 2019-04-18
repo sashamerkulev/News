@@ -1,14 +1,15 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.users
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.UserInfo
-import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.network.data.UsersApi
 import ru.merkulyevsasha.network.mappers.UserInfoMapper
 
-class UsersApiRepositoryImpl(sharedPreferences: SharedPreferences) : BaseApiRepository(sharedPreferences), UsersApiRepository {
+class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), UsersApiRepository {
 
     private val userInfoMapper = UserInfoMapper()
 

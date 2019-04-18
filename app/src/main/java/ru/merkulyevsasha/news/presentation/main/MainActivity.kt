@@ -7,18 +7,18 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.activity_main.drawer_layout
-import kotlinx.android.synthetic.main.activity_main.nav_view
-import kotlinx.android.synthetic.main.app_bar_main.adView
-import kotlinx.android.synthetic.main.app_bar_main.collapsinng_toolbar_layout
-import kotlinx.android.synthetic.main.app_bar_main.toolbar
+import kotlinx.android.synthetic.main.activity_main.drawer
+import kotlinx.android.synthetic.main.activity_main.navigation
 import ru.merkulyevsasha.apprate.AppRateRequester
+import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.BuildConfig
+import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.base.ToolbarCombinator
 
-class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainView, ToolbarCombinator {
 
     companion object {
         fun show(context: Context) {
@@ -27,33 +27,26 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         }
     }
 
-    private lateinit var pres: MainPresenter
+    private lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        pres = MainPresenter()
-
         setContentView(R.layout.activity_main)
+        navigation.setNavigationItemSelectedListener(this)
 
-        setSupportActionBar(toolbar)
-
-        collapsinng_toolbar_layout.isTitleEnabled = false
-
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        nav_view.setNavigationItemSelectedListener(this)
+        val serviceLocator = (application as NewsApp).getServiceLocator()
+        val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
+        presenter = MainPresenter(setupInteractor)
 
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID)
 
-        val adRequest = if (BuildConfig.DEBUG_MODE)
-            AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
-        else
-            AdRequest.Builder().addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
-        adView.loadAd(adRequest)
+//        val adRequestBuilder = AdRequest.Builder()
+//        if (BuildConfig.DEBUG_MODE) {
+//            adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//        }
+//        adRequestBuilder.addTestDevice("349C53FFD0654BDC5FF7D3D9254FC8E6").build()
+//        adView.loadAd(adRequestBuilder.build())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -64,30 +57,36 @@ class MainActivity : AppCompatActivity(), MainView, NavigationView.OnNavigationI
         super.onRestoreInstanceState(savedInstanceState)
     }
 
-    public override fun onPause() {
-        if (adView != null) {
-            adView.pause()
-        }
-        pres.unbindView()
+    override fun onPause() {
+//        if (adView != null) {
+//            adView.pause()
+//        }
+        presenter.unbindView()
         super.onPause()
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
-        adView.resume()
-        pres.bindView(this)
+//        adView.resume()
+        presenter.bindView(this)
     }
 
-    public override fun onDestroy() {
-        if (adView != null) {
-            adView.destroy()
-        }
-        pres.onDestroy()
+    override fun onDestroy() {
+//        if (adView != null) {
+//            adView.destroy()
+//        }
+        presenter.onDestroy()
         super.onDestroy()
     }
 
+    override fun toolbarCombine(toolbar: Toolbar) {
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        drawer_layout.closeDrawer(GravityCompat.START)
+        drawer.closeDrawer(GravityCompat.START)
         return true
     }
 

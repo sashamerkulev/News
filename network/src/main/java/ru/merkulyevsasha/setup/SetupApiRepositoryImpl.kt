@@ -1,14 +1,15 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.setup
 
 import io.reactivex.Single
+import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.models.Token
-import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
 import ru.merkulyevsasha.network.data.SetupApi
 import ru.merkulyevsasha.network.mappers.RssSourceMapper
 
-class SetupApiRepositoryImpl(sharedPreferences: SharedPreferences) : BaseApiRepository(sharedPreferences), SetupApiRepository {
+class SetupApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), SetupApiRepository {
 
     private val api: SetupApi = retrofit.create(SetupApi::class.java)
 

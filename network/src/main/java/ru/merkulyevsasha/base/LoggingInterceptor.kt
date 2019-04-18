@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.network
+package ru.merkulyevsasha.base
 
 import android.util.Log
 import okhttp3.Interceptor
@@ -29,6 +29,6 @@ class LoggingInterceptor : Interceptor {
     }
 
     companion object {
-        const val TAG = "networkInterceptor"
+        private val TAG = LoggingInterceptor::class.java.simpleName
     }
 }

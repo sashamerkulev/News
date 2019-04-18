@@ -6,6 +6,8 @@ buildscript {
     ext.rxjava2Android = '2.1.0'
     ext.support7 = '28.0.0'
     ext.junit = '4.12'
+    ext.assertJ = '3.8.0'
+    ext.mockito = '1.10.19'
     ext.supportTest = '1.0.2'
     ext.espresso = '3.0.2'
     ext.stetho = '1.5.1'

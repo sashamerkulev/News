@@ -5,7 +5,7 @@ import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.domain.UsersInteractor
-import ru.merkulyevsasha.core.preferences.SharedPreferences
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
@@ -15,18 +15,18 @@ import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
-import ru.merkulyevsasha.network.ArticlesApiRepositoryImpl
-import ru.merkulyevsasha.network.SetupApiRepositoryImpl
-import ru.merkulyevsasha.network.UsersApiRepositoryImpl
-import ru.merkulyevsasha.preferences.SharedPreferencesImpl
+import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
+import ru.merkulyevsasha.users.UsersApiRepositoryImpl
+import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 
 class ServiceLocator(context: Context) {
 
     private val maps = HashMap<Any, Any>()
 
     init {
-        val prefs = SharedPreferencesImpl(context)
-        maps[SharedPreferences::class.java] = prefs
+        val prefs = KeyValueStorageImpl(context)
+        maps[KeyValueStorage::class.java] = prefs
         maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs)
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
@@ -76,8 +76,8 @@ class ServiceLocator(context: Context) {
         return maps[DatabaseRepository::class.java] as DatabaseRepository
     }
 
-    private fun getPreferences(): SharedPreferences {
-        return maps[SharedPreferences::class.java] as SharedPreferences
+    private fun getPreferences(): KeyValueStorage {
+        return maps[KeyValueStorage::class.java] as KeyValueStorage
     }
 }
 
