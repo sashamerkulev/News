@@ -6,9 +6,8 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import javax.inject.Inject
 
-class NewsWorkerRunner @Inject constructor() : BackgroundWorker {
+class NewsWorkerRunner : BackgroundWorker {
 
     override fun runWorker(navId: Int, searchText: String?) {
 
@@ -27,10 +26,10 @@ class NewsWorkerRunner @Inject constructor() : BackgroundWorker {
             constraints
                 .setRequiresDeviceIdle(false)
         }
-        val worker = OneTimeWorkRequestBuilder<NewsWorker2>()
+        val worker = OneTimeWorkRequestBuilder<NewsWorker>()
             .setConstraints(constraints.build())
             .setInputData(data)
-            .addTag(NewsWorker2::class.java.simpleName)
+            .addTag(NewsWorker::class.java.simpleName)
             .build()
         WorkManager.getInstance().enqueue(worker)
     }

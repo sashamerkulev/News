@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+apply from: "$rootDir/android.gradle"
+
+def room = '1.1.1'
+
+dependencies {
+    implementation project(path: ':core')
+
+    implementation "android.arch.persistence.room:runtime:$room"
+    kapt "android.arch.persistence.room:compiler:$room"
+    implementation "android.arch.persistence.room:rxjava2:$room"
+}

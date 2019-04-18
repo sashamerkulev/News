@@ -6,9 +6,8 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class NewsWorkerPeriodicRunner @Inject constructor() : BackgroundPeriodicWorker {
+class NewsWorkerPeriodicRunner : BackgroundPeriodicWorker {
 
     override fun runWorker() {
         val constraints =
