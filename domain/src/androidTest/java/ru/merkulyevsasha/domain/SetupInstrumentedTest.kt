@@ -1,12 +1,11 @@
 package ru.merkulyevsasha.domain
 
 import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import ru.merkulyevsasha.NewsInsrumentalTestRunner
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
@@ -21,12 +20,8 @@ import java.util.*
  *
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
-@RunWith(AndroidJUnit4::class)
+@RunWith(NewsInsrumentalTestRunner::class)
 class SetupInstrumentedTest {
-
-    @Rule
-    @JvmField
-    val rxSchedulerRule = RxSchedulerRule()
 
     private lateinit var setupInteractor: SetupInteractor
     private lateinit var preferences: KeyValueStorage
