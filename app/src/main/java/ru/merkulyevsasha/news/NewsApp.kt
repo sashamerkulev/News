@@ -12,10 +12,7 @@ class NewsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-//        val clazz = serviceLocator.get(ArticlesInteractor::class.java)
-//        val clazz2 = serviceLocator.get(UsersInteractor::class.java)
-//        val clazz3 = serviceLocator.get(ArticleCommentsInteractor::class.java)
+        serviceLocator = ServiceLocator(this)
 
         MobileAds.initialize(this, getString(R.string.APP_ID))
         NewsWorkerPeriodicRunner().runWorker()
@@ -23,7 +20,6 @@ class NewsApp : Application() {
         if (BuildConfig.DEBUG_MODE) {
             Stetho.initializeWithDefaults(this)
         }
-        serviceLocator = ServiceLocator(this)
     }
 
     fun getServiceLocator() : ServiceLocator {

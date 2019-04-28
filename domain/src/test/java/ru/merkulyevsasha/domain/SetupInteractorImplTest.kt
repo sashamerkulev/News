@@ -33,16 +33,45 @@ class SetupInteractorImplTest {
         val firebaseId = UUID.randomUUID().toString()
 
         Mockito.`when`(preferences.getSetupId()).thenReturn("")
-        Mockito.`when`(setupApiRepository.registerSetup(Mockito.eq(setupId), Mockito.anyString())).thenReturn(Single.just(Token(token)))
+        Mockito.`when`(setupApiRepository.registerSetup(setupId, firebaseId)).thenReturn(Single.just(Token(token)))
+        Mockito.`when`(setupApiRepository.getRssSources()).thenReturn(Single.just(emptyList()))
 
         val testObserver = setupInteractor.registerSetup(setupId) { firebaseId }.test()
+        NewsTestRunner.testScheduler.triggerActions()
 
         testObserver
             .assertNoErrors()
 
         Mockito.verify(preferences).getSetupId()
-        Mockito.verify(preferences).setSetupId(setupId)
         Mockito.verify(preferences).setAccessToken(token)
+        Mockito.verify(preferences).setSetupId(setupId)
+        Mockito.verify(setupApiRepository).registerSetup(setupId, firebaseId)
+        Mockito.verify(setupApiRepository).getRssSources()
+        Mockito.verify(databaseRepository).deleteRssSources()
+        Mockito.verify(databaseRepository).saveRssSources(emptyList())
+    }
+
+    @Test
+    fun registerSetup_calls_repo_registerSetup_if_setup_id_is_not_empty() {
+        val setupId = UUID.randomUUID().toString()
+        val token = UUID.randomUUID().toString()
+        val firebaseId = UUID.randomUUID().toString()
+
+        Mockito.`when`(preferences.getSetupId()).thenReturn(setupId)
+        Mockito.`when`(preferences.getAccessToken()).thenReturn(token)
+        Mockito.`when`(setupApiRepository.getRssSources()).thenReturn(Single.just(emptyList()))
+
+        val testObserver = setupInteractor.registerSetup(setupId) { firebaseId }.test()
+        NewsTestRunner.testScheduler.triggerActions()
+
+        testObserver
+            .assertNoErrors()
+
+        Mockito.verify(preferences).getSetupId()
+        Mockito.verify(preferences).getAccessToken()
+        Mockito.verify(setupApiRepository).getRssSources()
+        Mockito.verify(databaseRepository).deleteRssSources()
+        Mockito.verify(databaseRepository).saveRssSources(emptyList())
     }
 
 }

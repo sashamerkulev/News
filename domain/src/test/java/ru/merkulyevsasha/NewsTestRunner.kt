@@ -1,25 +1,19 @@
 package ru.merkulyevsasha
 
 import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import org.junit.runners.BlockJUnit4ClassRunner
-import org.junit.runners.model.InitializationError
 
-class NewsTestRunner
-/**
- * Creates a BlockJUnit4ClassRunner to run `klass`
- *
- * @param klass
- * @throws InitializationError if the test class is malformed.
- */
-@Throws(InitializationError::class)
-constructor(klass: Class<*>) : BlockJUnit4ClassRunner(klass) {
-
-    private val testScheduler = Schedulers.trampoline()
+class NewsTestRunner(klass: Class<*>) : BlockJUnit4ClassRunner(klass) {
 
     init {
         RxJavaPlugins.setInitIoSchedulerHandler { schedulerCallable -> testScheduler }
         RxJavaPlugins.initIoScheduler { testScheduler }
         RxJavaPlugins.onIoScheduler(testScheduler)
+    }
+
+    companion object {
+        @JvmStatic
+        val testScheduler = TestScheduler()
     }
 }
