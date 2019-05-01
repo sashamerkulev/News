@@ -40,7 +40,6 @@
 
     </android.support.constraint.ConstraintLayout>
 
-
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
@@ -48,8 +47,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="@color/colorPrimaryDark"
-        app:itemTextColor="@color/colorPrimaryDark"
+        app:itemIconTint="?attr/colorPrimaryDark"
+        app:itemTextColor="?attr/colorPrimaryDark"
         app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
