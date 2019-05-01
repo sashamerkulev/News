@@ -15,4 +15,7 @@
     <string name="notification_channell_id">news.download</string>
     <string name="download_channel_name">Новости</string>
     <string name="download_channel_description">Канал уведомлений новостей</string>
+    <string name="title_articles">Статьи</string>
+    <string name="title_user">Пользователь</string>
+    <string name="title_actions">Активности</string>
 </resources>
