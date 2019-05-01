@@ -12,4 +12,5 @@ interface DatabaseRepository {
     fun saveRssSources(sources: List<RssSource>)
     fun getRssSources(): Single<List<RssSource>>
     fun deleteRssSources()
+    fun addOrUpdateArticles(articles: List<Article>)
 }

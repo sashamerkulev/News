@@ -1,115 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/news_date_source"
+            android:id="@+id/newsDateSource"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="date and source"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="date and source" />
 
         <View
+            android:id="@+id/sep1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#cecece"
-            />
+            android:background="?attr/separator"
+            app:layout_constraintTop_toBottomOf="@+id/newsDateSource" />
 
         <RelativeLayout
+            android:id="@+id/layoutTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
             android:orientation="horizontal"
-            android:paddingBottom="8dp"
-            >
-
-            <RelativeLayout
-                android:id="@+id/layout_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_toStartOf="@+id/imageview_chevron"
-                android:layout_toLeftOf="@+id/imageview_chevron"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:id="@+id/imageview_thumb"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:scaleType="centerCrop"
-                    />
-
-                <TextView
-                    android:id="@+id/news_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/imageview_thumb"
-                    android:layout_toRightOf="@+id/imageview_thumb"
-                    android:textSize="16sp"
-                    tools:text="title"
-                    />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/news_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/layout_title"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_toLeftOf="@+id/imageview_chevron"
-                android:textSize="14sp"
-                tools:text="description"
-                />
+            app:layout_constraintEnd_toStartOf="@+id/imageViewChevron"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sep1">
 
             <ImageView
-                android:id="@+id/imageview_chevron"
+                android:id="@+id/imageViewThumb"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/newsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:tint="#cecece"
-                app:srcCompat="@drawable/ic_chevron_right_black_24px"
-                tools:ignore="VectorDrawableCompat"
-                />
+                android:layout_toEndOf="@+id/imageViewThumb"
+                android:layout_toRightOf="@+id/imageViewThumb"
+                android:textSize="16sp"
+                tools:text="title" />
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/newsDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutTitle"
+            tools:text="description" />
+
+        <ImageView
+            android:id="@+id/imageViewChevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:tint="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/layoutTitle"
+            app:srcCompat="@drawable/ic_chevron_right_black_24px"
+            tools:ignore="ContentDescription,VectorDrawableCompat" />
+
+        <View
+            android:id="@+id/sep2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/separator"
+            app:layout_constraintTop_toBottomOf="@+id/newsDescription" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

@@ -54,4 +54,7 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
             .toList()
     }
 
+    override fun addOrUpdateArticles(articles: List<Article>) {
+    }
+
 }

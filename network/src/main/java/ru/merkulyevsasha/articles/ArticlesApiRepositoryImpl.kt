@@ -10,6 +10,7 @@ import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.network.data.ArticlesApi
 import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.network.mappers.ArticleMapper
+import java.util.*
 
 class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
 
@@ -18,10 +19,10 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
 
     private val api: ArticlesApi = retrofit.create(ArticlesApi::class.java)
 
-    override fun getArticles(): Single<List<Article>> {
-        return api.getArticles()
+    override fun getArticles(lastArticleReadDate: Date?): Single<List<Article>> {
+        return api.getArticles(lastArticleReadDate)
             .flattenAsFlowable { it }
-            .map { Article() }
+            .map { articlesMapper.map(it) }
             .toList()
     }
 

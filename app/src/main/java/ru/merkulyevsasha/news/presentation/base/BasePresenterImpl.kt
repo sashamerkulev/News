@@ -2,7 +2,7 @@ package ru.merkulyevsasha.news.presentation.base
 
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BasePresenter<T> {
+abstract class BasePresenterImpl<T : BaseView> {
 
     protected var view: T? = null
     protected val compositeDisposable: CompositeDisposable = CompositeDisposable()

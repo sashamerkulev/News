@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.presentation.useractivities
 
-interface UserActivitiesView {
+import ru.merkulyevsasha.news.presentation.base.BaseView
+
+interface UserActivitiesView: BaseView {
 
 }

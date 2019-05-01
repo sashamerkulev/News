@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.presentation.articlecomments
 
-interface ArticleCommentsView {
+import ru.merkulyevsasha.news.presentation.base.BaseView
+
+interface ArticleCommentsView: BaseView {
 
 }

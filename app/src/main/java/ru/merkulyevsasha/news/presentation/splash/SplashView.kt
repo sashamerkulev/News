@@ -1,6 +1,8 @@
 package ru.merkulyevsasha.news.presentation.splash
 
-interface SplashView {
+import ru.merkulyevsasha.news.presentation.base.BaseView
+
+interface SplashView: BaseView {
     fun showMainScreen()
     fun showFatalError()
 }

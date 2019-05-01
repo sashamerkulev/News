@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.presentation.main
 
-interface MainView {
+import ru.merkulyevsasha.news.presentation.base.BaseView
+
+interface MainView: BaseView {
 
 }

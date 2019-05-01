@@ -6,6 +6,18 @@ import ru.merkulyevsasha.database.entities.ArticleEntity
 
 class ArticleMapper: Mapper<ArticleEntity, Article> {
     override fun map(item: ArticleEntity): Article {
-        return Article()
+        return Article(
+            item.articleId,
+            item.sourceName,
+            item.title,
+            item.description,
+            item.pubDate,
+            item.category,
+            item.pictureUrl,
+            0,
+            0,
+            false,
+            false
+        )
     }
 }

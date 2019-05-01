@@ -1,6 +1,7 @@
 package ru.merkulyevsasha
 
 import android.content.Context
+import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.domain.SetupInteractor
@@ -15,10 +16,9 @@ import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
-import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.users.UsersApiRepositoryImpl
-import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 
 class ServiceLocator(context: Context) {
 
@@ -41,6 +41,7 @@ class ServiceLocator(context: Context) {
         when (clazz) {
             ArticlesInteractor::class.java -> maps[clazz] = ArticlesInteractorImpl(
                 getArticlesApiRepository(),
+                getPreferences(),
                 getDatabaseRepository()
             )
             UsersInteractor::class.java -> maps[clazz] = UsersInteractorImpl(

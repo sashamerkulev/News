@@ -1,8 +1,7 @@
 package ru.merkulyevsasha.news.presentation.articlecomments
 
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
-import ru.merkulyevsasha.core.presenters.ArticleCommentsPresenter
-import ru.merkulyevsasha.news.presentation.base.BasePresenter
+import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 
-class ArticleCommentsPresenterImpl(private val articleCommentsInteractor: ArticleCommentsInteractor) : BasePresenter<ArticleCommentsView>(), ArticleCommentsPresenter {
+class ArticleCommentsPresenterImpl(private val articleCommentsInteractor: ArticleCommentsInteractor) : BasePresenterImpl<ArticleCommentsView>() {
 }

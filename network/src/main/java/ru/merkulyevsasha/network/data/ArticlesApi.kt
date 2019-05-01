@@ -2,16 +2,21 @@ package ru.merkulyevsasha.network.data
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import ru.merkulyevsasha.network.models.ArticleCommentsResponse
 import ru.merkulyevsasha.network.models.ArticleResponse
+import java.util.*
 
 interface ArticlesApi {
 
-    @GET("/articles")
-    fun getArticles(): Single<List<ArticleResponse>>
+    @POST("/articles")
+    @FormUrlEncoded
+    fun getArticles(@Field("lastArticleReadDate") lastArticleReadDate: Date?): Single<List<ArticleResponse>>
 
     @GET("/articles/favorites")
     fun getFavoriteArticles(): Single<List<ArticleResponse>>

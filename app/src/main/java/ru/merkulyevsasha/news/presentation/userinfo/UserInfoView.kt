@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.presentation.userinfo
 
-interface UserInfoView {
+import ru.merkulyevsasha.news.presentation.base.BaseView
+
+interface UserInfoView: BaseView {
 
 }
