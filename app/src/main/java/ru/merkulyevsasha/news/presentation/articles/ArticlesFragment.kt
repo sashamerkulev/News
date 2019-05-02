@@ -3,9 +3,11 @@ package ru.merkulyevsasha.news.presentation.articles
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.ColorInt
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +59,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
         combinator?.combine(toolbar)
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
+        initSwipeRefreshColorScheme()
 
         layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
@@ -88,6 +91,10 @@ class ArticlesFragment : Fragment(), ArticlesView {
         adapter.setItems(items)
     }
 
+    override fun updateItems(items: List<Article>) {
+        adapter.updateItems(items)
+    }
+
     override fun showError() {
     }
 
@@ -97,6 +104,18 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
     override fun hideProgress() {
         swipeRefreshLayout.isRefreshing = false
+    }
+
+    private fun initSwipeRefreshColorScheme() {
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
+        @ColorInt val color1 = typedValue.data
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(color1)
+
+        theme.resolveAttribute(R.attr.colorControlNormal, typedValue, true)
+        @ColorInt val color2 = typedValue.data
+        swipeRefreshLayout.setColorSchemeColors(color2)
     }
 
     private inner class NewsViewAdapter constructor(
@@ -154,6 +173,11 @@ class ArticlesFragment : Fragment(), ArticlesView {
             this.items.addAll(items)
             this.notifyDataSetChanged()
             //if (position > 0) layoutManager.scrollToPosition(position)
+        }
+
+        fun updateItems(items: List<Article>) {
+            this.items.addAll(0, items) // TODO update existing items in the collection
+            this.notifyDataSetChanged()
         }
 
     }

@@ -28,7 +28,10 @@ class ArticlesInteractorImpl(
     override fun refreshAndGetArticles(): Single<List<Article>> {
         return Single.fromCallable { keyValueStorage.getLastArticleReadDate() ?: Date(0) }
             .flatMap { articlesApiRepository.getArticles(it) }
-            .doOnSuccess { databaseRepository.addOrUpdateArticles(it) }
+            .doOnSuccess {
+                databaseRepository.addOrUpdateArticles(it)
+                keyValueStorage.setLastArticleReadDate(Date())
+            }
             .subscribeOn(Schedulers.io())
     }
 

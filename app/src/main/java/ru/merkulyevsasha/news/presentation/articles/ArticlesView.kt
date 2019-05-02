@@ -4,8 +4,9 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.presentation.base.BaseView
 
 interface ArticlesView : BaseView {
-    fun showItems(items: List<Article>)
     fun showError()
     fun hideProgress()
     fun showProgress()
+    fun showItems(items: List<Article>)
+    fun updateItems(items: List<Article>)
 }

@@ -22,7 +22,17 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
     }
 
     fun onRefresh() {
-
+        compositeDisposable.add(
+            articlesInteractor.refreshAndGetArticles()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe(
+                    { view?.updateItems(it) },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    }))
     }
 
     fun onArticleCliked(newItem: Article) {
