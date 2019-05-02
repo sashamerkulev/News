@@ -6,12 +6,14 @@ class Article(
     val articleId: Int,
     val sourceName: String,
     val title: String,
+    val link: String,
     val description: String?,
     val pubDate: Date,
     val category: String,
     val pictureUrl: String?,
-    val likes: Long,
-    val dislikes: Long,
-    val like: Boolean,
-    val dislike: Boolean
-    )
+    val usersLikeCount: Int,
+    val usersDislikeCount: Int,
+    val isUserLiked: Boolean,
+    val isUserDisliked: Boolean,
+    val isUserCommented: Boolean
+)

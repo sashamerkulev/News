@@ -15,7 +15,17 @@ class ArticlesInteractorImpl(
     private val keyValueStorage: KeyValueStorage,
     private val databaseRepository: DatabaseRepository
 ) : ArticlesInteractor {
+
     override fun getArticles(): Single<List<Article>> {
+        return databaseRepository.getArticles()
+            .flatMap { items ->
+                if (items.isEmpty()) refreshAndGetArticles()
+                else Single.just(items)
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun refreshAndGetArticles(): Single<List<Article>> {
         return Single.fromCallable { keyValueStorage.getLastArticleReadDate() ?: Date(0) }
             .flatMap { articlesApiRepository.getArticles(it) }
             .doOnSuccess { databaseRepository.addOrUpdateArticles(it) }

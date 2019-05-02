@@ -16,5 +16,10 @@ class ArticleEntity(
     val pubDate: Date,
     val category: String,
     val pictureUrl: String,
+    val usersLikeCount: Int,
+    val usersDislikeCount: Int,
+    val isUserDisliked: Boolean,
+    val isUserLiked: Boolean,
+    val isUserCommented: Boolean,
     val search: String
 )

@@ -9,12 +9,14 @@ import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
 import ru.merkulyevsasha.database.mappers.ArticleCommentsMapper
+import ru.merkulyevsasha.database.mappers.ArticleEntityMapper
 import ru.merkulyevsasha.database.mappers.ArticleMapper
 import ru.merkulyevsasha.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.database.mappers.RssSourceMapper
 
 class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
 
+    private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
     private val articleCommentsMapper = ArticleCommentsMapper()
     private val rssSourceMapper = RssSourceMapper()
@@ -28,7 +30,7 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
     override fun getArticles(): Single<List<Article>> {
         return database.articleDao.getArticles()
             .flattenAsFlowable { it }
-            .map { articleMapper.map(it) }
+            .map { articleEntityMapper.map(it) }
             .toList()
     }
 
@@ -55,6 +57,7 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
     }
 
     override fun addOrUpdateArticles(articles: List<Article>) {
+        database.articleDao.insertOrUpdate(articles.map { articleMapper.map(it) })
     }
 
 }

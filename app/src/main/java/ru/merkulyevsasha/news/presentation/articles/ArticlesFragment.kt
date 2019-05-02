@@ -25,6 +25,7 @@ import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import java.text.SimpleDateFormat
 
 class ArticlesFragment : Fragment(), ArticlesView {
+
     companion object {
         @JvmStatic
         val TAG: String = ArticlesFragment::class.java.simpleName
@@ -90,6 +91,13 @@ class ArticlesFragment : Fragment(), ArticlesView {
     override fun showError() {
     }
 
+    override fun showProgress() {
+        swipeRefreshLayout.isRefreshing = true
+    }
+
+    override fun hideProgress() {
+        swipeRefreshLayout.isRefreshing = false
+    }
 
     private inner class NewsViewAdapter constructor(
         private val context: Context,

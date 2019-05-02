@@ -4,23 +4,22 @@ import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.database.entities.ArticleEntity
 
-class ArticleMapper : Mapper<Article, ArticleEntity> {
-    override fun map(item: Article): ArticleEntity {
-        return ArticleEntity(
+class ArticleEntityMapper: Mapper<ArticleEntity, Article> {
+    override fun map(item: ArticleEntity): Article {
+        return Article(
             item.articleId,
             item.sourceName,
             item.title,
             item.link,
-            item.description ?: "",
+            item.description,
             item.pubDate,
             item.category,
-            item.pictureUrl ?: "",
+            item.pictureUrl,
             item.usersLikeCount,
             item.usersDislikeCount,
             item.isUserLiked,
             item.isUserDisliked,
-            item.isUserCommented,
-            ""
+            item.isUserCommented
         )
     }
 }

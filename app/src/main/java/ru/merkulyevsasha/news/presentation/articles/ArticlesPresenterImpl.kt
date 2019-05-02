@@ -11,6 +11,8 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
         compositeDisposable.add(
             articlesInteractor.getArticles()
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
                 .subscribe(
                     { view?.showItems(it) },
                     {
