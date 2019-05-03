@@ -24,6 +24,10 @@ open class BaseApiRepository(sharedPreferences: KeyValueStorage) {
         builder.addInterceptor(TokenInterceptor(sharedPreferences))
         val client = builder.build()
 
+//        val gson = GsonBuilder()
+//            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+//            .create()
+
         retrofit = Retrofit.Builder()
             .baseUrl(BuildConfig.API_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

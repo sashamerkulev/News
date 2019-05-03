@@ -17,6 +17,7 @@ class ArticleEntityMapper: Mapper<ArticleEntity, Article> {
             item.pictureUrl,
             item.usersLikeCount,
             item.usersDislikeCount,
+            item.usersCommentCount,
             item.isUserLiked,
             item.isUserDisliked,
             item.isUserCommented

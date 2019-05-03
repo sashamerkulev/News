@@ -4,31 +4,31 @@ import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 
-class SourceNameMapper(private val databaseRepository: DatabaseRepository) : Mapper<List<Article>, List<Article>> {
+class SourceNameMapper(private val databaseRepository: DatabaseRepository) : Mapper<Article, Article> {
 
     private var rssSourceNameMap = mutableMapOf<String, String>()
 
-    override fun map(item: List<Article>): List<Article> {
+    override fun map(item: Article): Article {
         if (rssSourceNameMap.isEmpty()) {
             val map = databaseRepository.getRssSources().associateBy({ it.name }, { it.title })
             rssSourceNameMap.putAll(map)
         }
-        return item.map {
-            Article(it.articleId,
-                rssSourceNameMap[it.sourceName] ?: it.sourceName,
-                it.title,
-                it.link,
-                it.description,
-                it.pubDate,
-                it.category,
-                it.pictureUrl,
-                it.usersLikeCount,
-                it.usersDislikeCount,
-                it.isUserLiked,
-                it.isUserDisliked,
-                it.isUserCommented
-            )
-        }
+        return Article(item.articleId,
+            rssSourceNameMap[item.sourceName] ?: item.sourceName,
+            item.title,
+            item.link,
+            item.description,
+            item.pubDate,
+            item.category,
+            item.pictureUrl,
+            item.usersLikeCount,
+            item.usersDislikeCount,
+            item.usersCommentCount,
+            item.isUserLiked,
+            item.isUserDisliked,
+            item.isUserCommented
+        )
+
     }
 
 }

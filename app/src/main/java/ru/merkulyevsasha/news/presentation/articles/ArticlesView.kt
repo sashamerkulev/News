@@ -9,4 +9,6 @@ interface ArticlesView : BaseView {
     fun showProgress()
     fun showItems(items: List<Article>)
     fun updateItems(items: List<Article>)
+    fun setItemLike(item: Article)
+    fun setItemDislike(item: Article)
 }

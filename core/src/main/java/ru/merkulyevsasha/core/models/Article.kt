@@ -11,9 +11,10 @@ class Article(
     val pubDate: Date,
     val category: String,
     val pictureUrl: String?,
-    val usersLikeCount: Int,
-    val usersDislikeCount: Int,
-    val isUserLiked: Boolean,
-    val isUserDisliked: Boolean,
-    val isUserCommented: Boolean
+    var usersLikeCount: Int,
+    var usersDislikeCount: Int,
+    var usersCommentCount: Int,
+    var isUserLiked: Boolean,
+    var isUserDisliked: Boolean,
+    var isUserCommented: Boolean
 )

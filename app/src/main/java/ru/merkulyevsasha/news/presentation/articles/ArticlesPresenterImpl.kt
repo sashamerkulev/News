@@ -35,7 +35,35 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
                     }))
     }
 
-    fun onArticleCliked(newItem: Article) {
+    fun onArticleCliked(item: Article) {
+
+    }
+
+    fun onLikeClicked(article: Article) {
+        compositeDisposable.add(
+            articlesInteractor.likeArticle(article)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { item-> view?.setItemLike(item) },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    }))
+    }
+
+    fun onDislikeClicked(article: Article) {
+        compositeDisposable.add(
+            articlesInteractor.dislikeArticle(article)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { item-> view?.setItemDislike(item) },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    }))
+    }
+
+    fun onCommentClicked(articleId: Int) {
 
     }
 

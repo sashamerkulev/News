@@ -58,4 +58,12 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
         database.articleDao.insertOrUpdate(articles.map { articleMapper.map(it) })
     }
 
+    override fun updateLikeArticle(article: Article) {
+        database.articleDao.update(articleMapper.map(article))
+    }
+
+    override fun updateDislikeArticle(article: Article) {
+        database.articleDao.update(articleMapper.map(article))
+    }
+
 }

@@ -14,6 +14,7 @@ data class ArticleResponse(
     @field:SerializedName("PictureUrl") val pictureUrl: String?,
     @field:SerializedName("Likes") val likes: Int,
     @field:SerializedName("Dislikes") val dislikes: Int,
+    @field:SerializedName("Comments") val comments: Int,
     @field:SerializedName("Like") val like: Int,
     @field:SerializedName("Dislike") val dislike: Int,
     @field:SerializedName("Comment") val comment: Int

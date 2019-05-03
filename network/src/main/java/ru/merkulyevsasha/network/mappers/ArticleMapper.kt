@@ -17,6 +17,7 @@ class ArticleMapper : Mapper<ArticleResponse, Article> {
             item.pictureUrl,
             item.likes,
             item.dislikes,
+            item.comments,
             item.like > 0,
             item.dislike > 0,
             item.comment > 0

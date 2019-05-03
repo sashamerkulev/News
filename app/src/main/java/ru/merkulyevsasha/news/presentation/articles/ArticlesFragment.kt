@@ -1,9 +1,9 @@
 package ru.merkulyevsasha.news.presentation.articles
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.annotation.ColorInt
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -11,10 +11,15 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_articles.toolbar
+import kotlinx.android.synthetic.main.row_news_item.view.imageViewComment
+import kotlinx.android.synthetic.main.row_news_item.view.imageViewDislike
+import kotlinx.android.synthetic.main.row_news_item.view.imageViewLike
 import kotlinx.android.synthetic.main.row_news_item.view.imageViewThumb
 import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonComment
 import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonDislike
@@ -22,12 +27,17 @@ import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonLike
 import kotlinx.android.synthetic.main.row_news_item.view.newsDateSource
 import kotlinx.android.synthetic.main.row_news_item.view.newsDescription
 import kotlinx.android.synthetic.main.row_news_item.view.newsTitle
+import kotlinx.android.synthetic.main.row_news_item.view.textViewComment
+import kotlinx.android.synthetic.main.row_news_item.view.textViewDislike
+import kotlinx.android.synthetic.main.row_news_item.view.textViewLike
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ArticlesFragment : Fragment(), ArticlesView {
 
@@ -47,6 +57,9 @@ class ArticlesFragment : Fragment(), ArticlesView {
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
+    private lateinit var typedValue : TypedValue
+    private lateinit var theme: Resources.Theme
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
@@ -59,6 +72,10 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        typedValue = TypedValue()
+        theme = requireContext().theme
+
         combinator?.combine(toolbar)
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
@@ -90,14 +107,6 @@ class ArticlesFragment : Fragment(), ArticlesView {
         presenter?.bindView(this)
     }
 
-    override fun showItems(items: List<Article>) {
-        adapter.setItems(items)
-    }
-
-    override fun updateItems(items: List<Article>) {
-        adapter.updateItems(items)
-    }
-
     override fun showError() {
     }
 
@@ -109,16 +118,30 @@ class ArticlesFragment : Fragment(), ArticlesView {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    private fun initSwipeRefreshColorScheme() {
-        val typedValue = TypedValue()
-        val theme = requireContext().theme
-        theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
-        @ColorInt val color1 = typedValue.data
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(color1)
+    override fun showItems(items: List<Article>) {
+        adapter.setItems(items)
+    }
 
-        theme.resolveAttribute(R.attr.colorControlNormal, typedValue, true)
-        @ColorInt val color2 = typedValue.data
-        swipeRefreshLayout.setColorSchemeColors(color2)
+    override fun updateItems(items: List<Article>) {
+        adapter.updateItems(items)
+    }
+
+    override fun setItemLike(item: Article) {
+        adapter.updateItem(item)
+    }
+
+    override fun setItemDislike(item: Article) {
+        adapter.updateItem(item)
+    }
+
+    private fun initSwipeRefreshColorScheme() {
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getThemeCAttrColor(R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(getThemeCAttrColor(R.attr.colorControlNormal))
+    }
+
+    private fun getThemeCAttrColor(attrColor: Int): Int {
+        theme.resolveAttribute(attrColor, typedValue, true)
+        return typedValue.data
     }
 
     private inner class NewsViewAdapter constructor(
@@ -126,7 +149,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
         private val items: MutableList<Article>
     ) : RecyclerView.Adapter<ItemViewHolder>() {
 
-        @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
+        private val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.row_news_item, parent, false)
@@ -160,14 +183,33 @@ class ArticlesFragment : Fragment(), ArticlesView {
                 Glide.with(context).load(url).into(holder.itemView.imageViewThumb)
             }
 
+            holder.itemView.textViewLike.text = item.usersLikeCount.toString()
+            holder.itemView.textViewDislike.text = item.usersDislikeCount.toString()
+            holder.itemView.textViewComment.text = item.usersCommentCount.toString()
+
+            setAccentColorIf(item.isUserLiked, holder.itemView.textViewLike, holder.itemView.imageViewLike)
+            setAccentColorIf(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
+            setAccentColorIf(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
+
             holder.itemView.setOnClickListener {
                 val newItem = items[holder.adapterPosition]
                 presenter?.onArticleCliked(newItem)
             }
 
-            holder.itemView.layoutButtonLike.setOnClickListener {  }
-            holder.itemView.layoutButtonComment.setOnClickListener {  }
-            holder.itemView.layoutButtonDislike.setOnClickListener {  }
+            holder.itemView.layoutButtonLike.setOnClickListener {
+                val newItem = items[holder.adapterPosition]
+                presenter?.onLikeClicked(newItem)
+            }
+
+            holder.itemView.layoutButtonComment.setOnClickListener {
+                val newItem = items[holder.adapterPosition]
+                presenter?.onCommentClicked(newItem.articleId)
+            }
+
+            holder.itemView.layoutButtonDislike.setOnClickListener {
+                val newItem = items[holder.adapterPosition]
+                presenter?.onDislikeClicked(newItem)
+            }
 
         }
 
@@ -175,7 +217,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
             return items.size
         }
 
-        internal fun setItems(items: List<Article>) {
+        fun setItems(items: List<Article>) {
             this.items.clear()
             this.items.addAll(items)
             this.notifyDataSetChanged()
@@ -185,6 +227,26 @@ class ArticlesFragment : Fragment(), ArticlesView {
         fun updateItems(items: List<Article>) {
             this.items.addAll(0, items) // TODO update existing items in the collection
             this.notifyDataSetChanged()
+        }
+
+        fun updateItem(item: Article) {
+            val index = items.indexOfFirst { it.articleId == item.articleId }
+            items[index] = item
+            //this.notifyItemChanged(index)
+            this.notifyDataSetChanged()
+        }
+
+        private fun setAccentColorIf(expression: Boolean, textView: TextView, imageView: ImageView) {
+            if (expression) {
+                val color = getThemeCAttrColor(R.attr.black)
+                textView.setTextColor(color)
+                imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+            } else {
+                val color = getThemeCAttrColor(R.attr.separator)
+                textView.setTextColor(color)
+                imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+            }
+
         }
 
     }

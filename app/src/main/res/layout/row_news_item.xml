@@ -114,6 +114,18 @@
             app:srcCompat="@drawable/ic_like_48"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
 
+        <TextView
+            android:id="@+id/textViewLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:color="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
+            app:layout_constraintStart_toEndOf="@+id/imageViewLike"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
+            tools:text="112" />
+
         <View
             android:id="@+id/layoutButtonComment"
             android:layout_width="0dp"
@@ -137,6 +149,18 @@
             app:srcCompat="@drawable/ic_comment_black_24px"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
 
+        <TextView
+            android:id="@+id/textViewComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:color="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
+            app:layout_constraintStart_toEndOf="@+id/imageViewComment"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
+            tools:text="1" />
+
         <View
             android:id="@+id/layoutButtonDislike"
             android:layout_width="0dp"
@@ -159,6 +183,19 @@
             app:layout_constraintTop_toTopOf="@+id/layoutButtonDislike"
             app:srcCompat="@drawable/ic_dislike_48"
             tools:ignore="ContentDescription,VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/textViewDislike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:color="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
+            app:layout_constraintStart_toEndOf="@+id/imageViewDislike"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
+            tools:text="99" />
+
 
     </android.support.constraint.ConstraintLayout>
 

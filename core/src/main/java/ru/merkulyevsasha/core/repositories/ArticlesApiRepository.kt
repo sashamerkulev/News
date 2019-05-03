@@ -9,10 +9,10 @@ import java.util.*
 interface ArticlesApiRepository {
     fun getArticles(lastArticleReadDate: Date?): Single<List<Article>>
     fun getFavoriteArticles(): Single<List<Article>>
-    fun likeArticle(articleId: Long): Completable
-    fun dislikeArticle(articleId: Long): Completable
-    fun getArticleComments(articleId: Long): Single<List<ArticleComments>>
-    fun likeArticleComment(articleId: Long, commentId: Long): Completable
-    fun dislikeArticleComment(articleId: Long, commentId: Long): Completable
+    fun likeArticle(articleId: Int): Single<Article>
+    fun dislikeArticle(articleId: Int): Single<Article>
+    fun getArticleComments(articleId: Int): Single<List<ArticleComments>>
+    fun likeArticleComment(articleId: Int, commentId: Int): Completable
+    fun dislikeArticleComment(articleId: Int, commentId: Int): Completable
 }
 

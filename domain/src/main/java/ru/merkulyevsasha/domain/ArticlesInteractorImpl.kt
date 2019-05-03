@@ -1,6 +1,5 @@
 package ru.merkulyevsasha.domain
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
@@ -22,19 +21,25 @@ class ArticlesInteractorImpl(
         return databaseRepository.getArticles()
             .flatMap { items ->
                 if (items.isEmpty()) refreshAndGetArticles()
-                else Single.just(sourceNameMapper.map(items))
+                else Single.just(items.map { sourceNameMapper.map(it) })
             }
             .subscribeOn(Schedulers.io())
     }
 
     override fun refreshAndGetArticles(): Single<List<Article>> {
         return Single.fromCallable { keyValueStorage.getLastArticleReadDate() ?: Date(0) }
-            .flatMap { articlesApiRepository.getArticles(it) }
-            .doOnSuccess {
-                databaseRepository.addOrUpdateArticles(it)
-                keyValueStorage.setLastArticleReadDate(Date())
+            .flatMap {
+                articlesApiRepository.getArticles(it)
+                    .doOnSuccess { items ->
+                        if (items.isNotEmpty()) {
+                            databaseRepository.addOrUpdateArticles(items)
+                            keyValueStorage.setLastArticleReadDate(Date())
+                        }
+                    }
             }
+            .flattenAsFlowable { it }
             .map { sourceNameMapper.map(it) }
+            .toList()
             .subscribeOn(Schedulers.io())
     }
 
@@ -42,11 +47,21 @@ class ArticlesInteractorImpl(
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun likeArticle(articleId: Long): Completable {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    override fun likeArticle(article: Article): Single<Article> {
+        return articlesApiRepository.likeArticle(article.articleId)
+            .doOnSuccess {
+                databaseRepository.updateLikeArticle(it)
+            }
+            .map { sourceNameMapper.map(it) }
+            .subscribeOn(Schedulers.io())
     }
 
-    override fun dislikeArticle(articleId: Long): Completable {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    override fun dislikeArticle(article: Article): Single<Article> {
+        return articlesApiRepository.dislikeArticle(article.articleId)
+            .doOnSuccess {
+                databaseRepository.updateDislikeArticle(it)
+            }
+            .map { sourceNameMapper.map(it) }
+            .subscribeOn(Schedulers.io())
     }
 }

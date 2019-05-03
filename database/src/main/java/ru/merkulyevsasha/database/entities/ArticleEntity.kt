@@ -18,8 +18,9 @@ class ArticleEntity(
     val pictureUrl: String,
     val usersLikeCount: Int,
     val usersDislikeCount: Int,
-    val isUserDisliked: Boolean,
+    val usersCommentCount: Int,
     val isUserLiked: Boolean,
+    val isUserDisliked: Boolean,
     val isUserCommented: Boolean,
     val search: String
 )
