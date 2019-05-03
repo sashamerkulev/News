@@ -3,7 +3,6 @@ package ru.merkulyevsasha.database.dao
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import io.reactivex.Single
 import ru.merkulyevsasha.database.entities.RssSourceEntity
 
 @Dao
@@ -15,6 +14,5 @@ interface SetupDao {
     fun deleteRssSources()
 
     @Query("select id, name, title from sources")
-    fun getRssSources(): Single<List<RssSourceEntity>>
-
+    fun getRssSources(): List<RssSourceEntity>
 }

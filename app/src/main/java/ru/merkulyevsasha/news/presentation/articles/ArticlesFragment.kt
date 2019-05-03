@@ -16,6 +16,9 @@ import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_articles.toolbar
 import kotlinx.android.synthetic.main.row_news_item.view.imageViewThumb
+import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonComment
+import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonDislike
+import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonLike
 import kotlinx.android.synthetic.main.row_news_item.view.newsDateSource
 import kotlinx.android.synthetic.main.row_news_item.view.newsDescription
 import kotlinx.android.synthetic.main.row_news_item.view.newsTitle
@@ -161,6 +164,10 @@ class ArticlesFragment : Fragment(), ArticlesView {
                 val newItem = items[holder.adapterPosition]
                 presenter?.onArticleCliked(newItem)
             }
+
+            holder.itemView.layoutButtonLike.setOnClickListener {  }
+            holder.itemView.layoutButtonComment.setOnClickListener {  }
+            holder.itemView.layoutButtonDislike.setOnClickListener {  }
 
         }
 

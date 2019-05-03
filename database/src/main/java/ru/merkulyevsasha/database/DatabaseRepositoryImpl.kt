@@ -49,11 +49,9 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
         database.setupDao.deleteRssSources()
     }
 
-    override fun getRssSources(): Single<List<RssSource>> {
+    override fun getRssSources(): List<RssSource> {
         return database.setupDao.getRssSources()
-            .flattenAsFlowable { it }
             .map { rssSourceEntityMapper.map(it) }
-            .toList()
     }
 
     override fun addOrUpdateArticles(articles: List<Article>) {

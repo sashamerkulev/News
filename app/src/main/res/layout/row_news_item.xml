@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,10 +38,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewChevron"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sep1">
 
@@ -73,25 +74,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:textSize="14sp"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutTitle"
             tools:text="description" />
-
-        <ImageView
-            android:id="@+id/imageViewChevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:tint="?attr/separator"
-            app:layout_constraintBottom_toBottomOf="@+id/layoutTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/layoutTitle"
-            app:srcCompat="@drawable/ic_chevron_right_black_24px"
-            tools:ignore="ContentDescription,VectorDrawableCompat" />
 
         <View
             android:id="@+id/sep2"
@@ -100,6 +90,75 @@
             android:layout_marginTop="8dp"
             android:background="?attr/separator"
             app:layout_constraintTop_toBottomOf="@+id/newsDescription" />
+
+        <View
+            android:id="@+id/layoutButtonLike"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toStartOf="@+id/layoutButtonComment"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sep2" />
+
+        <ImageView
+            android:id="@+id/imageViewLike"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="false"
+            android:tint="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonLike"
+            app:layout_constraintStart_toStartOf="@+id/layoutButtonLike"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
+            app:srcCompat="@drawable/ic_like_48"
+            tools:ignore="ContentDescription,VectorDrawableCompat" />
+
+        <View
+            android:id="@+id/layoutButtonComment"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toStartOf="@+id/layoutButtonDislike"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/layoutButtonLike"
+            app:layout_constraintTop_toBottomOf="@+id/sep2" />
+
+        <ImageView
+            android:id="@+id/imageViewComment"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="false"
+            android:tint="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonComment"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonComment"
+            app:layout_constraintStart_toStartOf="@+id/layoutButtonComment"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonComment"
+            app:srcCompat="@drawable/ic_comment_black_24px"
+            tools:ignore="ContentDescription,VectorDrawableCompat" />
+
+        <View
+            android:id="@+id/layoutButtonDislike"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/layoutButtonComment"
+            app:layout_constraintTop_toBottomOf="@+id/sep2" />
+
+        <ImageView
+            android:id="@+id/imageViewDislike"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="false"
+            android:tint="?attr/separator"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonDislike"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonDislike"
+            app:layout_constraintStart_toStartOf="@+id/layoutButtonDislike"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonDislike"
+            app:srcCompat="@drawable/ic_dislike_48"
+            tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     </android.support.constraint.ConstraintLayout>
 

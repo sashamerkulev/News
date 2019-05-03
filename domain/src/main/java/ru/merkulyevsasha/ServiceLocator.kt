@@ -16,6 +16,7 @@ import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
+import ru.merkulyevsasha.domain.mappers.SourceNameMapper
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.users.UsersApiRepositoryImpl
@@ -42,7 +43,8 @@ class ServiceLocator(context: Context) {
             ArticlesInteractor::class.java -> maps[clazz] = ArticlesInteractorImpl(
                 getArticlesApiRepository(),
                 getPreferences(),
-                getDatabaseRepository()
+                getDatabaseRepository(),
+                SourceNameMapper(getDatabaseRepository())
             )
             UsersInteractor::class.java -> maps[clazz] = UsersInteractorImpl(
                 getUsersApiRepository(),
