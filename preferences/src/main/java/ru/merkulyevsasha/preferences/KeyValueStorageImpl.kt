@@ -11,6 +11,12 @@ class KeyValueStorageImpl(context: Context) : KeyValueStorage {
     private var setupId: String = ""
     private var lastArticleReadDate: Date? = null
 
+    init {
+        token = prefs.getString("TOKEN", "") ?: ""
+        setupId = prefs.getString("SETUP_ID", "") ?: ""
+        lastArticleReadDate = Date(prefs.getLong("LAST_ARTICLE_READ", 0))
+    }
+
     override fun getAccessToken(): String {
         return token
     }

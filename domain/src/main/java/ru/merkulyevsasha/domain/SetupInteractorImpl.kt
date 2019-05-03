@@ -14,19 +14,26 @@ class SetupInteractorImpl(
     private val databaseRepository: DatabaseRepository
 ) : SetupInteractor {
     override fun registerSetup(setupId: String, getFirebaseId: () -> String): Single<List<RssSource>> {
-        return Single.fromCallable {  preferences.getSetupId() }
+        return Single.fromCallable { preferences.getSetupId() }
             .flatMap { savedSetupId ->
                 if (savedSetupId.isEmpty()) setupApiRepository.registerSetup(setupId, getFirebaseId())
                     .doOnSuccess { token ->
                         preferences.setAccessToken(token.token)
                         preferences.setSetupId(setupId)
                     }
-                else Single.fromCallable {  preferences.getAccessToken() }
+                else Single.fromCallable { preferences.getAccessToken() }
             }
-            .flatMap { setupApiRepository.getRssSources() }
-            .doOnSuccess { sources ->
-                databaseRepository.deleteRssSources()
-                databaseRepository.saveRssSources(sources)
+            .flatMap {
+                setupApiRepository.getRssSources()
+                    .doOnSuccess { sources ->
+                        databaseRepository.deleteRssSources()
+                        databaseRepository.saveRssSources(sources)
+                    }
+                    .onErrorResumeNext {
+                        val sources = databaseRepository.getRssSources()
+                        if (sources.isEmpty()) throw it
+                        else Single.just(sources)
+                    }
             }
             .subscribeOn(Schedulers.io())
     }
