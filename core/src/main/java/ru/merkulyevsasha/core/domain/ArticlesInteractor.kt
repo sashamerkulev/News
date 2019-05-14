@@ -7,6 +7,7 @@ interface ArticlesInteractor {
     fun refreshAndGetArticles(): Single<List<Article>>
     fun getArticles(): Single<List<Article>>
     fun getFavoriteArticles(): Single<List<Article>>
-    fun likeArticle(article: Article): Single<Article>
-    fun dislikeArticle(article: Article): Single<Article>
+    fun likeArticle(articleId: Int): Single<Article>
+    fun dislikeArticle(articleId: Int): Single<Article>
+    fun getArticle(articleId: Int): Single<Article>
 }

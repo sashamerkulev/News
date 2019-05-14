@@ -18,6 +18,7 @@ import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
@@ -27,6 +28,7 @@ import ru.merkulyevsasha.news.presentation.userinfo.UserInfoFragment
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainView, ToolbarCombinator, MainActivityRouter {
 
     companion object {
+        @JvmStatic
         fun show(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setTheme(R.style.AppTheme_Normal)
         super.onCreate(savedInstanceState)
 
-        setContentView(ru.merkulyevsasha.news.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
         navigation.setNavigationItemSelectedListener(this)
 
         val serviceLocator = (application as NewsApp).getServiceLocator()
@@ -137,6 +139,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, UserInfoFragment.newInstance(), UserInfoFragment.TAG)
             .commit()
+    }
+
+    override fun showArticleDetails(articleId: Int) {
+        ArticleDetailsActivity.show(this, articleId)
     }
 
 }

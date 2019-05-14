@@ -1,47 +1,28 @@
-package ru.merkulyevsasha.news.presentation.articles
+package ru.merkulyevsasha.news.presentation.articledetails
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
-import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import timber.log.Timber
 
-class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<ArticlesView>() {
-    fun onFirstLoadArticles() {
+class ArticleDetailsPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<ArticleDetailsView>() {
+    fun onFirstLoadArticle(articleId: Int) {
         compositeDisposable.add(
-            articlesInteractor.getArticles()
+            articlesInteractor.getArticle(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe(
-                    { view?.showItems(it) },
+                    { view?.showItem(it) },
                     {
                         Timber.e(it)
                         view?.showError()
                     }))
     }
 
-    fun onRefresh() {
+    fun onLikeClicked(articleId: Int) {
         compositeDisposable.add(
-            articlesInteractor.refreshAndGetArticles()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view?.showProgress() }
-                .doAfterTerminate { view?.hideProgress() }
-                .subscribe(
-                    { view?.updateItems(it) },
-                    {
-                        Timber.e(it)
-                        view?.showError()
-                    }))
-    }
-
-    fun onArticleCliked(item: Article) {
-        view?.showArticleDetails(item.articleId)
-    }
-
-    fun onLikeClicked(article: Article) {
-        compositeDisposable.add(
-            articlesInteractor.likeArticle(article.articleId)
+            articlesInteractor.likeArticle(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { item -> view?.updateItem(item) },
@@ -51,9 +32,9 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
                     }))
     }
 
-    fun onDislikeClicked(article: Article) {
+    fun onDislikeClicked(articleId: Int) {
         compositeDisposable.add(
-            articlesInteractor.dislikeArticle(article.articleId)
+            articlesInteractor.dislikeArticle(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { item -> view?.updateItem(item) },
@@ -66,5 +47,4 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
     fun onCommentClicked(articleId: Int) {
 
     }
-
 }

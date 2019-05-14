@@ -13,6 +13,5 @@ interface DatabaseRepository {
     fun getRssSources(): List<RssSource>
     fun deleteRssSources()
     fun addOrUpdateArticles(articles: List<Article>)
-    fun updateLikeArticle(article: Article)
-    fun updateDislikeArticle(article: Article)
+    fun updateArticle(article: Article)
 }

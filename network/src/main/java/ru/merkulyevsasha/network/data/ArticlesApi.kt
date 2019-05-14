@@ -26,6 +26,9 @@ interface ArticlesApi {
     @PUT("/articles/{articleId}/dislike")
     fun dislikeArticle(@Path("articleId") articleId: Int): Single<ArticleResponse>
 
+    @GET("/articles/{articleId}")
+    fun getArticle(@Path("articleId") articleId: Int): Single<ArticleResponse>
+
     @GET("/articles/{articleId}/comments")
     fun getArticleComments(@Path("articleId") articleId: Int): Single<List<ArticleCommentsResponse>>
 

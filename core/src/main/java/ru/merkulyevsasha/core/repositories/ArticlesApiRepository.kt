@@ -11,8 +11,8 @@ interface ArticlesApiRepository {
     fun getFavoriteArticles(): Single<List<Article>>
     fun likeArticle(articleId: Int): Single<Article>
     fun dislikeArticle(articleId: Int): Single<Article>
+    fun getArticle(articleId: Int): Single<Article>
     fun getArticleComments(articleId: Int): Single<List<ArticleComments>>
     fun likeArticleComment(articleId: Int, commentId: Int): Completable
     fun dislikeArticleComment(articleId: Int, commentId: Int): Completable
 }
-

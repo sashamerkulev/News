@@ -47,6 +47,11 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
             .map { articlesMapper.map(it) }
     }
 
+    override fun getArticle(articleId: Int): Single<Article> {
+        return api.getArticle(articleId)
+            .map { articlesMapper.map(it) }
+    }
+
     override fun getArticleComments(articleId: Int): Single<List<ArticleComments>> {
         return api.getArticleComments(articleId)
             .flattenAsFlowable { it }
@@ -61,5 +66,4 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
     override fun dislikeArticleComment(articleId: Int, commentId: Int): Completable {
         return api.dislikeArticleComment(articleId, commentId)
     }
-
 }

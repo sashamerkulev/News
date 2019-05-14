@@ -6,4 +6,5 @@ interface MainActivityRouter {
     fun showUserActivities()
     fun showUserInfo()
 
+    fun showArticleDetails(articleId: Int)
 }

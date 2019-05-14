@@ -34,6 +34,7 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +59,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
     private lateinit var layoutManager: LinearLayoutManager
 
     private lateinit var typedValue : TypedValue
-    private lateinit var theme: Resources.Theme
+    private lateinit var currentTheme: Resources.Theme
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -74,7 +75,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
         super.onViewCreated(view, savedInstanceState)
 
         typedValue = TypedValue()
-        theme = requireContext().theme
+        currentTheme = requireContext().theme
 
         combinator?.combine(toolbar)
 
@@ -107,6 +108,11 @@ class ArticlesFragment : Fragment(), ArticlesView {
         presenter?.bindView(this)
     }
 
+    override fun onDestroyView() {
+        presenter?.onDestroy()
+        super.onDestroyView()
+    }
+
     override fun showError() {
     }
 
@@ -126,21 +132,23 @@ class ArticlesFragment : Fragment(), ArticlesView {
         adapter.updateItems(items)
     }
 
-    override fun setItemLike(item: Article) {
+    override fun updateItem(item: Article) {
         adapter.updateItem(item)
     }
 
-    override fun setItemDislike(item: Article) {
-        adapter.updateItem(item)
+    override fun showArticleDetails(articleId: Int) {
+        if (requireActivity() is MainActivityRouter) {
+            (requireActivity() as MainActivityRouter).showArticleDetails(articleId)
+        }
     }
 
     private fun initSwipeRefreshColorScheme() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getThemeCAttrColor(R.attr.colorAccent))
-        swipeRefreshLayout.setColorSchemeColors(getThemeCAttrColor(R.attr.colorControlNormal))
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getThemeAttrColor(R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(getThemeAttrColor(R.attr.colorControlNormal))
     }
 
-    private fun getThemeCAttrColor(attrColor: Int): Int {
-        theme.resolveAttribute(attrColor, typedValue, true)
+    private fun getThemeAttrColor(attrColor: Int): Int {
+        currentTheme.resolveAttribute(attrColor, typedValue, true)
         return typedValue.data
     }
 
@@ -238,11 +246,11 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
         private fun setAccentColorIf(expression: Boolean, textView: TextView, imageView: ImageView) {
             if (expression) {
-                val color = getThemeCAttrColor(R.attr.black)
+                val color = getThemeAttrColor(R.attr.black)
                 textView.setTextColor(color)
                 imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
             } else {
-                val color = getThemeCAttrColor(R.attr.separator)
+                val color = getThemeAttrColor(R.attr.separator)
                 textView.setTextColor(color)
                 imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
             }

@@ -47,21 +47,31 @@ class ArticlesInteractorImpl(
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun likeArticle(article: Article): Single<Article> {
-        return articlesApiRepository.likeArticle(article.articleId)
+    override fun likeArticle(articleId: Int): Single<Article> {
+        return articlesApiRepository.likeArticle(articleId)
             .doOnSuccess {
-                databaseRepository.updateLikeArticle(it)
+                databaseRepository.updateArticle(it)
             }
             .map { sourceNameMapper.map(it) }
             .subscribeOn(Schedulers.io())
     }
 
-    override fun dislikeArticle(article: Article): Single<Article> {
-        return articlesApiRepository.dislikeArticle(article.articleId)
+    override fun dislikeArticle(articleId: Int): Single<Article> {
+        return articlesApiRepository.dislikeArticle(articleId)
             .doOnSuccess {
-                databaseRepository.updateDislikeArticle(it)
+                databaseRepository.updateArticle(it)
             }
             .map { sourceNameMapper.map(it) }
             .subscribeOn(Schedulers.io())
     }
+
+    override fun getArticle(articleId: Int): Single<Article> {
+        return articlesApiRepository.getArticle(articleId)
+            .doOnSuccess {
+                databaseRepository.updateArticle(it)
+            }
+            .map { sourceNameMapper.map(it) }
+            .subscribeOn(Schedulers.io())
+    }
+
 }
