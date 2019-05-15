@@ -30,8 +30,8 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
             .toList()
     }
 
-    override fun getFavoriteArticles(): Single<List<Article>> {
-        return api.getFavoriteArticles()
+    override fun getUserActivityArticles(): Single<List<Article>> {
+        return api.getUserActivityArticles()
             .flattenAsFlowable { it }
             .map { articlesMapper.map(it) }
             .toList()

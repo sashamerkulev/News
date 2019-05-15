@@ -4,9 +4,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
+import ru.merkulyevsasha.news.presentation.common.newsadapter.CallbackClickHandler
 import timber.log.Timber
 
-class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<ArticlesView>() {
+class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<ArticlesView>(), CallbackClickHandler {
     fun onFirstLoadArticles() {
         compositeDisposable.add(
             articlesInteractor.getArticles()
@@ -35,35 +36,35 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
                     }))
     }
 
-    fun onArticleCliked(item: Article) {
+    override fun onArticleCliked(item: Article) {
         view?.showArticleDetails(item.articleId)
     }
 
-    fun onLikeClicked(article: Article) {
+    override fun onLikeClicked(item: Article) {
         compositeDisposable.add(
-            articlesInteractor.likeArticle(article.articleId)
+            articlesInteractor.likeArticle(item.articleId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { item -> view?.updateItem(item) },
+                    { newItem -> view?.updateItem(newItem) },
                     {
                         Timber.e(it)
                         view?.showError()
                     }))
     }
 
-    fun onDislikeClicked(article: Article) {
+    override fun onDislikeClicked(item: Article) {
         compositeDisposable.add(
-            articlesInteractor.dislikeArticle(article.articleId)
+            articlesInteractor.dislikeArticle(item.articleId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { item -> view?.updateItem(item) },
+                    { newItem -> view?.updateItem(newItem) },
                     {
                         Timber.e(it)
                         view?.showError()
                     }))
     }
 
-    fun onCommentClicked(articleId: Int) {
+    override fun onCommentClicked(articleId: Int) {
 
     }
 

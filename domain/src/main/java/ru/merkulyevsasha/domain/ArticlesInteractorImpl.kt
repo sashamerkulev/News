@@ -43,8 +43,12 @@ class ArticlesInteractorImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override fun getFavoriteArticles(): Single<List<Article>> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    override fun getUserActivityArticles(): Single<List<Article>> {
+        return articlesApiRepository.getUserActivityArticles()
+            .flattenAsFlowable { it }
+            .map { sourceNameMapper.map(it) }
+            .toList()
+            .subscribeOn(Schedulers.io())
     }
 
     override fun likeArticle(articleId: Int): Single<Article> {
