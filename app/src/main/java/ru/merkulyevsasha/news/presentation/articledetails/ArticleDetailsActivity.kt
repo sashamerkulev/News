@@ -2,17 +2,13 @@ package ru.merkulyevsasha.news.presentation.articledetails
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ImageView
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_articledetails.imageViewComment
 import kotlinx.android.synthetic.main.activity_articledetails.imageViewDislike
 import kotlinx.android.synthetic.main.activity_articledetails.imageViewLike
@@ -28,6 +24,7 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 
 class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
 
@@ -42,8 +39,7 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
     }
 
     private var presenter: ArticleDetailsPresenterImpl? = null
-    private lateinit var typedValue : TypedValue
-    private lateinit var currentTheme: Resources.Theme
+    private lateinit var colorThemeResolver: ColorThemeResolver
 
     private var articleId = 0
 
@@ -53,8 +49,7 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
 
         setContentView(R.layout.activity_articledetails)
 
-        typedValue = TypedValue()
-        currentTheme = theme
+        colorThemeResolver = ColorThemeResolver(TypedValue(), theme)
 
         layoutButtonLike.setOnClickListener {
             presenter?.onLikeClicked(articleId)
@@ -121,30 +116,12 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
         textViewDislike.text = item.usersDislikeCount.toString()
         textViewComment.text = item.usersCommentCount.toString()
 
-        setAccentColorIf(item.isUserLiked, textViewLike, imageViewLike)
-        setAccentColorIf(item.isUserDisliked, textViewDislike, imageViewDislike)
-        setAccentColorIf(item.isUserCommented, textViewComment, imageViewComment)
+        colorThemeResolver.setAccentColorIf(item.isUserLiked, textViewLike, imageViewLike)
+        colorThemeResolver.setAccentColorIf(item.isUserDisliked, textViewDislike, imageViewDislike)
+        colorThemeResolver.setAccentColorIf(item.isUserCommented, textViewComment, imageViewComment)
     }
 
     override fun showError() {
-    }
-
-    private fun getThemeAttrColor(attrColor: Int): Int {
-        currentTheme.resolveAttribute(attrColor, typedValue, true)
-        return typedValue.data
-    }
-
-    private fun setAccentColorIf(expression: Boolean, textView: TextView, imageView: ImageView) {
-        if (expression) {
-            val color = getThemeAttrColor(R.attr.black)
-            textView.setTextColor(color)
-            imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-        } else {
-            val color = getThemeAttrColor(R.attr.separator)
-            textView.setTextColor(color)
-            imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-        }
-
     }
 
     private inner class ArticleDetailsViewClient : WebViewClient() {

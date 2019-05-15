@@ -1,8 +1,6 @@
 package ru.merkulyevsasha.news.presentation.articles
 
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -11,8 +9,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
@@ -34,6 +30,7 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import java.text.SimpleDateFormat
@@ -58,8 +55,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var typedValue : TypedValue
-    private lateinit var currentTheme: Resources.Theme
+    private lateinit var colorThemeResolver: ColorThemeResolver
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -74,8 +70,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        typedValue = TypedValue()
-        currentTheme = requireContext().theme
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         combinator?.combine(toolbar)
 
@@ -143,13 +138,8 @@ class ArticlesFragment : Fragment(), ArticlesView {
     }
 
     private fun initSwipeRefreshColorScheme() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getThemeAttrColor(R.attr.colorAccent))
-        swipeRefreshLayout.setColorSchemeColors(getThemeAttrColor(R.attr.colorControlNormal))
-    }
-
-    private fun getThemeAttrColor(attrColor: Int): Int {
-        currentTheme.resolveAttribute(attrColor, typedValue, true)
-        return typedValue.data
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
     }
 
     private inner class NewsViewAdapter constructor(
@@ -195,9 +185,9 @@ class ArticlesFragment : Fragment(), ArticlesView {
             holder.itemView.textViewDislike.text = item.usersDislikeCount.toString()
             holder.itemView.textViewComment.text = item.usersCommentCount.toString()
 
-            setAccentColorIf(item.isUserLiked, holder.itemView.textViewLike, holder.itemView.imageViewLike)
-            setAccentColorIf(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
-            setAccentColorIf(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
+            colorThemeResolver.setAccentColorIf(item.isUserLiked, holder.itemView.textViewLike, holder.itemView.imageViewLike)
+            colorThemeResolver.setAccentColorIf(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
+            colorThemeResolver.setAccentColorIf(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
 
             holder.itemView.setOnClickListener {
                 val newItem = items[holder.adapterPosition]
@@ -242,19 +232,6 @@ class ArticlesFragment : Fragment(), ArticlesView {
             items[index] = item
             //this.notifyItemChanged(index)
             this.notifyDataSetChanged()
-        }
-
-        private fun setAccentColorIf(expression: Boolean, textView: TextView, imageView: ImageView) {
-            if (expression) {
-                val color = getThemeAttrColor(R.attr.black)
-                textView.setTextColor(color)
-                imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-            } else {
-                val color = getThemeAttrColor(R.attr.separator)
-                textView.setTextColor(color)
-                imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-            }
-
         }
 
     }
