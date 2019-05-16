@@ -8,7 +8,7 @@ import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.domain.mappers.SourceNameMapper
-import java.util.*
+import java.util.Date
 
 class ArticlesInteractorImpl(
     private val articlesApiRepository: ArticlesApiRepository,
@@ -77,5 +77,4 @@ class ArticlesInteractorImpl(
             .map { sourceNameMapper.map(it) }
             .subscribeOn(Schedulers.io())
     }
-
 }

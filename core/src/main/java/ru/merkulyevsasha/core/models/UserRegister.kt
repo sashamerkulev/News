@@ -1,5 +1,3 @@
 package ru.merkulyevsasha.core.models
 
-class UserRegister {
-
-}
+class UserRegister

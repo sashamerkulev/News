@@ -1,6 +1,6 @@
 package ru.merkulyevsasha.core.preferences
 
-import java.util.*
+import java.util.Date
 
 interface KeyValueStorage {
     fun getAccessToken(): String

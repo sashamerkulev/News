@@ -3,7 +3,7 @@ package ru.merkulyevsasha.database.entities
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
-import java.util.*
+import java.util.Date
 
 @Entity(tableName = "articles", indices = [Index("sourceName"), Index("search")])
 class ArticleEntity(

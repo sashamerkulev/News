@@ -9,4 +9,3 @@ interface UsersApiRepository {
     fun updateUser(name: String, phone: String): Completable
     fun uploadUserPhoto(): Completable
 }
-

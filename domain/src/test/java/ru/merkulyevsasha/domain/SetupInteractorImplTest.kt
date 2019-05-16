@@ -73,5 +73,4 @@ class SetupInteractorImplTest {
         Mockito.verify(databaseRepository).deleteRssSources()
         Mockito.verify(databaseRepository).saveRssSources(emptyList())
     }
-
 }

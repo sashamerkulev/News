@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComments
-import java.util.*
+import java.util.Date
 
 interface ArticlesApiRepository {
     fun getArticles(lastArticleReadDate: Date?): Single<List<Article>>

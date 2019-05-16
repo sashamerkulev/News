@@ -28,7 +28,5 @@ class SourceNameMapper(private val databaseRepository: DatabaseRepository) : Map
             item.isUserDisliked,
             item.isUserCommented
         )
-
     }
-
 }

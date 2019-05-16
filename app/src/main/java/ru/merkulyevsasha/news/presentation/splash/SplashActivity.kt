@@ -10,7 +10,7 @@ import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.main.MainActivity
-import java.util.*
+import java.util.UUID
 
 class SplashActivity : AppCompatActivity(), SplashView {
 

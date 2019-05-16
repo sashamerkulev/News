@@ -26,5 +26,4 @@ class SetupApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiReposi
             .map { rssSourceMapper.map(it) }
             .toList()
     }
-
 }

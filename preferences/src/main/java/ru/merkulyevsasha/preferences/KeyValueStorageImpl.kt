@@ -2,7 +2,7 @@ package ru.merkulyevsasha.preferences
 
 import android.content.Context
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import java.util.*
+import java.util.Date
 
 class KeyValueStorageImpl(context: Context) : KeyValueStorage {
     private val prefs: android.content.SharedPreferences = context.getSharedPreferences("keyvalue", Context.MODE_PRIVATE)
@@ -43,5 +43,4 @@ class KeyValueStorageImpl(context: Context) : KeyValueStorage {
         lastArticleReadDate = lastDate
         prefs.edit().putLong("LAST_ARTICLE_READ", lastDate.time).apply()
     }
-
 }

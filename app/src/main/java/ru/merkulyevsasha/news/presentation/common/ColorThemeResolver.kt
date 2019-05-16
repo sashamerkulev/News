@@ -22,7 +22,6 @@ class ColorThemeResolver(
             textView.setTextColor(color)
             imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
-
     }
 
     fun getThemeAttrColor(attrColor: Int): Int {

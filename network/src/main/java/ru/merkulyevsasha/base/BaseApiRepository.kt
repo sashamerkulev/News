@@ -10,7 +10,7 @@ import ru.merkulyevsasha.network.BuildConfig
 
 open class BaseApiRepository(sharedPreferences: KeyValueStorage) {
 
-    internal val retrofit : Retrofit
+    internal val retrofit: Retrofit
 
     init {
         val builder = OkHttpClient.Builder()
@@ -35,5 +35,4 @@ open class BaseApiRepository(sharedPreferences: KeyValueStorage) {
             .client(client)
             .build()
     }
-
 }

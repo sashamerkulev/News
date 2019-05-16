@@ -55,6 +55,5 @@ class UserActivitiesPresenterImpl(private val articlesInteractor: ArticlesIntera
     }
 
     override fun onCommentClicked(articleId: Int) {
-
     }
 }

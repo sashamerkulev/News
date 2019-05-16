@@ -8,4 +8,3 @@ interface SetupApiRepository {
     fun registerSetup(setupId: String, firebaseId: String): Single<Token>
     fun getRssSources(): Single<List<RssSource>>
 }
-

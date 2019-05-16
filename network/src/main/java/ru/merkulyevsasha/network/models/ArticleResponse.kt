@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.network.models
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 data class ArticleResponse(
     @field:SerializedName("ArticleId") val articleId: Int,

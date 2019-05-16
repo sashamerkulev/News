@@ -27,5 +27,4 @@ class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiReposi
     override fun uploadUserPhoto(): Completable {
         return api.uploadUserPhoto()
     }
-
 }

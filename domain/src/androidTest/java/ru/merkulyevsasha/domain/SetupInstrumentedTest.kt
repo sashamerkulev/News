@@ -10,7 +10,7 @@ import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.database.DatabaseRepositoryImpl
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
-import java.util.*
+import java.util.UUID
 
 @RunWith(NewsInsrumentalTestRunner::class)
 class SetupInstrumentedTest {
@@ -53,7 +53,6 @@ class SetupInstrumentedTest {
 
         testObserver
             .assertNoErrors()
-        assertThat<RssSource>(databaseRepository.getRssSources().blockingGet()).isNotEmpty()
+        assertThat<RssSource>(databaseRepository.getRssSources()).isNotEmpty
     }
-
 }

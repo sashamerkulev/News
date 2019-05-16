@@ -83,4 +83,3 @@ class ServiceLocator(context: Context) {
         return maps[KeyValueStorage::class.java] as KeyValueStorage
     }
 }
-

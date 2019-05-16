@@ -4,7 +4,7 @@ import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.database.entities.ArticleEntity
 
-class ArticleEntityMapper: Mapper<ArticleEntity, Article> {
+class ArticleEntityMapper : Mapper<ArticleEntity, Article> {
     override fun map(item: ArticleEntity): Article {
         return Article(
             item.articleId,

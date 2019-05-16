@@ -127,5 +127,4 @@ class ArticlesFragment : Fragment(), ArticlesView {
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
         swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
     }
-
 }

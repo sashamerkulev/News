@@ -23,7 +23,7 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class NewsViewAdapter constructor(
     private val context: Context,
@@ -93,7 +93,6 @@ class NewsViewAdapter constructor(
             val newItem = items[holder.adapterPosition]
             callbackClickHandler?.onDislikeClicked(newItem)
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -104,7 +103,7 @@ class NewsViewAdapter constructor(
         this.items.clear()
         this.items.addAll(items)
         this.notifyDataSetChanged()
-        //if (position > 0) layoutManager.scrollToPosition(position)
+        // if (position > 0) layoutManager.scrollToPosition(position)
     }
 
     fun updateItems(items: List<Article>) {
@@ -115,8 +114,7 @@ class NewsViewAdapter constructor(
     fun updateItem(item: Article) {
         val index = items.indexOfFirst { it.articleId == item.articleId }
         items[index] = item
-        //this.notifyItemChanged(index)
+        // this.notifyItemChanged(index)
         this.notifyDataSetChanged()
     }
-
 }

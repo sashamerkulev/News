@@ -79,5 +79,4 @@ class NewsWorker constructor(
         @JvmStatic
         private val reentrantLock = ReentrantLock()
     }
-
 }

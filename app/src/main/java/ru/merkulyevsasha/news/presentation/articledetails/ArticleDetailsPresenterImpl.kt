@@ -45,6 +45,5 @@ class ArticleDetailsPresenterImpl(private val articlesInteractor: ArticlesIntera
     }
 
     fun onCommentClicked(articleId: Int) {
-
     }
 }

@@ -144,7 +144,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun showArticleDetails(articleId: Int) {
         ArticleDetailsActivity.show(this, articleId)
     }
-
 }
-
-

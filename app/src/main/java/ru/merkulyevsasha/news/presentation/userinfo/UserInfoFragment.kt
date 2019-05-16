@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_userainfo.toolbar
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.news.NewsApp
@@ -43,6 +44,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
         val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         val interactor = serviceLocator.get(UsersInteractor::class.java)
         presenter = UserInfoPresenterImpl(interactor)
+        presenter?.bindView(this)
+        presenter?.onFirstLoad()
     }
 
     override fun onPause() {
@@ -55,4 +58,14 @@ class UserInfoFragment : Fragment(), UserInfoView {
         presenter?.bindView(this)
     }
 
+    override fun showError() {
+    }
+
+    override fun showProgress() {
+        swipeRefreshLayout.isRefreshing = true
+    }
+
+    override fun hideProgress() {
+        swipeRefreshLayout.isRefreshing = false
+    }
 }

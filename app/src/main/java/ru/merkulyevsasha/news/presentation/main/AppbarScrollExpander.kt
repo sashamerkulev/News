@@ -30,12 +30,10 @@ class AppbarScrollExpander internal constructor(view: View, appbarlayout: AppBar
             }
             false
         }
-
     }
 
     private inner class TouchPoint {
         internal var x: Float = 0f
         internal var y: Float = 0f
     }
-
 }

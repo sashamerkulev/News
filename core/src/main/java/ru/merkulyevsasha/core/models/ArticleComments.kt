@@ -1,5 +1,3 @@
 package ru.merkulyevsasha.core.models
 
-class ArticleComments {
-
-}
+class ArticleComments

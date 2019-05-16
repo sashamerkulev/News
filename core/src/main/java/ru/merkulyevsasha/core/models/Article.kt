@@ -1,6 +1,6 @@
 package ru.merkulyevsasha.core.models
 
-import java.util.*
+import java.util.Date
 
 class Article(
     val articleId: Int,

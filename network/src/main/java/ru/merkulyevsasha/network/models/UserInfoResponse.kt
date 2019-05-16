@@ -1,5 +1,3 @@
 package ru.merkulyevsasha.network.models
 
-class UserInfoResponse {
-
-}
+class UserInfoResponse

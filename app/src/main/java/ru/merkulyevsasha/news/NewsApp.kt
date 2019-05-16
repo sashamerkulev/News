@@ -8,7 +8,7 @@ import ru.merkulyevsasha.news.newsjobs.NewsWorkerPeriodicRunner
 
 class NewsApp : Application() {
 
-    private lateinit var serviceLocator : ServiceLocator
+    private lateinit var serviceLocator: ServiceLocator
 
     override fun onCreate() {
         super.onCreate()
@@ -22,7 +22,7 @@ class NewsApp : Application() {
         }
     }
 
-    fun getServiceLocator() : ServiceLocator {
+    fun getServiceLocator(): ServiceLocator {
         return serviceLocator
     }
 }
