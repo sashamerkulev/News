@@ -18,7 +18,7 @@ android {
 }
 
 def work = "1.0.1"
-def firebaseCore = "16.0.8"
+def firebaseCore = "16.0.9"
 def firebaseCrash = "16.2.1"
 def firebaseAds = "17.2.0"
 def glide = "4.6.1"
@@ -61,7 +61,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
-}
-
