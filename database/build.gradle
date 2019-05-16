@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 apply from: "$rootDir/android.gradle"
+apply from: "$rootDir/confktlint.gradle"
 
 def room = '1.1.1'
 

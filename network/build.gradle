@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply from: "$rootDir/android.gradle"
+apply from: "$rootDir/confktlint.gradle"
 
 def retrofit = '2.2.0'
 def okHttp = '3.11.0'

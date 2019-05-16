@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply from: "$rootDir/android.gradle"
+apply from: "$rootDir/confktlint.gradle"
 
 //noinspection GroovyMissingReturnStatement
 android {
