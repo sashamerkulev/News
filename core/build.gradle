@@ -4,4 +4,4 @@ apply plugin: 'kotlin-android-extensions'
 
 apply from: "$rootDir/android.gradle"
 apply from: "$rootDir/confktlint.gradle"
-
+apply from: "$rootDir/detekt.gradle"
