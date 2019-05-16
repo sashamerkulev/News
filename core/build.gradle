@@ -3,6 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply from: "$rootDir/android.gradle"
-apply from: "$rootDir/confktlint.gradle"
+apply from: "$rootDir/ktlint.gradle"
 apply from: "$rootDir/detekt.gradle"
 apply from: "$rootDir/jacoco.gradle"
