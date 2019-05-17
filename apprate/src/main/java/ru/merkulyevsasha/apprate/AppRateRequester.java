@@ -2,7 +2,6 @@ package ru.merkulyevsasha.apprate;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
@@ -42,29 +41,20 @@ public class AppRateRequester {
                 builder.setMessage(R.string.rate_message);
                 builder.setCancelable(false);
 
-                builder.setNeutralButton(R.string.remind_later_message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharedPreferences.updateDate();
-                        dialog.dismiss();
-                    }
+                builder.setNeutralButton(R.string.remind_later_message, (dialog, which) -> {
+                    sharedPreferences.updateDate();
+                    dialog.dismiss();
                 });
 
-                builder.setNegativeButton(R.string.no_thanks_message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharedPreferences.setRated();
-                        dialog.dismiss();
-                    }
+                builder.setNegativeButton(R.string.no_thanks_message, (dialog, which) -> {
+                    sharedPreferences.setRated();
+                    dialog.dismiss();
                 });
 
-                builder.setPositiveButton(R.string.rate_now_message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharedPreferences.setRated();
-                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+packagename)));
-                        dialog.dismiss();
-                    }
+                builder.setPositiveButton(R.string.rate_now_message, (dialog, which) -> {
+                    sharedPreferences.setRated();
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+packagename)));
+                    dialog.dismiss();
                 });
 
                 builder.show();

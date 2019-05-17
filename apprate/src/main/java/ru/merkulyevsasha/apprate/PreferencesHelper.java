@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import java.util.Calendar;
 
-public class PreferencesHelper {
+class PreferencesHelper {
 
     private static final String APP_PREFERENCES = "appraterequester";
     private static final String KEY_COUNT = "count";
@@ -42,7 +42,7 @@ public class PreferencesHelper {
         return sharedPreferences.getInt(KEY_COUNT, 0);
     }
 
-    public long getDate(){
+    long getDate(){
         return sharedPreferences.getLong(KEY_DATE, 0);
     }
 
