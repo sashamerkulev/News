@@ -5,7 +5,9 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import timber.log.Timber
 
-class ArticleDetailsPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<ArticleDetailsView>() {
+class ArticleDetailsPresenterImpl(
+    private val articlesInteractor: ArticlesInteractor
+) : BasePresenterImpl<ArticleDetailsView>() {
     fun onFirstLoadArticle(articleId: Int) {
         compositeDisposable.add(
             articlesInteractor.getArticle(articleId)

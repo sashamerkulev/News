@@ -25,7 +25,8 @@ import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import ru.merkulyevsasha.news.presentation.useractivities.UserActivitiesFragment
 import ru.merkulyevsasha.news.presentation.userinfo.UserInfoFragment
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, MainView, ToolbarCombinator, MainActivityRouter {
+class MainActivity : AppCompatActivity(),
+    NavigationView.OnNavigationItemSelectedListener, MainView, ToolbarCombinator, MainActivityRouter {
 
     companion object {
         @JvmStatic
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var presenter: MainPresenter
 
-    private val navigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val navigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             ru.merkulyevsasha.news.R.id.navigation_articles -> {
                 showArticles()
@@ -113,7 +115,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun combine(toolbar: Toolbar) {
-        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, ru.merkulyevsasha.news.R.string.navigation_drawer_open, ru.merkulyevsasha.news.R.string.navigation_drawer_close)
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar,
+            R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
     }

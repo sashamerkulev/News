@@ -2,10 +2,11 @@ package ru.merkulyevsasha.preferences
 
 import android.content.Context
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import java.util.Date
+import java.util.*
 
 class KeyValueStorageImpl(context: Context) : KeyValueStorage {
-    private val prefs: android.content.SharedPreferences = context.getSharedPreferences("keyvalue", Context.MODE_PRIVATE)
+    private val prefs: android.content.SharedPreferences =
+        context.getSharedPreferences("keyvalue", Context.MODE_PRIVATE)
 
     private var token: String = ""
     private var setupId: String = ""

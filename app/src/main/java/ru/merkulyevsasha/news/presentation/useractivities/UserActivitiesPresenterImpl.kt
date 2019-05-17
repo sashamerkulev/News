@@ -7,7 +7,9 @@ import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import ru.merkulyevsasha.news.presentation.common.newsadapter.CallbackClickHandler
 import timber.log.Timber
 
-class UserActivitiesPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<UserActivitiesView>(), CallbackClickHandler {
+class UserActivitiesPresenterImpl(
+    private val articlesInteractor: ArticlesInteractor
+) : BasePresenterImpl<UserActivitiesView>(), CallbackClickHandler {
     fun onFirstLoadArticles() {
         compositeDisposable.add(
             articlesInteractor.getUserActivityArticles()

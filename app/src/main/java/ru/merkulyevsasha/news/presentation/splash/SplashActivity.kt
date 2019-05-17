@@ -10,7 +10,7 @@ import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.main.MainActivity
-import java.util.UUID
+import java.util.*
 
 class SplashActivity : AppCompatActivity(), SplashView {
 
@@ -54,9 +54,6 @@ class SplashActivity : AppCompatActivity(), SplashView {
     }
 
     private fun registerNewsChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        // Creating an existing notification channel with its original values performs no operation, so it's safe to call this code when starting an app.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.download_channel_name)
             val description = getString(R.string.download_channel_description)

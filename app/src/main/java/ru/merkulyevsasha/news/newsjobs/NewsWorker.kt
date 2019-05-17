@@ -20,7 +20,7 @@ class NewsWorker constructor(
     override fun doWork(): Result {
         println("NewsWorker.doWork: tryLock")
         if (reentrantLock.tryLock()) {
-            try {
+//            try {
                 println("NewsWorker.doWork: lock")
                 val singleRun = inputData.getBoolean("singleRun", false)
                 val navId = inputData.getInt("navId", R.id.nav_all)
@@ -35,13 +35,13 @@ class NewsWorker constructor(
 //                    println("NewsWorker.doWork: finished with: ${items.size}")
 //                    if (!singleRun) sendNotification(applicationContext)
 //                }
-            } catch (e: Exception) {
-                println("NewsWorker.doWork: finished with error: $e")
-            } finally {
+//            } catch (e: Exception) {
+//                println("NewsWorker.doWork: finished with error: $e")
+//            } finally {
 //                newsInteractor.setProgress(false)
 //                broadcastHelper.notifyWorkerFinished()
                 reentrantLock.unlock()
-            }
+//            }
         }
         return Result.success()
     }
@@ -72,11 +72,13 @@ class NewsWorker constructor(
         builder.setContentIntent(resultPendingIntent)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         // mId allows you to update the notification later on.
-        notificationManager.notify(993, builder.build())
+        notificationManager.notify(NOTIF_ID, builder.build())
     }
 
     companion object {
         @JvmStatic
         private val reentrantLock = ReentrantLock()
+
+        private const val NOTIF_ID = 993
     }
 }

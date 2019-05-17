@@ -110,9 +110,9 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    thresholdInFiles: 11
-    thresholdInClasses: 11
-    thresholdInInterfaces: 11
+    thresholdInFiles: 30
+    thresholdInClasses: 30
+    thresholdInInterfaces: 20
     thresholdInObjects: 11
     thresholdInEnums: 11
     ignoreDeprecated: false
@@ -220,7 +220,7 @@ formatting:
     continuationIndentSize: 4
   MaximumLineLength:
     active: true
-    maxLineLength: 120
+    maxLineLength: 150
   ModifierOrdering:
     active: true
     autoCorrect: true
@@ -415,7 +415,7 @@ style:
     active: false
   MaxLineLength:
     active: true
-    maxLineLength: 120
+    maxLineLength: 150
     excludePackageStatements: false
     excludeImportStatements: false
     excludeCommentStatements: false
@@ -426,7 +426,7 @@ style:
   NestedClassesVisibility:
     active: false
   NewLineAtEndOfFile:
-    active: true
+    active: false
   NoTabs:
     active: false
   OptionalAbstractKeyword:

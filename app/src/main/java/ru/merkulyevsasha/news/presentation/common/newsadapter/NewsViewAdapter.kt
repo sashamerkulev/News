@@ -23,7 +23,7 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
 class NewsViewAdapter constructor(
     private val context: Context,
@@ -51,13 +51,8 @@ class NewsViewAdapter constructor(
         val pubDate = item.pubDate
         holder.itemView.newsDateSource.text = String.format("%s %s", format.format(pubDate), source)
 
-        if (title == description || description.isNullOrEmpty()) {
-            holder.itemView.newsDescription.visibility = View.GONE
-        } else {
-            holder.itemView.newsDescription.visibility = View.VISIBLE
-            holder.itemView.newsDescription.text = description.trim { it <= ' ' }
-        }
-        holder.itemView.newsTitle.text = title
+        initDescription(title, description, holder)
+
         holder.itemView.imageViewThumb.setImageResource(0)
         if (url.isNullOrEmpty()) {
             holder.itemView.imageViewThumb.visibility = View.GONE
@@ -74,25 +69,7 @@ class NewsViewAdapter constructor(
         colorThemeResolver.setAccentColorIf(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
         colorThemeResolver.setAccentColorIf(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
 
-        holder.itemView.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onArticleCliked(newItem)
-        }
-
-        holder.itemView.layoutButtonLike.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onLikeClicked(newItem)
-        }
-
-        holder.itemView.layoutButtonComment.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onCommentClicked(newItem.articleId)
-        }
-
-        holder.itemView.layoutButtonDislike.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onDislikeClicked(newItem)
-        }
+        initClickListeners(holder)
     }
 
     override fun getItemCount(): Int {
@@ -116,5 +93,37 @@ class NewsViewAdapter constructor(
         items[index] = item
         // this.notifyItemChanged(index)
         this.notifyDataSetChanged()
+    }
+
+    private fun initDescription(title: String, description: String?, holder: ItemViewHolder) {
+        if (title == description || description.isNullOrEmpty()) {
+            holder.itemView.newsDescription.visibility = View.GONE
+        } else {
+            holder.itemView.newsDescription.visibility = View.VISIBLE
+            holder.itemView.newsDescription.text = description.trim { it <= ' ' }
+        }
+        holder.itemView.newsTitle.text = title
+    }
+
+    private fun initClickListeners(holder: ItemViewHolder) {
+        holder.itemView.setOnClickListener {
+            val newItem = items[holder.adapterPosition]
+            callbackClickHandler?.onArticleCliked(newItem)
+        }
+
+        holder.itemView.layoutButtonLike.setOnClickListener {
+            val newItem = items[holder.adapterPosition]
+            callbackClickHandler?.onLikeClicked(newItem)
+        }
+
+        holder.itemView.layoutButtonComment.setOnClickListener {
+            val newItem = items[holder.adapterPosition]
+            callbackClickHandler?.onCommentClicked(newItem.articleId)
+        }
+
+        holder.itemView.layoutButtonDislike.setOnClickListener {
+            val newItem = items[holder.adapterPosition]
+            callbackClickHandler?.onDislikeClicked(newItem)
+        }
     }
 }
