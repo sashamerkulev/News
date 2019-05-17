@@ -24,7 +24,7 @@ project.afterEvaluate {
             def testTaskName = "test${sourceName.capitalize()}UnitTest"
 
             def excludes = []
-            new File("${project.projectDir}/jacoco.exclude").eachLine { line ->
+            new File("$rootDir/jacoco.exclude").eachLine { line ->
                 if (!line.isEmpty() && !line.startsWith("//")) {
                     excludes << line
                 }
