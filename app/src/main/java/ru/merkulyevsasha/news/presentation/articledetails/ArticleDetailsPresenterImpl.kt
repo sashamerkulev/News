@@ -48,4 +48,7 @@ class ArticleDetailsPresenterImpl(
 
     fun onCommentClicked(articleId: Int) {
     }
+
+    fun onShareClicked(articleId: Int) {
+    }
 }

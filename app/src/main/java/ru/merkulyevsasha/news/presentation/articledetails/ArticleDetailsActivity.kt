@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_articledetails.imageViewLike
 import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonComment
 import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonDislike
 import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonLike
+import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonShare
 import kotlinx.android.synthetic.main.activity_articledetails.progressbar
 import kotlinx.android.synthetic.main.activity_articledetails.textViewComment
 import kotlinx.android.synthetic.main.activity_articledetails.textViewDislike
@@ -59,6 +60,9 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
         }
         layoutButtonDislike.setOnClickListener {
             presenter?.onDislikeClicked(articleId)
+        }
+        layoutButtonShare.setOnClickListener {
+            presenter?.onShareClicked(articleId)
         }
 
         articleId = intent.getIntExtra(ARTICLE_ID, 0)

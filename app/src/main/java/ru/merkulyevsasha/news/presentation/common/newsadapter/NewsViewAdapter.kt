@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.row_news_item.view.imageViewThumb
 import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonComment
 import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonDislike
 import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonLike
+import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonShare
 import kotlinx.android.synthetic.main.row_news_item.view.newsDateSource
 import kotlinx.android.synthetic.main.row_news_item.view.newsDescription
 import kotlinx.android.synthetic.main.row_news_item.view.newsTitle
@@ -124,6 +125,11 @@ class NewsViewAdapter constructor(
         holder.itemView.layoutButtonDislike.setOnClickListener {
             val newItem = items[holder.adapterPosition]
             callbackClickHandler?.onDislikeClicked(newItem)
+        }
+
+        holder.itemView.layoutButtonShare.setOnClickListener {
+            val newItem = items[holder.adapterPosition]
+            callbackClickHandler?.onShareClicked(newItem)
         }
     }
 }

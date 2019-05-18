@@ -8,6 +8,7 @@ import ru.merkulyevsasha.news.presentation.common.newsadapter.CallbackClickHandl
 import timber.log.Timber
 
 class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) : BasePresenterImpl<ArticlesView>(), CallbackClickHandler {
+
     fun onFirstLoadArticles() {
         compositeDisposable.add(
             articlesInteractor.getArticles()
@@ -66,4 +67,8 @@ class ArticlesPresenterImpl(private val articlesInteractor: ArticlesInteractor) 
 
     override fun onCommentClicked(articleId: Int) {
     }
+
+    override fun onShareClicked(item: Article) {
+    }
+
 }

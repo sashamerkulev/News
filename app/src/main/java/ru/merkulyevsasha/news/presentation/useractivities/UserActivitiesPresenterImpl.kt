@@ -58,4 +58,8 @@ class UserActivitiesPresenterImpl(
 
     override fun onCommentClicked(articleId: Int) {
     }
+
+    override fun onShareClicked(item: Article) {
+    }
+
 }

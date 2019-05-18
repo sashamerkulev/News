@@ -7,4 +7,5 @@ interface CallbackClickHandler {
     fun onLikeClicked(item: Article)
     fun onCommentClicked(articleId: Int)
     fun onDislikeClicked(item: Article)
+    fun onShareClicked(item: Article)
 }

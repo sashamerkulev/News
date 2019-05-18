@@ -50,6 +50,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sep2" />
 
+    <View
+        android:id="@+id/layoutButtonComment"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintEnd_toStartOf="@+id/layoutButtonDislike"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/layoutButtonLike"
+        app:layout_constraintTop_toBottomOf="@+id/sep2" />
+
+    <View
+        android:id="@+id/layoutButtonDislike"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintEnd_toEndOf="@+id/layoutButtonShare"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/layoutButtonComment"
+        app:layout_constraintTop_toBottomOf="@+id/sep2" />
+
+    <View
+        android:id="@+id/layoutButtonShare"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/layoutButtonDislike"
+        app:layout_constraintTop_toBottomOf="@+id/sep2" />
+
     <ImageView
         android:id="@+id/imageViewLike"
         android:layout_width="24dp"
@@ -60,7 +90,7 @@
         app:layout_constraintEnd_toEndOf="@+id/layoutButtonLike"
         app:layout_constraintStart_toStartOf="@+id/layoutButtonLike"
         app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
-        app:srcCompat="@drawable/ic_like_48"
+        app:srcCompat="@drawable/ic_mood_happy_24px"
         tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     <TextView
@@ -74,16 +104,6 @@
         app:layout_constraintStart_toEndOf="@+id/imageViewLike"
         app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
         tools:text="112" />
-
-    <View
-        android:id="@+id/layoutButtonComment"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintEnd_toStartOf="@+id/layoutButtonDislike"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/layoutButtonLike"
-        app:layout_constraintTop_toBottomOf="@+id/sep2" />
 
     <ImageView
         android:id="@+id/imageViewComment"
@@ -110,16 +130,6 @@
         app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
         tools:text="1" />
 
-    <View
-        android:id="@+id/layoutButtonDislike"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/layoutButtonComment"
-        app:layout_constraintTop_toBottomOf="@+id/sep2" />
-
     <ImageView
         android:id="@+id/imageViewDislike"
         android:layout_width="24dp"
@@ -130,7 +140,7 @@
         app:layout_constraintEnd_toEndOf="@+id/layoutButtonDislike"
         app:layout_constraintStart_toStartOf="@+id/layoutButtonDislike"
         app:layout_constraintTop_toTopOf="@+id/layoutButtonDislike"
-        app:srcCompat="@drawable/ic_dislike_48"
+        app:srcCompat="@drawable/ic_mood_unhappy_24px"
         tools:ignore="ContentDescription,VectorDrawableCompat" />
 
     <TextView
@@ -145,5 +155,17 @@
         app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
         tools:text="99" />
 
+    <ImageView
+        android:id="@+id/imageViewShare"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:clickable="false"
+        android:tint="?attr/separator"
+        app:layout_constraintBottom_toBottomOf="@+id/layoutButtonShare"
+        app:layout_constraintEnd_toEndOf="@+id/layoutButtonShare"
+        app:layout_constraintStart_toStartOf="@+id/layoutButtonShare"
+        app:layout_constraintTop_toTopOf="@+id/layoutButtonShare"
+        app:srcCompat="@drawable/ic_share_24px"
+        tools:ignore="ContentDescription,VectorDrawableCompat" />
 
 </android.support.constraint.ConstraintLayout>
