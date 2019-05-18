@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
-import kotlinx.android.synthetic.main.fragment_userainfo.toolbar
+import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.news.NewsApp
+import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 
 class UserInfoFragment : Fragment(), UserInfoView {
@@ -35,7 +35,7 @@ class UserInfoFragment : Fragment(), UserInfoView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(ru.merkulyevsasha.news.R.layout.fragment_userainfo, container, false)
+        inflater.inflate(R.layout.fragment_userinfo, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,14 +58,17 @@ class UserInfoFragment : Fragment(), UserInfoView {
         presenter?.bindView(this)
     }
 
+    override fun onDestroyView() {
+        presenter?.onDestroy()
+        super.onDestroyView()
+    }
+
     override fun showError() {
     }
 
     override fun showProgress() {
-        swipeRefreshLayout.isRefreshing = true
     }
 
     override fun hideProgress() {
-        swipeRefreshLayout.isRefreshing = false
     }
 }

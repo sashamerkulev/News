@@ -22,11 +22,16 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="user info"
-            app:layout_constraintEnd_toEndOf="parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewAvatar"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="16dp"
+            android:clickable="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_avatar_empty"
+            app:civ_border_color="?attr/separator"
+            app:civ_border_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
