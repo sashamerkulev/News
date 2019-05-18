@@ -17,11 +17,23 @@ class ArticlesInteractorImpl(
     private val sourceNameMapper: SourceNameMapper
 ) : ArticlesInteractor {
 
+    companion object {
+        private const val NOT_USER_ACTIVITIES_HOURS = 24
+        private const val USER_ACTIVITIES_HOURS = 24 * 30
+    }
+
     override fun getArticles(): Single<List<Article>> {
-        return databaseRepository.getArticles()
-            .flatMap { items ->
-                if (items.isEmpty()) refreshAndGetArticles()
-                else Single.just(items.map { sourceNameMapper.map(it) })
+        return Single.fromCallable {
+            val cleanDate = Calendar.getInstance()
+            cleanDate.add(Calendar.HOUR, -NOT_USER_ACTIVITIES_HOURS)
+            databaseRepository.removeOldArticles(cleanDate.time)
+        }
+            .flatMap {
+                databaseRepository.getArticles()
+                    .flatMap { items ->
+                        if (items.isEmpty()) refreshAndGetArticles()
+                        else Single.just(items.map { sourceNameMapper.map(it) })
+                    }
             }
             .subscribeOn(Schedulers.io())
     }
@@ -44,7 +56,7 @@ class ArticlesInteractorImpl(
     }
 
     override fun getUserActivityArticles(): Single<List<Article>> {
-        return articlesApiRepository.getUserActivityArticles()
+        return databaseRepository.getUserActivityArticles()
             .flattenAsFlowable { it }
             .map { sourceNameMapper.map(it) }
             .toList()

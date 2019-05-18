@@ -13,6 +13,7 @@ import ru.merkulyevsasha.database.mappers.ArticleEntityMapper
 import ru.merkulyevsasha.database.mappers.ArticleMapper
 import ru.merkulyevsasha.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.database.mappers.RssSourceMapper
+import java.util.*
 
 class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
 
@@ -29,6 +30,17 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
 
     override fun getArticles(): Single<List<Article>> {
         return database.articleDao.getArticles()
+            .flattenAsFlowable { it }
+            .map { articleEntityMapper.map(it) }
+            .toList()
+    }
+
+    override fun removeOldArticles(cleanDate: Date) {
+        database.articleDao.removeOldNotUserActivityArticles(cleanDate)
+    }
+
+    override fun getUserActivityArticles(): Single<List<Article>> {
+        return database.articleDao.getUserActivityArticles()
             .flattenAsFlowable { it }
             .map { articleEntityMapper.map(it) }
             .toList()

@@ -7,11 +7,18 @@ import android.arch.persistence.room.Query
 import android.arch.persistence.room.Update
 import io.reactivex.Single
 import ru.merkulyevsasha.database.entities.ArticleEntity
+import java.util.*
 
 @Dao
 interface ArticleDao {
     @Query("select * from articles order by pubDate desc")
     fun getArticles(): Single<List<ArticleEntity>>
+
+    @Query("select * from articles where isUserLiked or isUserCommented or isUserDisliked order by pubDate desc")
+    fun getUserActivityArticles(): Single<List<ArticleEntity>>
+
+    @Query("delete from articles where pubDate < :cleanDate and  not (isUserLiked or isUserCommented or isUserDisliked)")
+    fun removeOldNotUserActivityArticles(cleanDate: Date)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(items: List<ArticleEntity>)
