@@ -40,3 +40,52 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task allStaticAnalysis(
+        dependsOn: [
+                'app:lintDebug',
+                'app:ktlint',
+                'apprate:ktlint',
+                'core:ktlint',
+                'database:ktlint',
+                'domain:ktlint',
+                'network:ktlint',
+                'preferences:ktlint',
+                'app:detekt',
+                'apprate:detekt',
+                'core:detekt',
+                'database:detekt',
+                'domain:detekt',
+                'network:detekt',
+                'preferences:detekt'
+        ]) {
+    group = 'verification'
+}
+
+task allDebugUnitTest(
+        dependsOn: [
+                'app:testDebugUnitTest',
+                'apprate:testDebugUnitTest',
+                'core:testDebugUnitTest',
+                'database:testDebugUnitTest',
+                'domain:testDebugUnitTest',
+                'network:testDebugUnitTest',
+                'preferences:testDebugUnitTest'
+
+        ]) {
+    group = 'verification'
+}
+
+task allCoverageVerification(
+        dependsOn: [
+                'app:testDebugUnitTestCoverageVerification',
+                'apprate:testDebugUnitTestCoverageVerification',
+                'core:testDebugUnitTestCoverageVerification',
+                'database:testDebugUnitTestCoverageVerification',
+                'domain:testDebugUnitTestCoverageVerification',
+                'network:testDebugUnitTestCoverageVerification',
+                'preferences:testDebugUnitTestCoverageVerification'
+
+        ]) {
+    group = 'verification'
+}
