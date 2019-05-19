@@ -20,7 +20,9 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
         @JvmStatic
         fun newInstance(): Fragment {
-            return UserInfoFragment()
+            val fragment = UserInfoFragment()
+            fragment.arguments = Bundle()
+            return fragment
         }
     }
 

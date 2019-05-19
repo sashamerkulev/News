@@ -1,14 +1,13 @@
-package ru.merkulyevsasha.news.presentation.main
+package ru.merkulyevsasha.news.presentation.common
 
 import android.support.design.widget.AppBarLayout
 import android.view.MotionEvent
 import android.view.View
 
-/**
- * Created by sasha_merkulev on 01.10.2017.
- */
-
-class AppbarScrollExpander internal constructor(view: View, appbarlayout: AppBarLayout) {
+class AppbarScrollExpander(
+    view: View,
+    appbarlayout: AppBarLayout
+) {
 
     private val touchPoint: TouchPoint
     var expanded: Boolean = false

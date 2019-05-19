@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -40,22 +41,22 @@ class MainActivity : AppCompatActivity(),
 
     private val navigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            ru.merkulyevsasha.news.R.id.navigation_articles -> {
-                showArticles()
-                return@OnNavigationItemSelectedListener true
+            when (item.itemId) {
+                ru.merkulyevsasha.news.R.id.navigation_articles -> {
+                    showArticles()
+                    return@OnNavigationItemSelectedListener true
+                }
+                ru.merkulyevsasha.news.R.id.navigation_actions -> {
+                    showUserActivities()
+                    return@OnNavigationItemSelectedListener true
+                }
+                ru.merkulyevsasha.news.R.id.navigation_user -> {
+                    showUserInfo()
+                    return@OnNavigationItemSelectedListener true
+                }
             }
-            ru.merkulyevsasha.news.R.id.navigation_actions -> {
-                showUserActivities()
-                return@OnNavigationItemSelectedListener true
-            }
-            ru.merkulyevsasha.news.R.id.navigation_user -> {
-                showUserInfo()
-                return@OnNavigationItemSelectedListener true
-            }
+            false
         }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_Normal)
@@ -114,6 +115,11 @@ class MainActivity : AppCompatActivity(),
         super.onDestroy()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     override fun combine(toolbar: Toolbar) {
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar,
             R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -127,24 +133,35 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun showArticles() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, ArticlesFragment.newInstance(), ArticlesFragment.TAG)
-            .commit()
+        val tag = ArticlesFragment.TAG
+        val fragment = findOrCreateFragment(tag) { ArticlesFragment.newInstance() }
+        replaceFragment(tag, fragment)
     }
 
     override fun showUserActivities() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, UserActivitiesFragment.newInstance(), UserActivitiesFragment.TAG)
-            .commit()
+        val tag = UserActivitiesFragment.TAG
+        val fragment = findOrCreateFragment(tag) { UserActivitiesFragment.newInstance() }
+        replaceFragment(tag, fragment)
     }
 
     override fun showUserInfo() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, UserInfoFragment.newInstance(), UserInfoFragment.TAG)
-            .commit()
+        val tag = UserInfoFragment.TAG
+        val fragment = findOrCreateFragment(tag) { UserInfoFragment.newInstance() }
+        replaceFragment(tag, fragment)
     }
 
     override fun showArticleDetails(articleId: Int) {
         ArticleDetailsActivity.show(this, articleId)
+    }
+
+    private fun findOrCreateFragment(tag: String, createFragment: () -> Fragment): Fragment {
+        return supportFragmentManager.findFragmentByTag(tag) ?: createFragment()
+    }
+
+    private fun replaceFragment(tag: String, fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, fragment, tag)
+            .addToBackStack(tag)
+            .commit()
     }
 }

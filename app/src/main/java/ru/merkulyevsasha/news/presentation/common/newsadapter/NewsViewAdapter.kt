@@ -81,7 +81,6 @@ class NewsViewAdapter constructor(
         this.items.clear()
         this.items.addAll(items)
         this.notifyDataSetChanged()
-        // if (position > 0) layoutManager.scrollToPosition(position)
     }
 
     fun updateItems(items: List<Article>) {
@@ -92,7 +91,6 @@ class NewsViewAdapter constructor(
     fun updateItem(item: Article) {
         val index = items.indexOfFirst { it.articleId == item.articleId }
         items[index] = item
-        // this.notifyItemChanged(index)
         this.notifyDataSetChanged()
     }
 

@@ -18,4 +18,6 @@
     <string name="title_articles">Статьи</string>
     <string name="title_user">Пользователь</string>
     <string name="title_actions">Активности</string>
+    <string name="userinfo_button_camera_title">Загрузить с камеры</string>
+    <string name="userinfo_button_gallery_title">Загрузить с галереи</string>
 </resources>

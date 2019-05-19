@@ -26,10 +26,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.main.MainActivity" />
-        <activity android:name=".presentation.articledetails.ArticleDetailsActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".presentation.main.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".presentation.articledetails.ArticleDetailsActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".newsjobs.RebootActionReceiver">
             <intent-filter>

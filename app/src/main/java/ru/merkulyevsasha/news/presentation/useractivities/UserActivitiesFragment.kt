@@ -15,6 +15,8 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
+import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
@@ -28,7 +30,9 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
         @JvmStatic
         fun newInstance(): Fragment {
-            return UserActivitiesFragment()
+            val fragment = UserActivitiesFragment()
+            fragment.arguments = Bundle()
+            return fragment
         }
     }
 
@@ -39,6 +43,10 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     private lateinit var layoutManager: LinearLayoutManager
 
     private lateinit var colorThemeResolver: ColorThemeResolver
+
+    private lateinit var appbarScrollExpander: AppbarScrollExpander
+    private var expanded = true
+    private var position = 0
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -52,6 +60,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val savedState = savedInstanceState ?: arguments
+        savedState?.apply {
+            position = this.getInt(ArticlesFragment.KEY_POSITION, 0)
+            expanded = this.getBoolean(ArticlesFragment.KEY_EXPANDED, true)
+        }
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
@@ -89,8 +103,15 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         presenter?.bindView(this)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        saveFragmentState(outState)
+    }
+
     override fun onDestroyView() {
         presenter?.onDestroy()
+        saveFragmentState(arguments ?: Bundle())
         super.onDestroyView()
     }
 
@@ -107,6 +128,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     override fun showItems(items: List<Article>) {
         adapter.setItems(items)
+        layoutManager.scrollToPosition(position)
     }
 
     override fun updateItems(items: List<Article>) {
@@ -121,6 +143,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         if (requireActivity() is MainActivityRouter) {
             (requireActivity() as MainActivityRouter).showArticleDetails(articleId)
         }
+    }
+
+    private fun saveFragmentState(state: Bundle) {
+        position = layoutManager.findFirstVisibleItemPosition()
+        state.putInt(ArticlesFragment.KEY_POSITION, position)
+        state.putBoolean(ArticlesFragment.KEY_EXPANDED, expanded)
     }
 
     private fun initSwipeRefreshColorScheme() {

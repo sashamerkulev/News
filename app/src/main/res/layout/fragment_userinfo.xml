@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar_layout"
+        android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -34,6 +34,73 @@
             app:civ_border_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/layoutButtonCamera"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/layoutButtonGallery"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/layoutButtonCamera" />
+
+        <TextView
+            android:id="@+id/textViewCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/userinfo_button_camera_title"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonCamera"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonCamera"
+            app:layout_constraintStart_toStartOf="@+id/layoutButtonCamera"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonCamera" />
+
+        <TextView
+            android:id="@+id/textViewGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/userinfo_button_gallery_title"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonGallery"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonGallery"
+            app:layout_constraintStart_toStartOf="@+id/layoutButtonGallery"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonGallery" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/nameTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewAvatar">
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="Введите имя"
+                android:imeOptions="actionDone"
+                android:inputType="textPersonName" />
+
+        </android.support.design.widget.TextInputLayout>
 
     </android.support.constraint.ConstraintLayout>
 
