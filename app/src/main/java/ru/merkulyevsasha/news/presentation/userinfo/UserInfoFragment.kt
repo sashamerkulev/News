@@ -1,24 +1,41 @@
 package ru.merkulyevsasha.news.presentation.userinfo
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
+import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
+import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import ru.merkulyevsasha.core.domain.UsersInteractor
+import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
+import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import java.io.IOException
 
 class UserInfoFragment : Fragment(), UserInfoView {
 
     companion object {
         @JvmStatic
         val TAG = UserInfoFragment::class.java.simpleName
+
+        private const val KEY_FILE_NAME = "key_file_name"
+
+        private const val GALLERY_TAKE_IMAGE_REQUEST = 1001
+        private const val CAMERA_TAKE_IMAGE_REQUEST = 1001
 
         @JvmStatic
         fun newInstance(): Fragment {
@@ -33,6 +50,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
     private lateinit var colorThemeResolver: ColorThemeResolver
 
+    private var profileFileName: String = ""
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
@@ -46,6 +65,11 @@ class UserInfoFragment : Fragment(), UserInfoView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val savedState = savedInstanceState ?: arguments
+        savedState?.apply {
+            profileFileName = savedState.getString(KEY_FILE_NAME, "")
+        }
+
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         toolbar.setTitle(R.string.fragment_user_title)
@@ -57,6 +81,9 @@ class UserInfoFragment : Fragment(), UserInfoView {
         presenter = UserInfoPresenterImpl(interactor)
         presenter?.bindView(this)
         presenter?.onFirstLoad()
+
+        layoutButtonCamera.setOnClickListener { presenter?.onLoadCameraClicked() }
+        layoutButtonGallery.setOnClickListener { presenter?.onLoadGalleryClick() }
     }
 
     override fun onPause() {
@@ -69,12 +96,20 @@ class UserInfoFragment : Fragment(), UserInfoView {
         presenter?.bindView(this)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        saveFragmentState(outState)
+    }
+
     override fun onDestroyView() {
+        saveFragmentState(arguments ?: Bundle())
         presenter?.onDestroy()
         super.onDestroyView()
     }
 
     override fun showError() {
+        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
     }
 
     override fun showProgress() {
@@ -82,4 +117,64 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
     override fun hideProgress() {
     }
+
+    override fun takeGalleryPicture() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.newnews_select_image_label)), GALLERY_TAKE_IMAGE_REQUEST)
+    }
+
+    override fun takeCameraPicture() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+            // Create the File where the photo should go
+            profileFileName = ImageFileHelper.getTempFileName()
+            val helper = ImageFileHelper(requireContext(), profileFileName)
+            try {
+                helper.file().createNewFile()
+                if (helper.file() != null) {
+                    val photoURI = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", helper.file())
+                    //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(helper.file()));
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, CAMERA_TAKE_IMAGE_REQUEST)
+                }
+            } catch (ex: IOException) {
+                // Error occurred while creating the File
+                ex.printStackTrace()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CAMERA_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            val helper = ImageFileHelper(requireContext(), profileFileName)
+            helper.compress()
+            profileFileName = helper.file().absolutePath
+            Glide.with(this).load(helper.file()).into(imageViewAvatar)
+            presenter?.onChangedAvatar(profileFileName)
+        }
+
+        if (requestCode == GALLERY_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            try {
+                profileFileName = ImageFileHelper.getTempFileName()
+                val helper = ImageFileHelper(requireContext(), profileFileName)
+                helper.createImageFile(requireActivity().contentResolver.openInputStream(data.data!!))
+                helper.compress()
+                profileFileName = helper.file().absolutePath
+                Glide.with(this).load(helper.file()).into(imageViewAvatar)
+                presenter?.onChangedAvatar(profileFileName)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun saveFragmentState(state: Bundle) {
+        state.putString(KEY_FILE_NAME, profileFileName)
+    }
+
 }

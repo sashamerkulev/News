@@ -2,6 +2,7 @@ package ru.merkulyevsasha.domain
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
@@ -19,7 +20,8 @@ class UsersInteractorImpl(
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun uploadUserPhoto(): Completable {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    override fun uploadUserPhoto(profileFileName: String): Completable {
+        return usersApiRepository.uploadUserPhoto(profileFileName)
+            .subscribeOn(Schedulers.io())
     }
 }

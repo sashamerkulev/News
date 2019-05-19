@@ -120,7 +120,11 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        finish()
+//        if (supportFragmentManager.fragments.size <= 1) {
+            finish()
+//        } else {
+//            super.onBackPressed()
+//        }
     }
 
     override fun combine(toolbar: Toolbar) {

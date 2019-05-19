@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_articledetails.imageViewComment
 import kotlinx.android.synthetic.main.activity_articledetails.imageViewDislike
 import kotlinx.android.synthetic.main.activity_articledetails.imageViewLike
@@ -126,6 +127,7 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
     }
 
     override fun showError() {
+        Toast.makeText(this, "Ooops!", Toast.LENGTH_LONG).show()
     }
 
     private inner class ArticleDetailsViewClient : WebViewClient() {

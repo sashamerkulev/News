@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
 import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
 import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
@@ -150,6 +151,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     }
 
     override fun showError() {
+        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
     }
 
     override fun showProgress() {

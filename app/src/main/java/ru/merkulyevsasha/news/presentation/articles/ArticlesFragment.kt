@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
@@ -152,6 +153,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
     }
 
     override fun showError() {
+        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
     }
 
     override fun showProgress() {

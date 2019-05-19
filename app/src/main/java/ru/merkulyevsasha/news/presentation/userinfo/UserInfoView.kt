@@ -6,4 +6,6 @@ interface UserInfoView : BaseView {
     fun showError()
     fun hideProgress()
     fun showProgress()
+    fun takeGalleryPicture()
+    fun takeCameraPicture()
 }

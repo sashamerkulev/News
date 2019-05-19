@@ -21,6 +21,7 @@
     <string name="fragment_articles_title">Новости</string>
     <string name="fragment_actions_title">Отмеченные новости</string>
     <string name="fragment_user_title">Профиль</string>
-    <string name="userinfo_button_camera_title">Загрузить с камеры</string>
+    <string name="userinfo_button_camera_title">Сфотографировать</string>
     <string name="userinfo_button_gallery_title">Загрузить с галереи</string>
+    <string name="newnews_select_image_label">Выберите изображение</string>
 </resources>

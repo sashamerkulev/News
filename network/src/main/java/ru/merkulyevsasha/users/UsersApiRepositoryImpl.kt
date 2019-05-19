@@ -2,12 +2,16 @@ package ru.merkulyevsasha.users
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.network.data.UsersApi
 import ru.merkulyevsasha.network.mappers.UserInfoMapper
+import java.io.File
 
 class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), UsersApiRepository {
 
@@ -24,7 +28,15 @@ class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiReposi
         return api.updateUser(name, phone)
     }
 
-    override fun uploadUserPhoto(): Completable {
-        return api.uploadUserPhoto()
+    override fun uploadUserPhoto(profileFileName: String): Completable {
+        return Single.fromCallable {
+            val fileImage = File(profileFileName)
+            val requestBody = RequestBody.create(MediaType.parse("image/*"), fileImage)
+            MultipartBody.Part.createFormData("File", fileImage.name, requestBody)
+        }
+            .flatMapCompletable {
+                api.uploadUserPhoto(it)
+            }
+
     }
 }
