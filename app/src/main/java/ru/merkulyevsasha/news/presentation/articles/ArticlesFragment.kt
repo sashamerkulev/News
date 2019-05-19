@@ -73,6 +73,8 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
+        toolbar.setTitle(R.string.fragment_articles_title)
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
 
         appbarScrollExpander = AppbarScrollExpander(recyclerView, appbarLayout)

@@ -9,11 +9,10 @@ class AppbarScrollExpander(
     appbarlayout: AppBarLayout
 ) {
 
-    private val touchPoint: TouchPoint
+    private val touchPoint= TouchPoint()
     var expanded: Boolean = false
 
     init {
-        touchPoint = TouchPoint()
         view.setOnTouchListener { _, event ->
             val action = event.action
             when (action) {
@@ -24,6 +23,7 @@ class AppbarScrollExpander(
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                     val y = event.y
                     expanded = y - touchPoint.y > 0
+                    System.out.println("AppbarScrollExpander-> $y - ${touchPoint.y} = $expanded")
                     appbarlayout.setExpanded(expanded)
                 }
             }

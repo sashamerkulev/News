@@ -2,4 +2,5 @@
 <resources>
     <attr name="separator" format="reference" />
     <attr name="black" format="reference" />
+    <attr name="actionBarTextColor" format="reference" />
 </resources>

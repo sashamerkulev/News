@@ -15,9 +15,12 @@
     <string name="notification_channell_id">news.download</string>
     <string name="download_channel_name">Новости</string>
     <string name="download_channel_description">Канал уведомлений новостей</string>
-    <string name="title_articles">Статьи</string>
-    <string name="title_user">Пользователь</string>
-    <string name="title_actions">Активности</string>
+    <string name="bottom_button_articles_title">Новости</string>
+    <string name="bottom_button_actions_title">Активности</string>
+    <string name="bottom_button_user_title">Профиль</string>
+    <string name="fragment_articles_title">Новости</string>
+    <string name="fragment_actions_title">Отмеченные новости</string>
+    <string name="fragment_user_title">Профиль</string>
     <string name="userinfo_button_camera_title">Загрузить с камеры</string>
     <string name="userinfo_button_gallery_title">Загрузить с галереи</string>
 </resources>

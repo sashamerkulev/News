@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_useractivities.appbarLayout
 import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
 import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_useractivities.toolbar
@@ -69,7 +70,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
+        toolbar.setTitle(R.string.fragment_actions_title)
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
+
+        appbarScrollExpander = AppbarScrollExpander(recyclerView, appbarLayout)
+        appbarScrollExpander.expanded = expanded
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()

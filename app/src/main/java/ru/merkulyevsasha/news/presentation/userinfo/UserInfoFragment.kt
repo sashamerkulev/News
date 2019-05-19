@@ -3,6 +3,7 @@ package ru.merkulyevsasha.news.presentation.userinfo
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 
 class UserInfoFragment : Fragment(), UserInfoView {
@@ -29,6 +31,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
     private var presenter: UserInfoPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
 
+    private lateinit var colorThemeResolver: ColorThemeResolver
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
@@ -41,6 +45,11 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
+
+        toolbar.setTitle(R.string.fragment_user_title)
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
 
         val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()

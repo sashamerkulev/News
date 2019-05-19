@@ -17,6 +17,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="separator">@color/separator</item>
         <item name="black">@color/black22</item>
+        <item name="actionBarTextColor">@color/white</item>
 
     </style>
 
