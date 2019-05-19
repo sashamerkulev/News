@@ -4,10 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_articles.toolbar
@@ -90,6 +92,28 @@ class ArticlesFragment : Fragment(), ArticlesView {
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = ArticlesPresenterImpl(interactor)
         presenter?.bindView(this)
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (position >= layoutManager.findFirstVisibleItemPosition()) {
+                    position = layoutManager.findFirstVisibleItemPosition()
+                    if (position > 5 && !swipeRefreshLayout.isRefreshing) {
+                        buttonUp.visibility = View.VISIBLE
+                    } else {
+                        buttonUp.visibility = View.GONE
+                    }
+                } else {
+                    position = layoutManager.findFirstVisibleItemPosition() - 1
+                    buttonUp.visibility = View.GONE
+                }
+            }
+        })
+
+        buttonUp.setOnClickListener { _ ->
+            layoutManager.scrollToPosition(0)
+            position = 0
+            buttonUp.visibility = View.GONE
+        }
 
         layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
