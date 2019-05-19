@@ -11,7 +11,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.bottomNav
+import kotlinx.android.synthetic.main.activity_main.cardview
 import kotlinx.android.synthetic.main.activity_main.drawer
 import kotlinx.android.synthetic.main.activity_main.navigation
 import ru.merkulyevsasha.apprate.AppRateRequester
@@ -22,12 +24,14 @@ import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
+import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import ru.merkulyevsasha.news.presentation.useractivities.UserActivitiesFragment
 import ru.merkulyevsasha.news.presentation.userinfo.UserInfoFragment
 
 class MainActivity : AppCompatActivity(),
-    NavigationView.OnNavigationItemSelectedListener, MainView, ToolbarCombinator, MainActivityRouter {
+    NavigationView.OnNavigationItemSelectedListener, MainView,
+    ToolbarCombinator, ShowActionBarListener, MainActivityRouter {
 
     companion object {
         @JvmStatic
@@ -125,6 +129,16 @@ class MainActivity : AppCompatActivity(),
             R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
+    }
+
+    override fun onShowActionBar(show: Boolean) {
+        if (show) {
+            supportActionBar?.show()
+            cardview.visibility = View.VISIBLE
+        } else {
+            supportActionBar?.hide()
+            cardview.visibility = View.GONE
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

@@ -8,7 +8,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_articles.appbarLayout
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_articles.toolbar
@@ -19,6 +18,7 @@ import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
+import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import ru.merkulyevsasha.news.presentation.common.newsadapter.NewsViewAdapter
 
@@ -42,6 +42,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
     private var presenter: ArticlesPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
+    private var showActionBarListener: ShowActionBarListener? = null
 
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -56,6 +57,9 @@ class ArticlesFragment : Fragment(), ArticlesView {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
+        }
+        if (context is ShowActionBarListener) {
+            showActionBarListener = context
         }
     }
 
@@ -77,8 +81,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
 
-        appbarScrollExpander = AppbarScrollExpander(recyclerView, appbarLayout)
-        appbarScrollExpander.expanded = expanded
+        appbarScrollExpander = AppbarScrollExpander(recyclerView, showActionBarListener)
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()

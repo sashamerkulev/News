@@ -1,16 +1,13 @@
 package ru.merkulyevsasha.news.presentation.common
 
-import android.support.design.widget.AppBarLayout
 import android.view.MotionEvent
 import android.view.View
 
 class AppbarScrollExpander(
     view: View,
-    appbarlayout: AppBarLayout
+    showActionBarListener: ShowActionBarListener?
 ) {
-
-    private val touchPoint= TouchPoint()
-    var expanded: Boolean = false
+    private val touchPoint = TouchPoint()
 
     init {
         view.setOnTouchListener { _, event ->
@@ -22,9 +19,9 @@ class AppbarScrollExpander(
                 }
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                     val y = event.y
-                    expanded = y - touchPoint.y > 0
-                    System.out.println("AppbarScrollExpander-> $y - ${touchPoint.y} = $expanded")
-                    appbarlayout.setExpanded(expanded)
+                    val isShow = y - touchPoint.y > 0
+                    System.out.println("AppbarScrollExpander-> $y - ${touchPoint.y} = $isShow")
+                    showActionBarListener?.onShowActionBar(isShow)
                 }
             }
             false
