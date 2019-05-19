@@ -66,9 +66,9 @@ class NewsViewAdapter constructor(
         holder.itemView.textViewDislike.text = item.usersDislikeCount.toString()
         holder.itemView.textViewComment.text = item.usersCommentCount.toString()
 
-        colorThemeResolver.setAccentColorIf(item.isUserLiked, holder.itemView.textViewLike, holder.itemView.imageViewLike)
-        colorThemeResolver.setAccentColorIf(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
-        colorThemeResolver.setAccentColorIf(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
+        colorThemeResolver.setArticleActivityColor(item.isUserLiked, holder.itemView.textViewLike, holder.itemView.imageViewLike)
+        colorThemeResolver.setArticleActivityColor(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
+        colorThemeResolver.setArticleActivityColor(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
 
         initClickListeners(holder)
     }

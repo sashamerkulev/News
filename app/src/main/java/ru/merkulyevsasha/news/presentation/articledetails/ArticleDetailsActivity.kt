@@ -120,9 +120,9 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
         textViewDislike.text = item.usersDislikeCount.toString()
         textViewComment.text = item.usersCommentCount.toString()
 
-        colorThemeResolver.setAccentColorIf(item.isUserLiked, textViewLike, imageViewLike)
-        colorThemeResolver.setAccentColorIf(item.isUserDisliked, textViewDislike, imageViewDislike)
-        colorThemeResolver.setAccentColorIf(item.isUserCommented, textViewComment, imageViewComment)
+        colorThemeResolver.setArticleActivityColor(item.isUserLiked, textViewLike, imageViewLike)
+        colorThemeResolver.setArticleActivityColor(item.isUserDisliked, textViewDislike, imageViewDislike)
+        colorThemeResolver.setArticleActivityColor(item.isUserCommented, textViewComment, imageViewComment)
     }
 
     override fun showError() {

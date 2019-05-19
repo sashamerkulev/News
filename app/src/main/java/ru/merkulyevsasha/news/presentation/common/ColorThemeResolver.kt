@@ -12,13 +12,13 @@ class ColorThemeResolver(
     private val currentTheme: Resources.Theme
 ) {
 
-    fun setAccentColorIf(expression: Boolean, textView: TextView, imageView: ImageView) {
+    fun setArticleActivityColor(expression: Boolean, textView: TextView, imageView: ImageView) {
         if (expression) {
-            val color = getThemeAttrColor(R.attr.black)
+            val color = getThemeAttrColor(R.attr.colorPrimaryDark)
             textView.setTextColor(color)
             imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         } else {
-            val color = getThemeAttrColor(R.attr.separator)
+            val color = getThemeAttrColor(R.attr.colorPrimary)
             textView.setTextColor(color)
             imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
