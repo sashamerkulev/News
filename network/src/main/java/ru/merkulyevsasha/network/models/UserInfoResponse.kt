@@ -1,3 +1,7 @@
 package ru.merkulyevsasha.network.models
 
-class UserInfoResponse
+data class UserInfoResponse(
+    val name: String,
+    val phone: String,
+    val fileName: String
+)

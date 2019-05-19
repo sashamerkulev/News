@@ -18,12 +18,14 @@ import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import ru.merkulyevsasha.core.domain.UsersInteractor
+import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import java.io.File
 import java.io.IOException
 
 class UserInfoFragment : Fragment(), UserInfoView {
@@ -116,6 +118,12 @@ class UserInfoFragment : Fragment(), UserInfoView {
     }
 
     override fun hideProgress() {
+    }
+
+    override fun showUserInfo(userInfo: UserInfo) {
+        if (userInfo.fileName.isNotEmpty()) {
+            Glide.with(this).load(File(userInfo.fileName)).into(imageViewAvatar)
+        }
     }
 
     override fun takeGalleryPicture() {

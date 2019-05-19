@@ -6,6 +6,10 @@ import ru.merkulyevsasha.network.models.UserInfoResponse
 
 class UserInfoMapper : Mapper<UserInfoResponse, UserInfo> {
     override fun map(item: UserInfoResponse): UserInfo {
-        return UserInfo()
+        return UserInfo(
+            item.name,
+            item.phone,
+            item.fileName
+        )
     }
 }

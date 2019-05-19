@@ -48,7 +48,8 @@ class ServiceLocator(context: Context) {
             )
             UsersInteractor::class.java -> maps[clazz] = UsersInteractorImpl(
                 getUsersApiRepository(),
-                getDatabaseRepository()
+                getDatabaseRepository(),
+                getPreferences()
             )
             ArticleCommentsInteractor::class.java -> maps[clazz] = ArticleCommentsInteractorImpl(
                 getArticlesApiRepository(),

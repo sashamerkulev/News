@@ -1,3 +1,7 @@
 package ru.merkulyevsasha.core.models
 
-class UserInfo
+data class UserInfo(
+    val name: String,
+    val phone: String,
+    val fileName: String
+)
