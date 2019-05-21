@@ -18,7 +18,7 @@ class UsersInteractorImpl(
         return Single.fromCallable { UserInfo(
             keyValueStorage.getUserName(),
             keyValueStorage.getUserPhone(),
-            keyValueStorage.getUserAvatarFileName()
+            BuildConfig.API_URL + "/users/downloadPhoto"
         ) }
         .subscribeOn(Schedulers.io())
     }

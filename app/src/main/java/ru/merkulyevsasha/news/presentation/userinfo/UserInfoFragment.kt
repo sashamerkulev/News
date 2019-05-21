@@ -13,6 +13,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
@@ -25,8 +29,8 @@ import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
-import java.io.File
 import java.io.IOException
+
 
 class UserInfoFragment : Fragment(), UserInfoView {
 
@@ -62,7 +66,7 @@ class UserInfoFragment : Fragment(), UserInfoView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_userinfo, container, false)
+        inflater.inflate(ru.merkulyevsasha.news.R.layout.fragment_userinfo, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,8 +78,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
-        toolbar.setTitle(R.string.fragment_user_title)
-        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
+        toolbar.setTitle(ru.merkulyevsasha.news.R.string.fragment_user_title)
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
 
         val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
@@ -122,7 +126,14 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
     override fun showUserInfo(userInfo: UserInfo) {
         if (userInfo.fileName.isNotEmpty()) {
-            Glide.with(this).load(File(userInfo.fileName)).into(imageViewAvatar)
+            val url = GlideUrl(userInfo.fileName, LazyHeaders.Builder()
+                .addHeader("Authorization", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjoxNTU4NTY0NDEzLCJzZXR1cElkIjoiOGQzMWI4OGUtY2QzZC00NjI1LWI1YTctNDg3NjU5MDdkNmU0In0.Xlk4TmtXxszbya5QTpiUIJ2SQ6BqPCuYX3n39nGh2_c")
+                .build())
+            val options = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+            Glide.with(this).load(url).apply(options).into(imageViewAvatar)
+
+            //Glide.with(this).load(userInfo.fileName).into(imageViewAvatar)
         }
     }
 
