@@ -127,7 +127,7 @@ class UserInfoFragment : Fragment(), UserInfoView {
     override fun showUserInfo(userInfo: UserInfo) {
         if (userInfo.fileName.isNotEmpty()) {
             val url = GlideUrl(userInfo.fileName, LazyHeaders.Builder()
-                .addHeader("Authorization", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjoxNTU4NTY0NDEzLCJzZXR1cElkIjoiOGQzMWI4OGUtY2QzZC00NjI1LWI1YTctNDg3NjU5MDdkNmU0In0.Xlk4TmtXxszbya5QTpiUIJ2SQ6BqPCuYX3n39nGh2_c")
+                .addHeader("Authorization", userInfo.authorization)
                 .build())
             val options = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

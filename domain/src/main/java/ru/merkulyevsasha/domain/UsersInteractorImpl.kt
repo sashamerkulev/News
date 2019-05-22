@@ -15,11 +15,7 @@ class UsersInteractorImpl(
     private val keyValueStorage: KeyValueStorage
 ) : UsersInteractor {
     override fun getUserInfo(): Single<UserInfo> {
-        return Single.fromCallable { UserInfo(
-            keyValueStorage.getUserName(),
-            keyValueStorage.getUserPhone(),
-            BuildConfig.API_URL + "/users/downloadPhoto"
-        ) }
+        return usersApiRepository.getUserInfo()
         .subscribeOn(Schedulers.io())
     }
 

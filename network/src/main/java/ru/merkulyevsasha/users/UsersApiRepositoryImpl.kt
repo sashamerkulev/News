@@ -15,7 +15,7 @@ import java.io.File
 
 class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), UsersApiRepository {
 
-    private val userInfoMapper = UserInfoMapper()
+    private val userInfoMapper = UserInfoMapper("bearer " + sharedPreferences.getAccessToken())
 
     private val api: UsersApi = retrofit.create(UsersApi::class.java)
 
