@@ -110,7 +110,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
             }
         })
 
-        buttonUp.setOnClickListener { _ ->
+        buttonUp.setOnClickListener {
             layoutManager.scrollToPosition(0)
             position = 0
             buttonUp.visibility = View.GONE

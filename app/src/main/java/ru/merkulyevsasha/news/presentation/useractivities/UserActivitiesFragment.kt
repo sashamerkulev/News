@@ -108,7 +108,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
             }
         })
 
-        buttonUp.setOnClickListener { _ ->
+        buttonUp.setOnClickListener {
             layoutManager.scrollToPosition(0)
             position = 0
             buttonUp.visibility = View.GONE

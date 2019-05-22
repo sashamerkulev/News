@@ -31,12 +31,11 @@ import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import java.io.IOException
 
-
 class UserInfoFragment : Fragment(), UserInfoView {
 
     companion object {
         @JvmStatic
-        val TAG = UserInfoFragment::class.java.simpleName
+        val TAG: String = UserInfoFragment::class.java.simpleName
 
         private const val KEY_FILE_NAME = "key_file_name"
 
@@ -66,7 +65,7 @@ class UserInfoFragment : Fragment(), UserInfoView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(ru.merkulyevsasha.news.R.layout.fragment_userinfo, container, false)
+        inflater.inflate(R.layout.fragment_userinfo, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,8 +77,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
-        toolbar.setTitle(ru.merkulyevsasha.news.R.string.fragment_user_title)
-        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.actionBarTextColor))
+        toolbar.setTitle(R.string.fragment_user_title)
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
 
         val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()

@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
 //        if (supportFragmentManager.fragments.size <= 1) {
-            finish()
+        finish()
 //        } else {
 //            super.onBackPressed()
 //        }
