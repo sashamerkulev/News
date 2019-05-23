@@ -6,6 +6,6 @@ import ru.merkulyevsasha.core.models.UserInfo
 
 interface UsersInteractor {
     fun getUserInfo(): Single<UserInfo>
-    fun updateUser(name: String, phone: String): Completable
-    fun uploadUserPhoto(profileFileName: String): Completable
+    fun updateUser(name: String, phone: String): Single<UserInfo>
+    fun uploadUserPhoto(profileFileName: String): Single<UserInfo>
 }

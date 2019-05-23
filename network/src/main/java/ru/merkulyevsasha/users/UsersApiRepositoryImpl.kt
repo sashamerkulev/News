@@ -1,6 +1,5 @@
 package ru.merkulyevsasha.users
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -24,19 +23,20 @@ class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiReposi
             .map { userInfoMapper.map(it) }
     }
 
-    override fun updateUser(name: String, phone: String): Completable {
+    override fun updateUser(name: String, phone: String): Single<UserInfo> {
         return api.updateUser(name, phone)
+            .map { userInfoMapper.map(it) }
     }
 
-    override fun uploadUserPhoto(profileFileName: String): Completable {
+    override fun uploadUserPhoto(profileFileName: String): Single<UserInfo> {
         return Single.fromCallable {
             val fileImage = File(profileFileName)
             val requestBody = RequestBody.create(MediaType.parse("image/*"), fileImage)
             MultipartBody.Part.createFormData("File", fileImage.name, requestBody)
         }
-            .flatMapCompletable {
+            .flatMap {
                 api.uploadUserPhoto(it)
             }
-
+            .map { userInfoMapper.map(it) }
     }
 }

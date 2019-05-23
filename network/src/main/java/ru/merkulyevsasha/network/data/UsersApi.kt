@@ -1,6 +1,5 @@
 package ru.merkulyevsasha.network.data
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.MultipartBody
 import retrofit2.http.Field
@@ -18,9 +17,9 @@ interface UsersApi {
 
     @FormUrlEncoded
     @PUT("/users/update")
-    fun updateUser(@Field("name") name: String, @Field("phone") phone: String): Completable
+    fun updateUser(@Field("name") name: String, @Field("phone") phone: String): Single<UserInfoResponse>
 
     @Multipart
     @PUT("/users/uploadPhoto")
-    fun uploadUserPhoto(@Part image: MultipartBody.Part): Completable
+    fun uploadUserPhoto(@Part image: MultipartBody.Part): Single<UserInfoResponse>
 }

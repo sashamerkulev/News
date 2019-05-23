@@ -130,9 +130,9 @@ class UserInfoFragment : Fragment(), UserInfoView {
                 .build())
             val options = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(false)
+                .onlyRetrieveFromCache(false)
             Glide.with(this).load(url).apply(options).into(imageViewAvatar)
-
-            //Glide.with(this).load(userInfo.fileName).into(imageViewAvatar)
         }
     }
 

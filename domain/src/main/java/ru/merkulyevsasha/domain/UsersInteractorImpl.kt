@@ -1,6 +1,5 @@
 package ru.merkulyevsasha.domain
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.UsersInteractor
@@ -16,18 +15,18 @@ class UsersInteractorImpl(
 ) : UsersInteractor {
     override fun getUserInfo(): Single<UserInfo> {
         return usersApiRepository.getUserInfo()
-        .subscribeOn(Schedulers.io())
-    }
-
-    override fun updateUser(name: String, phone: String): Completable {
-        return usersApiRepository.updateUser(name, phone)
-            .doOnComplete { keyValueStorage.saveNameAndPhone(name, phone) }
             .subscribeOn(Schedulers.io())
     }
 
-    override fun uploadUserPhoto(profileFileName: String): Completable {
+    override fun updateUser(name: String, phone: String): Single<UserInfo> {
+        return usersApiRepository.updateUser(name, phone)
+            .doOnSuccess { keyValueStorage.saveNameAndPhone(name, phone) }
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun uploadUserPhoto(profileFileName: String): Single<UserInfo> {
         return usersApiRepository.uploadUserPhoto(profileFileName)
-            .doOnComplete { keyValueStorage.saveProfileFileName(profileFileName) }
+            .doOnSuccess { keyValueStorage.saveProfileFileName(profileFileName) }
             .subscribeOn(Schedulers.io())
     }
 }

@@ -36,6 +36,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
             usersInteractor.uploadUserPhoto(profileFileName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    view?.showUserInfo(it)
                 },
                     {
                         Timber.e(it)
