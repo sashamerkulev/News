@@ -18,10 +18,10 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
-import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import ru.merkulyevsasha.news.presentation.common.newsadapter.NewsViewAdapter
@@ -176,9 +176,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     }
 
     override fun showArticleDetails(articleId: Int) {
-        if (requireActivity() is MainActivityRouter) {
-            (requireActivity() as MainActivityRouter).showArticleDetails(articleId)
-        }
+        ArticleDetailsActivity.show(requireContext(), articleId)
     }
 
     private fun saveFragmentState(state: Bundle) {

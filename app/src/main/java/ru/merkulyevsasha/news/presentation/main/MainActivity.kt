@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -13,7 +12,6 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.bottomNav
-import kotlinx.android.synthetic.main.activity_main.cardview
 import kotlinx.android.synthetic.main.activity_main.drawer
 import kotlinx.android.synthetic.main.activity_main.navigation
 import ru.merkulyevsasha.apprate.AppRateRequester
@@ -21,17 +19,13 @@ import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
-import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
-import ru.merkulyevsasha.news.presentation.common.MainActivityRouter
+import ru.merkulyevsasha.news.presentation.common.MainActivityRouterImpl
 import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
-import ru.merkulyevsasha.news.presentation.useractivities.UserActivitiesFragment
-import ru.merkulyevsasha.news.presentation.userinfo.UserInfoFragment
 
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, MainView,
-    ToolbarCombinator, ShowActionBarListener, MainActivityRouter {
+    ToolbarCombinator, ShowActionBarListener {
 
     companion object {
         @JvmStatic
@@ -41,21 +35,22 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private lateinit var mainActivityRouter: MainActivityRouterImpl
     private lateinit var presenter: MainPresenter
 
     private val navigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                ru.merkulyevsasha.news.R.id.navigation_articles -> {
-                    showArticles()
+                R.id.navigation_articles -> {
+                    mainActivityRouter.showArticles()
                     return@OnNavigationItemSelectedListener true
                 }
-                ru.merkulyevsasha.news.R.id.navigation_actions -> {
-                    showUserActivities()
+                R.id.navigation_actions -> {
+                    mainActivityRouter.showUserActivities()
                     return@OnNavigationItemSelectedListener true
                 }
-                ru.merkulyevsasha.news.R.id.navigation_user -> {
-                    showUserInfo()
+                R.id.navigation_user -> {
+                    mainActivityRouter.showUserInfo()
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -65,6 +60,8 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_Normal)
         super.onCreate(savedInstanceState)
+
+        mainActivityRouter = MainActivityRouterImpl(applicationContext, supportFragmentManager)
 
         setContentView(R.layout.activity_main)
         navigation.setNavigationItemSelectedListener(this)
@@ -85,7 +82,7 @@ class MainActivity : AppCompatActivity(),
 //        adView.loadAd(adRequestBuilder.build())
 
         if (savedInstanceState == null) {
-            showArticles()
+            mainActivityRouter.showArticles()
         }
     }
 
@@ -138,10 +135,10 @@ class MainActivity : AppCompatActivity(),
     override fun onShowActionBar(show: Boolean) {
         if (show) {
             supportActionBar?.show()
-            cardview.visibility = View.VISIBLE
+            bottomNav.visibility = View.VISIBLE
         } else {
             supportActionBar?.hide()
-            cardview.visibility = View.GONE
+            bottomNav.visibility = View.GONE
         }
     }
 
@@ -150,36 +147,4 @@ class MainActivity : AppCompatActivity(),
         return true
     }
 
-    override fun showArticles() {
-        val tag = ArticlesFragment.TAG
-        val fragment = findOrCreateFragment(tag) { ArticlesFragment.newInstance() }
-        replaceFragment(tag, fragment)
-    }
-
-    override fun showUserActivities() {
-        val tag = UserActivitiesFragment.TAG
-        val fragment = findOrCreateFragment(tag) { UserActivitiesFragment.newInstance() }
-        replaceFragment(tag, fragment)
-    }
-
-    override fun showUserInfo() {
-        val tag = UserInfoFragment.TAG
-        val fragment = findOrCreateFragment(tag) { UserInfoFragment.newInstance() }
-        replaceFragment(tag, fragment)
-    }
-
-    override fun showArticleDetails(articleId: Int) {
-        ArticleDetailsActivity.show(this, articleId)
-    }
-
-    private fun findOrCreateFragment(tag: String, createFragment: () -> Fragment): Fragment {
-        return supportFragmentManager.findFragmentByTag(tag) ?: createFragment()
-    }
-
-    private fun replaceFragment(tag: String, fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment, tag)
-            .addToBackStack(tag)
-            .commit()
-    }
 }
