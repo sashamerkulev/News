@@ -1,5 +1,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,7 +27,7 @@
             android:id="@+id/imageViewAvatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/edge_margin_16dp"
             android:clickable="false"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_avatar_empty"
@@ -39,10 +40,7 @@
             android:id="@+id/layoutButtonCamera"
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_margin="@dimen/edge_margin_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,10 +49,7 @@
             android:id="@+id/layoutButtonGallery"
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="@dimen/edge_margin_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
             app:layout_constraintTop_toBottomOf="@+id/layoutButtonCamera" />
@@ -83,24 +78,38 @@
             android:id="@+id/nameTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/edge_margin_16dp"
+            android:layout_marginTop="@dimen/edge_margin_32dp"
+            android:layout_marginEnd="@dimen/edge_margin_16dp"
+            android:layout_marginBottom="@dimen/edge_margin_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewAvatar">
 
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/user_name_hint"
                 android:imeOptions="actionDone"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                tools:ignore="Autofill" />
 
         </android.support.design.widget.TextInputLayout>
+
+        <Button
+            style="@style/AppButtonStyle"
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/save_button_title"
+            android:textAllCaps="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
     </android.support.constraint.ConstraintLayout>
 
