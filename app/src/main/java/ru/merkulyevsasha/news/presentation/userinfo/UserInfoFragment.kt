@@ -11,6 +11,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,7 +21,9 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
+import kotlinx.android.synthetic.main.fragment_userinfo.saveButton
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
+import kotlinx.android.synthetic.main.fragment_userinfo.userName
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.news.BuildConfig
@@ -69,6 +72,7 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         val savedState = savedInstanceState ?: arguments
         savedState?.apply {
@@ -89,6 +93,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
 
         layoutButtonCamera.setOnClickListener { presenter?.onLoadCameraClicked() }
         layoutButtonGallery.setOnClickListener { presenter?.onLoadGalleryClick() }
+
+        saveButton.setOnClickListener { presenter?.onSaveButtonClicked(userName.text.toString()) }
     }
 
     override fun onPause() {

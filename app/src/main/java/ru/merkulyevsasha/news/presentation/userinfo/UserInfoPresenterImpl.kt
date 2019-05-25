@@ -45,4 +45,19 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
 
         )
     }
+
+    fun onSaveButtonClicked(userName: String) {
+        compositeDisposable.add(
+            usersInteractor.updateUser(userName, "")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    //view?.showUserInfo(it)
+                },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    })
+
+        )
+    }
 }

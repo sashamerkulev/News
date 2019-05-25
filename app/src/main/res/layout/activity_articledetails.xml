@@ -43,7 +43,7 @@
     <View
         android:id="@+id/layoutButtonLike"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/size_40dp"
         android:background="?attr/selectableItemBackground"
         app:layout_constraintEnd_toStartOf="@+id/layoutButtonComment"
         app:layout_constraintHorizontal_bias="0.5"
@@ -53,7 +53,7 @@
     <View
         android:id="@+id/layoutButtonComment"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/size_40dp"
         android:background="?attr/selectableItemBackground"
         app:layout_constraintEnd_toStartOf="@+id/layoutButtonDislike"
         app:layout_constraintHorizontal_bias="0.5"
@@ -63,7 +63,7 @@
     <View
         android:id="@+id/layoutButtonDislike"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/size_40dp"
         android:background="?attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="@+id/layoutButtonShare"
         app:layout_constraintHorizontal_bias="0.5"
@@ -73,7 +73,7 @@
     <View
         android:id="@+id/layoutButtonShare"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/size_40dp"
         android:background="?attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -82,8 +82,8 @@
 
     <ImageView
         android:id="@+id/imageViewLike"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/size_24dp"
+        android:layout_height="@dimen/size_24dp"
         android:clickable="false"
         android:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
@@ -97,8 +97,8 @@
         android:id="@+id/textViewLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="@dimen/margin_4dp"
+        android:layout_marginLeft="@dimen/margin_4dp"
         android:color="?attr/separator"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
         app:layout_constraintStart_toEndOf="@+id/imageViewLike"
@@ -107,8 +107,8 @@
 
     <ImageView
         android:id="@+id/imageViewComment"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/size_24dp"
+        android:layout_height="@dimen/size_24dp"
         android:clickable="false"
         android:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonComment"
@@ -122,8 +122,8 @@
         android:id="@+id/textViewComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="@dimen/margin_4dp"
+        android:layout_marginLeft="@dimen/margin_4dp"
         android:color="?attr/separator"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
         app:layout_constraintStart_toEndOf="@+id/imageViewComment"
@@ -132,8 +132,8 @@
 
     <ImageView
         android:id="@+id/imageViewDislike"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/size_24dp"
+        android:layout_height="@dimen/size_24dp"
         android:clickable="false"
         android:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonDislike"
@@ -147,8 +147,8 @@
         android:id="@+id/textViewDislike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="@dimen/margin_4dp"
+        android:layout_marginLeft="@dimen/margin_4dp"
         android:color="?attr/separator"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
         app:layout_constraintStart_toEndOf="@+id/imageViewDislike"
@@ -157,8 +157,8 @@
 
     <ImageView
         android:id="@+id/imageViewShare"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/size_24dp"
+        android:layout_height="@dimen/size_24dp"
         android:clickable="false"
         android:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/layoutButtonShare"
