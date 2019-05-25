@@ -11,7 +11,7 @@ apply from: "$rootDir/jacoco.gradle"
 def room = '1.1.1'
 
 dependencies {
-    implementation project(path: ':core')
+    compileOnly project(path: ':core')
 
     implementation "android.arch.persistence.room:runtime:$room"
     kapt "android.arch.persistence.room:compiler:$room"

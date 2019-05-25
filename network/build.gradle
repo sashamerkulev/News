@@ -11,7 +11,7 @@ def retrofit = '2.2.0'
 def okHttp = '3.11.0'
 
 dependencies {
-    implementation project(path: ':core')
+    compileOnly project(path: ':core')
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"

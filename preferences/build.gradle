@@ -8,5 +8,5 @@ apply from: "$rootDir/detekt.gradle"
 apply from: "$rootDir/jacoco.gradle"
 
 dependencies {
-    implementation project(path: ':core')
+    compileOnly project(path: ':core')
 }
