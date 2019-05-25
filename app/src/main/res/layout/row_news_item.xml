@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_8dp"
-            android:background="?attr/separator"
+            android:background="?attr/separatorColor"
             app:layout_constraintTop_toBottomOf="@+id/newsDateSource" />
 
         <RelativeLayout
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_8dp"
-            android:background="?attr/separator"
+            android:background="?attr/separatorColor"
             app:layout_constraintTop_toBottomOf="@+id/newsDescription" />
 
         <View
@@ -147,7 +147,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_4dp"
             android:layout_marginLeft="@dimen/margin_4dp"
-            android:color="?attr/separator"
+            android:color="?attr/separatorColor"
             app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
             app:layout_constraintStart_toEndOf="@+id/imageViewLike"
             app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
@@ -172,7 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_4dp"
             android:layout_marginLeft="@dimen/margin_4dp"
-            android:color="?attr/separator"
+            android:color="?attr/separatorColor"
             app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
             app:layout_constraintStart_toEndOf="@+id/imageViewComment"
             app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"
@@ -197,7 +197,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_4dp"
             android:layout_marginLeft="@dimen/margin_4dp"
-            android:color="?attr/separator"
+            android:color="?attr/separatorColor"
             app:layout_constraintBottom_toBottomOf="@+id/layoutButtonLike"
             app:layout_constraintStart_toEndOf="@+id/imageViewDislike"
             app:layout_constraintTop_toTopOf="@+id/layoutButtonLike"

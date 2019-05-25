@@ -15,9 +15,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="separator">@color/separator</item>
-        <item name="black">@color/black22</item>
+        <item name="separatorColor">@color/separator</item>
+        <item name="blackColor">@color/black22</item>
         <item name="actionBarTextColor">@color/white</item>
+        <item name="inactiveColor">@color/colorInactive</item>
 
         <item name="colorButtonNormal">@color/colorPrimaryDark</item>
     </style>
@@ -25,6 +26,11 @@
     <style name="AppButtonStyle" parent="Theme.AppCompat.Light">
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/shape_round_10dp</item>
+    </style>
+
+    <style name="BottomNavigation">
+        <item name="itemIconTint">@color/selector_bottom_navigation</item>
+        <item name="itemTextColor">@color/selector_bottom_navigation</item>
     </style>
 
 </resources>

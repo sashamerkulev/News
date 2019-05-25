@@ -31,7 +31,7 @@
             android:clickable="false"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_avatar_empty"
-            app:civ_border_color="?attr/separator"
+            app:civ_border_color="?attr/separatorColor"
             app:civ_border_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

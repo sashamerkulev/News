@@ -24,16 +24,17 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <Button
-            style="@style/AppButtonStyle"
             android:id="@+id/buttonUp"
+            style="@style/AppButtonStyle"
             android:layout_width="@dimen/up_button_width"
             android:layout_height="@dimen/up_button_height"
             android:layout_margin="@dimen/margin_16dp"
             android:text="@string/button_up_title"
             android:textAllCaps="true"
-            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
