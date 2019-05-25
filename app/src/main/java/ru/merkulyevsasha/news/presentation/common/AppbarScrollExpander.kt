@@ -20,7 +20,6 @@ class AppbarScrollExpander(
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                     val y = event.y
                     val isShow = y - touchPoint.y > 0
-                    System.out.println("AppbarScrollExpander-> $y - ${touchPoint.y} = $isShow")
                     showActionBarListener?.onShowActionBar(isShow)
                 }
             }

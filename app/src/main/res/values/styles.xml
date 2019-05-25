@@ -29,6 +29,7 @@
     </style>
 
     <style name="BottomNavigation">
+        <item name="android:background">@color/colorPrimary</item>
         <item name="itemIconTint">@color/selector_bottom_navigation</item>
         <item name="itemTextColor">@color/selector_bottom_navigation</item>
     </style>
