@@ -123,6 +123,10 @@ class UserInfoFragment : Fragment(), UserInfoView {
         Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
     }
 
+    override fun showNameRequiredValidationMessage() {
+        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
+    }
+
     override fun showProgress() {
     }
 

@@ -47,6 +47,10 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
     }
 
     fun onSaveButtonClicked(userName: String) {
+        if (userName.isEmpty()) {
+            view?.showNameRequiredValidationMessage()
+            return
+        }
         compositeDisposable.add(
             usersInteractor.updateUser(userName, "")
                 .observeOn(AndroidSchedulers.mainThread())

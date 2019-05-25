@@ -10,4 +10,5 @@ interface UserInfoView : BaseView {
     fun takeGalleryPicture()
     fun takeCameraPicture()
     fun showUserInfo(userInfo: UserInfo)
+    fun showNameRequiredValidationMessage()
 }
