@@ -1,15 +1,14 @@
 package ru.merkulyevsasha.news.presentation.common
 
-import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.useractivities.UserActivitiesFragment
 import ru.merkulyevsasha.news.presentation.userinfo.UserInfoFragment
 
 class MainActivityRouterImpl(
-    private val context: Context,
     private val fragmentManager: FragmentManager
 ) : MainActivityRouter {
 

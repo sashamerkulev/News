@@ -16,11 +16,11 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
 import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
 import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
@@ -46,6 +46,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appbarLayout: AppBarLayout
 
+    private lateinit var serviceLocator: ServiceLocator
     private var presenter: UserActivitiesPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
 
@@ -60,6 +61,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         if (context is ToolbarCombinator) {
             combinator = context
         }
@@ -97,9 +99,8 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()
 
-        val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = UserActivitiesPresenterImpl(interactor)
+        presenter = UserActivitiesPresenterImpl(interactor, serviceLocator.getApplicationRouter())
         presenter?.bindView(this)
 
 
@@ -185,10 +186,6 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     override fun updateItem(item: Article) {
         adapter.updateItem(item)
-    }
-
-    override fun showArticleDetails(articleId: Int) {
-        ArticleDetailsActivity.show(requireContext(), articleId)
     }
 
     private fun saveFragmentState(state: Bundle) {

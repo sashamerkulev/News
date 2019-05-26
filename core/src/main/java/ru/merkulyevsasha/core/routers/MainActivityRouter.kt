@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation.common
+package ru.merkulyevsasha.core.routers
 
 interface MainActivityRouter {
     fun showArticles()

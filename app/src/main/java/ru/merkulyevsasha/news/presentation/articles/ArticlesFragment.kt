@@ -16,11 +16,11 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
 import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
@@ -49,6 +49,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appbarLayout: AppBarLayout
 
+    private lateinit var serviceLocator: ServiceLocator
     private var presenter: ArticlesPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
 
@@ -63,6 +64,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         if (context is ToolbarCombinator) {
             combinator = context
         }
@@ -87,7 +89,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
         appbarLayout = view.findViewById(R.id.appbarLayout)
 
         toolbar.setTitle(R.string.fragment_articles_title)
-        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.actionBarTextColor))
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false;
         combinator?.combine(toolbar)
 
@@ -100,9 +102,8 @@ class ArticlesFragment : Fragment(), ArticlesView {
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()
 
-        val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticlesPresenterImpl(interactor)
+        presenter = ArticlesPresenterImpl(interactor, serviceLocator.getApplicationRouter())
         presenter?.bindView(this)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -187,10 +188,6 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
     override fun updateItem(item: Article) {
         adapter.updateItem(item)
-    }
-
-    override fun showArticleDetails(articleId: Int) {
-        ArticleDetailsActivity.show(requireContext(), articleId)
     }
 
     private fun saveFragmentState(state: Bundle) {

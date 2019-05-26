@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.news.presentation.useractivities
 
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
@@ -8,7 +9,8 @@ import ru.merkulyevsasha.news.presentation.common.newsadapter.CallbackClickHandl
 import timber.log.Timber
 
 class UserActivitiesPresenterImpl(
-    private val articlesInteractor: ArticlesInteractor
+    private val articlesInteractor: ArticlesInteractor,
+    private val applicationRouter: ApplicationRouter
 ) : BasePresenterImpl<UserActivitiesView>(), CallbackClickHandler {
     fun onFirstLoadArticles() {
         compositeDisposable.add(
@@ -29,7 +31,7 @@ class UserActivitiesPresenterImpl(
     }
 
     override fun onArticleCliked(item: Article) {
-        view?.showArticleDetails(item.articleId)
+        applicationRouter.showArticleDetails(item.articleId)
     }
 
     override fun onLikeClicked(item: Article) {

@@ -12,7 +12,7 @@ class NewsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        serviceLocator = ServiceLocator(this)
+        serviceLocator = ServiceLocator(this, ApplicationRouterImpl(this))
 
         MobileAds.initialize(this, getString(R.string.APP_ID))
 //        NewsWorkerPeriodicRunner().runWorker()

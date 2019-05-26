@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(),
         setTheme(R.style.AppTheme_Normal)
         super.onCreate(savedInstanceState)
 
-        mainActivityRouter = MainActivityRouterImpl(applicationContext, supportFragmentManager)
+        mainActivityRouter = MainActivityRouterImpl(supportFragmentManager)
 
         setContentView(R.layout.activity_main)
         navigation.setNavigationItemSelectedListener(this)

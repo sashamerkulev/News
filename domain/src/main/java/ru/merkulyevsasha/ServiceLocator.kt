@@ -2,6 +2,7 @@ package ru.merkulyevsasha
 
 import android.content.Context
 import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.domain.SetupInteractor
@@ -21,7 +22,7 @@ import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 
-class ServiceLocator(context: Context) {
+class ServiceLocator(context: Context, router: ApplicationRouter) {
 
     private val maps = HashMap<Any, Any>()
 
@@ -32,6 +33,7 @@ class ServiceLocator(context: Context) {
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
         maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context)
+        maps[ApplicationRouter::class.java] = router
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -70,6 +72,10 @@ class ServiceLocator(context: Context) {
         }
     }
 
+    fun getApplicationRouter(): ApplicationRouter {
+        return maps[ApplicationRouter::class.java] as ApplicationRouter
+    }
+
     private fun getArticlesApiRepository(): ArticlesApiRepository {
         return maps[ArticlesApiRepository::class.java] as ArticlesApiRepository
     }
@@ -89,4 +95,5 @@ class ServiceLocator(context: Context) {
     private fun getPreferences(): KeyValueStorage {
         return maps[KeyValueStorage::class.java] as KeyValueStorage
     }
+
 }
