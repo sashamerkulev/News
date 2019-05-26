@@ -125,6 +125,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
             layoutManager.scrollToPosition(0)
             position = 0
             buttonUp.visibility = View.GONE
+            appbarLayout.setExpanded(true)
         }
 
         layoutManager = LinearLayoutManager(requireContext())
