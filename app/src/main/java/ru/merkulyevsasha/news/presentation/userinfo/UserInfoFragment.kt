@@ -175,9 +175,8 @@ class UserInfoFragment : Fragment(), UserInfoView {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == CAMERA_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             val helper = ImageFileHelper(requireContext(), profileFileName)
             helper.compress()
@@ -185,18 +184,17 @@ class UserInfoFragment : Fragment(), UserInfoView {
             Glide.with(this).load(helper.file()).into(imageViewAvatar)
             presenter?.onChangedAvatar(profileFileName)
         }
-
-        if (requestCode == GALLERY_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            try {
-                profileFileName = ImageFileHelper.getTempFileName()
-                val helper = ImageFileHelper(requireContext(), profileFileName)
-                helper.createImageFile(requireActivity().contentResolver.openInputStream(data.data!!))
-                helper.compress()
-                profileFileName = helper.file().absolutePath
-                Glide.with(this).load(helper.file()).into(imageViewAvatar)
-                presenter?.onChangedAvatar(profileFileName)
-            } catch (e: Exception) {
-                e.printStackTrace()
+        if (requestCode == GALLERY_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
+            intent?.let {
+                it.data?.let {
+                    profileFileName = ImageFileHelper.getTempFileName()
+                    val helper = ImageFileHelper(requireContext(), profileFileName)
+                    helper.createImageFile(requireActivity().contentResolver.openInputStream(it))
+                    helper.compress()
+                    profileFileName = helper.file().absolutePath
+                    Glide.with(this).load(helper.file()).into(imageViewAvatar)
+                    presenter?.onChangedAvatar(profileFileName)
+                }
             }
         }
     }

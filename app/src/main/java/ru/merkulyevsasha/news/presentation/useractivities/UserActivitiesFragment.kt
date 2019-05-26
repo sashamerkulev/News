@@ -103,30 +103,13 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         presenter = UserActivitiesPresenterImpl(interactor, serviceLocator.getApplicationRouter())
         presenter?.bindView(this)
 
+        initRecyclerView()
+        initBottomUp()
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (position >= layoutManager.findFirstVisibleItemPosition()) {
-                    position = layoutManager.findFirstVisibleItemPosition()
-                    if (position > 5 && !swipeRefreshLayout.isRefreshing) {
-                        buttonUp.visibility = View.VISIBLE
-                    } else {
-                        buttonUp.visibility = View.GONE
-                    }
-                } else {
-                    position = layoutManager.findFirstVisibleItemPosition() - 1
-                    buttonUp.visibility = View.GONE
-                }
-            }
-        })
+        presenter?.onFirstLoadArticles()
+    }
 
-        buttonUp.setOnClickListener {
-            layoutManager.scrollToPosition(0)
-            position = 0
-            buttonUp.visibility = View.GONE
-            appbarLayout.setExpanded(true)
-        }
-
+    private fun initRecyclerView() {
         layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
@@ -137,8 +120,30 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
             ArrayList()
         )
         recyclerView.adapter = adapter
+    }
 
-        presenter?.onFirstLoadArticles()
+    private fun initBottomUp() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (position >= layoutManager.findFirstVisibleItemPosition()) {
+                    position = layoutManager.findFirstVisibleItemPosition()
+                    if (position > ArticlesFragment.MAX_POSITION && !swipeRefreshLayout.isRefreshing) {
+                        buttonUp.visibility = View.VISIBLE
+                    } else {
+                        buttonUp.visibility = View.GONE
+                    }
+                } else {
+                    position = layoutManager.findFirstVisibleItemPosition() - 1
+                    buttonUp.visibility = View.GONE
+                }
+            }
+        })
+        buttonUp.setOnClickListener {
+            layoutManager.scrollToPosition(0)
+            position = 0
+            buttonUp.visibility = View.GONE
+            appbarLayout.setExpanded(true)
+        }
     }
 
     override fun onPause() {

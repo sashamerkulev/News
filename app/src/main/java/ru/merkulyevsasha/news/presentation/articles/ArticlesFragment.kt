@@ -31,6 +31,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
     companion object {
 
+        const val MAX_POSITION = 5
         const val KEY_POSITION = "key_position"
         const val KEY_EXPANDED = "key_expanded"
 
@@ -106,11 +107,18 @@ class ArticlesFragment : Fragment(), ArticlesView {
         presenter = ArticlesPresenterImpl(interactor, serviceLocator.getApplicationRouter())
         presenter?.bindView(this)
 
+        initRecyclerView()
+        initBottomUp()
+
+        presenter?.onFirstLoadArticles()
+    }
+
+    private fun initBottomUp() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (position >= layoutManager.findFirstVisibleItemPosition()) {
                     position = layoutManager.findFirstVisibleItemPosition()
-                    if (position > 5 && !swipeRefreshLayout.isRefreshing) {
+                    if (position > MAX_POSITION && !swipeRefreshLayout.isRefreshing) {
                         buttonUp.visibility = View.VISIBLE
                     } else {
                         buttonUp.visibility = View.GONE
@@ -121,14 +129,15 @@ class ArticlesFragment : Fragment(), ArticlesView {
                 }
             }
         })
-
         buttonUp.setOnClickListener {
             layoutManager.scrollToPosition(0)
             position = 0
             buttonUp.visibility = View.GONE
             appbarLayout.setExpanded(true)
         }
+    }
 
+    private fun initRecyclerView() {
         layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
@@ -139,8 +148,6 @@ class ArticlesFragment : Fragment(), ArticlesView {
             ArrayList()
         )
         recyclerView.adapter = adapter
-
-        presenter?.onFirstLoadArticles()
     }
 
     override fun onPause() {
