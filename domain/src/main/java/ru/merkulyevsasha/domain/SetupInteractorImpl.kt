@@ -7,20 +7,24 @@ import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
+import java.util.*
 
 class SetupInteractorImpl(
     private val preferences: KeyValueStorage,
     private val setupApiRepository: SetupApiRepository,
     private val databaseRepository: DatabaseRepository
 ) : SetupInteractor {
-    override fun registerSetup(setupId: String, getFirebaseId: () -> String): Single<List<RssSource>> {
+    override fun registerSetup(getFirebaseId: () -> String): Single<List<RssSource>> {
         return Single.fromCallable { preferences.getSetupId() }
             .flatMap { savedSetupId ->
-                if (savedSetupId.isEmpty()) setupApiRepository.registerSetup(setupId, getFirebaseId())
-                    .doOnSuccess { token ->
-                        preferences.setAccessToken(token.token)
-                        preferences.setSetupId(setupId)
-                    }
+                if (savedSetupId.isEmpty()) {
+                    val setupId = UUID.randomUUID().toString()
+                    setupApiRepository.registerSetup(setupId, getFirebaseId())
+                        .doOnSuccess { token ->
+                            preferences.setAccessToken(token.token)
+                            preferences.setSetupId(setupId)
+                        }
+                }
                 else Single.fromCallable { preferences.getAccessToken() }
             }
             .flatMap {

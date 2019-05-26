@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
@@ -14,14 +15,16 @@ import java.util.*
 
 class SplashActivity : AppCompatActivity(), SplashView {
 
-    private lateinit var presenter: SplashPresenterImpl
+    private var presenter: SplashPresenterImpl? = null
+
+    private lateinit var serviceLocator: ServiceLocator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         registerNewsChannel()
 
-        val serviceLocator = (application as NewsApp).getServiceLocator()
+        serviceLocator = (application as NewsApp).getServiceLocator()
         val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
         presenter = SplashPresenterImpl(setupInteractor)
     }
@@ -38,18 +41,19 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
     override fun onResume() {
         super.onResume()
-        presenter.bindView(this)
-        val setupId = UUID.randomUUID().toString()
-        presenter.onSetup(setupId, getFirebaseId = { UUID.randomUUID().toString() })
+        presenter?.bindView(this)
+        presenter?.onSetup(getFirebaseId = { UUID.randomUUID().toString() })
     }
 
     override fun onPause() {
-        presenter.unbindView()
+        presenter?.unbindView()
         super.onPause()
     }
 
     override fun onDestroy() {
-        presenter.onDestroy()
+        presenter?.onDestroy()
+        presenter = null
+        serviceLocator.release(SetupInteractor::class.java)
         super.onDestroy()
     }
 

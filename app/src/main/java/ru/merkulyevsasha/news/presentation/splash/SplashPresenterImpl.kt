@@ -6,9 +6,9 @@ import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import timber.log.Timber
 
 class SplashPresenterImpl(private val setupInteractor: SetupInteractor) : BasePresenterImpl<SplashView>() {
-    fun onSetup(setupId: String, getFirebaseId: () -> String) {
+    fun onSetup(getFirebaseId: () -> String) {
         compositeDisposable.add(
-            setupInteractor.registerSetup(setupId, getFirebaseId)
+            setupInteractor.registerSetup(getFirebaseId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { view?.showMainScreen() },

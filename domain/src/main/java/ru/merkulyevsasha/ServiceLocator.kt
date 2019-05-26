@@ -64,6 +64,12 @@ class ServiceLocator(context: Context) {
         return maps[clazz] as T
     }
 
+    fun <T> release(clazz: Class<T>) {
+        if (maps.containsKey(clazz)) {
+            maps.remove(clazz)
+        }
+    }
+
     private fun getArticlesApiRepository(): ArticlesApiRepository {
         return maps[ArticlesApiRepository::class.java] as ArticlesApiRepository
     }

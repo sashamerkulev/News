@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_articledetails.textViewComment
 import kotlinx.android.synthetic.main.activity_articledetails.textViewDislike
 import kotlinx.android.synthetic.main.activity_articledetails.textViewLike
 import kotlinx.android.synthetic.main.activity_articledetails.webview
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
@@ -40,6 +41,7 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
         }
     }
 
+    private lateinit var serviceLocator: ServiceLocator
     private var presenter: ArticleDetailsPresenterImpl? = null
     private lateinit var colorThemeResolver: ColorThemeResolver
 
@@ -66,9 +68,9 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
             presenter?.onShareClicked(articleId)
         }
 
+        serviceLocator = (application as NewsApp).getServiceLocator()
         articleId = intent.getIntExtra(ARTICLE_ID, 0)
         if (articleId > 0) {
-            val serviceLocator = (application as NewsApp).getServiceLocator()
             val interactor = serviceLocator.get(ArticlesInteractor::class.java)
             presenter = ArticleDetailsPresenterImpl(interactor)
             presenter?.bindView(this)
@@ -90,6 +92,8 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
 
     override fun onDestroy() {
         presenter?.onDestroy()
+        presenter = null
+        serviceLocator.release(ArticlesInteractor::class.java)
         super.onDestroy()
     }
 
