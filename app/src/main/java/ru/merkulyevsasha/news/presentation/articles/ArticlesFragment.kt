@@ -2,9 +2,12 @@ package ru.merkulyevsasha.news.presentation.articles
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +16,6 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
-import kotlinx.android.synthetic.main.fragment_articles.toolbar
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
@@ -43,9 +45,12 @@ class ArticlesFragment : Fragment(), ArticlesView {
         }
     }
 
+    private lateinit var toolbar: Toolbar
+    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
+    private lateinit var appbarLayout: AppBarLayout
+
     private var presenter: ArticlesPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
-    private var showActionBarListener: ShowActionBarListener? = null
 
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -60,9 +65,6 @@ class ArticlesFragment : Fragment(), ArticlesView {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
-        }
-        if (context is ShowActionBarListener) {
-            showActionBarListener = context
         }
     }
 
@@ -80,11 +82,20 @@ class ArticlesFragment : Fragment(), ArticlesView {
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
+        toolbar = view.findViewById(R.id.toolbar)
+        collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
+        appbarLayout = view.findViewById(R.id.appbarLayout)
+
         toolbar.setTitle(R.string.fragment_articles_title)
-        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
+        toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.actionBarTextColor))
+        collapsingToolbarLayout.isTitleEnabled = false;
         combinator?.combine(toolbar)
 
-        appbarScrollExpander = AppbarScrollExpander(recyclerView, showActionBarListener)
+        appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
+            override fun onShowActionBar(show: Boolean) {
+                appbarLayout.setExpanded(show)
+            }
+        })
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()
@@ -188,7 +199,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
     }
 
     private fun initSwipeRefreshColorScheme() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
-        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.colorControlNormal))
     }
 }

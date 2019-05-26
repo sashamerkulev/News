@@ -99,8 +99,8 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            style="@style/AppButtonStyle"
             android:id="@+id/saveButton"
+            style="@style/AppButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16dp"
@@ -109,7 +109,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
     </android.support.constraint.ConstraintLayout>
 

@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.view.View
 import kotlinx.android.synthetic.main.activity_main.bottomNav
 import kotlinx.android.synthetic.main.activity_main.drawer
 import kotlinx.android.synthetic.main.activity_main.navigation
@@ -20,12 +19,11 @@ import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.MainActivityRouterImpl
-import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, MainView,
-    ToolbarCombinator, ShowActionBarListener {
+    ToolbarCombinator {
 
     companion object {
         @JvmStatic
@@ -130,16 +128,6 @@ class MainActivity : AppCompatActivity(),
             R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
-    }
-
-    override fun onShowActionBar(show: Boolean) {
-        if (show) {
-            supportActionBar?.show()
-            bottomNav.visibility = View.VISIBLE
-        } else {
-            supportActionBar?.hide()
-            bottomNav.visibility = View.GONE
-        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

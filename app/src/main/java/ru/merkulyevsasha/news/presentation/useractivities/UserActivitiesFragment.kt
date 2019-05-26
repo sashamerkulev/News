@@ -2,9 +2,12 @@ package ru.merkulyevsasha.news.presentation.useractivities
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +16,6 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
 import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
 import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
-import kotlinx.android.synthetic.main.fragment_useractivities.toolbar
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.NewsApp
@@ -40,9 +42,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         }
     }
 
+    private lateinit var toolbar: Toolbar
+    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
+    private lateinit var appbarLayout: AppBarLayout
+
     private var presenter: UserActivitiesPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
-    private var showActionBarListener: ShowActionBarListener? = null
 
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -57,9 +62,6 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
-        }
-        if (context is ShowActionBarListener) {
-            showActionBarListener = context
         }
     }
 
@@ -77,11 +79,20 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
+        toolbar = view.findViewById(R.id.toolbar)
+        collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
+        appbarLayout = view.findViewById(R.id.appbarLayout)
+
         toolbar.setTitle(R.string.fragment_actions_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
+        collapsingToolbarLayout.isTitleEnabled = false;
         combinator?.combine(toolbar)
 
-        appbarScrollExpander = AppbarScrollExpander(recyclerView, showActionBarListener)
+        appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
+            override fun onShowActionBar(show: Boolean) {
+                appbarLayout.setExpanded(show)
+            }
+        })
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()
