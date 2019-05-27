@@ -72,9 +72,9 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
         articleId = intent.getIntExtra(ARTICLE_ID, 0)
         if (articleId > 0) {
             val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-            presenter = ArticleDetailsPresenterImpl(interactor)
+            presenter = ArticleDetailsPresenterImpl(interactor, serviceLocator.getApplicationRouter())
             presenter?.bindView(this)
-            presenter?.onFirstLoadArticle(articleId)
+            presenter?.onFirstLoad(articleId)
         } else {
             finish()
         }

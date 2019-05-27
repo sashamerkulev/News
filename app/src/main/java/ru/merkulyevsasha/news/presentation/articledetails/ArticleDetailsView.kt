@@ -6,7 +6,7 @@ import ru.merkulyevsasha.news.presentation.base.BaseView
 interface ArticleDetailsView : BaseView {
     fun showProgress()
     fun hideProgress()
-    fun showItem(item: Article)
     fun showError()
+    fun showItem(item: Article)
     fun updateItem(item: Article)
 }

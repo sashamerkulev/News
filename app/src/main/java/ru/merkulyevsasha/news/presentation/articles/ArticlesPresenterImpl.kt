@@ -13,7 +13,7 @@ class ArticlesPresenterImpl(
     private val applicationRouter: ApplicationRouter
 ) : BasePresenterImpl<ArticlesView>(), CallbackClickHandler {
 
-    fun onFirstLoadArticles() {
+    fun onFirstLoad() {
         compositeDisposable.add(
             articlesInteractor.getArticles()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -70,6 +70,7 @@ class ArticlesPresenterImpl(
     }
 
     override fun onCommentClicked(articleId: Int) {
+        applicationRouter.showArticleComments(articleId)
     }
 
     override fun onShareClicked(item: Article) {

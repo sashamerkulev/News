@@ -110,7 +110,7 @@ class ArticlesFragment : Fragment(), ArticlesView {
         initRecyclerView()
         initBottomUp()
 
-        presenter?.onFirstLoadArticles()
+        presenter?.onFirstLoad()
     }
 
     private fun initBottomUp() {

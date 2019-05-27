@@ -106,7 +106,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
         initRecyclerView()
         initBottomUp()
 
-        presenter?.onFirstLoadArticles()
+        presenter?.onFirstLoad()
     }
 
     private fun initRecyclerView() {

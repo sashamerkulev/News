@@ -2,13 +2,15 @@ package ru.merkulyevsasha.news.presentation.articledetails
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
+import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import timber.log.Timber
 
 class ArticleDetailsPresenterImpl(
-    private val articlesInteractor: ArticlesInteractor
+    private val articlesInteractor: ArticlesInteractor,
+    private val applicationRouter: ApplicationRouter
 ) : BasePresenterImpl<ArticleDetailsView>() {
-    fun onFirstLoadArticle(articleId: Int) {
+    fun onFirstLoad(articleId: Int) {
         compositeDisposable.add(
             articlesInteractor.getArticle(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -47,6 +49,7 @@ class ArticleDetailsPresenterImpl(
     }
 
     fun onCommentClicked(articleId: Int) {
+        applicationRouter.showArticleComments(articleId)
     }
 
     fun onShareClicked(articleId: Int) {
