@@ -14,4 +14,10 @@ interface KeyValueStorage {
     fun getUserName(): String
     fun getUserPhone(): String
     fun getUserAvatarFileName(): String
+    fun isApplicationAlreadyRatedFlag(): Boolean
+    fun setApplicationRatedFlag()
+    fun getApplicationRunNumber(): Int
+    fun updateApplicationRunNumber()
+    fun getLastApplicationRunDate(): Long
+    fun updateLastApplicationRunDate()
 }

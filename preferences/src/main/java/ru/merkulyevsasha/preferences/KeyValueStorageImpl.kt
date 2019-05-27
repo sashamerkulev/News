@@ -6,80 +6,102 @@ import java.util.*
 
 class KeyValueStorageImpl(context: Context) : KeyValueStorage {
 
+    companion object {
+        private val KEY_TOKEN = "KEY_TOKEN"
+        private val KEY_SETUP_ID = "KEY_SETUP_ID"
+        private val KEY_LAST_ARTICLE_READ = "KEY_LAST_ARTICLE_READ"
+        private val KEY_USER_NAME = "KEY_USER_NAME"
+        private val KEY_USER_PHONE = "KEY_USER_PHONE"
+        private val KEY_USER_AVATAR_FILE_NAME = "KEY_USER_AVATAR_FILE_NAME"
+        private val KEY_APPLICATION_RUN_NUMBER = "KEY_APPLICATION_RUN_NUMBER"
+        private val KEY_APPLICATION_RATED_FLAG = "KEY_APPLICATION_RATED_FLAG"
+        private val KEY_LAST_APPLICATION_RUN_DATE = "KEY_LAST_APPLICATION_RUN_DATE"
+    }
+
     private val prefs: android.content.SharedPreferences =
         context.getSharedPreferences("keyvalue", Context.MODE_PRIVATE)
 
-    private var token: String = ""
-    private var setupId: String = ""
-    private var lastArticleReadDate: Date? = null
-    private var fileName: String = ""
-    private var name: String = ""
-    private var phone: String = ""
-
-    init {
-        token = prefs.getString("TOKEN", "") ?: ""
-        setupId = prefs.getString("SETUP_ID", "") ?: ""
-        lastArticleReadDate = Date(prefs.getLong("LAST_ARTICLE_READ", 0))
-        fileName = prefs.getString("FILE_NAME", "") ?: ""
-        name = prefs.getString("NAME", "") ?: ""
-        phone = prefs.getString("PHONE", "") ?: ""
-    }
-
     override fun getAccessToken(): String {
-        return token
+        return prefs.getString(KEY_TOKEN, "") ?: ""
     }
 
     override fun setAccessToken(token: String) {
-        this.token = token
-        prefs.edit().putString("TOKEN", token).apply()
+        prefs.edit().putString(KEY_TOKEN, token).apply()
     }
 
     override fun getSetupId(): String {
-        return setupId
+        return prefs.getString(KEY_SETUP_ID, "") ?: ""
     }
 
     override fun setSetupId(setupId: String) {
-        this.setupId = setupId
-        prefs.edit().putString("SETUP_ID", setupId).apply()
+        prefs.edit().putString(KEY_SETUP_ID, setupId).apply()
     }
 
     override fun getLastArticleReadDate(): Date? {
-        return lastArticleReadDate
+        return Date(prefs.getLong(KEY_LAST_ARTICLE_READ, 0))
     }
 
     override fun setLastArticleReadDate(lastDate: Date) {
-        lastArticleReadDate = lastDate
-        prefs.edit().putLong("LAST_ARTICLE_READ", lastDate.time).apply()
+        prefs.edit().putLong(KEY_LAST_ARTICLE_READ, lastDate.time).apply()
     }
 
     override fun saveNameAndPhone(name: String, phone: String) {
-        this.name = name
-        this.phone = phone
         prefs
             .edit()
-            .putString("NAME", name)
-            .putString("PHONE", phone)
+            .putString(KEY_USER_NAME, name)
+            .putString(KEY_USER_PHONE, phone)
             .apply()
     }
 
     override fun saveProfileFileName(profileFileName: String) {
-        this.fileName = profileFileName
         prefs
             .edit()
-            .putString("FILE_NAME", profileFileName)
+            .putString(KEY_USER_AVATAR_FILE_NAME, profileFileName)
             .apply()
     }
 
     override fun getUserName(): String {
-        return name
+        return prefs.getString(KEY_USER_NAME, "") ?: ""
     }
 
     override fun getUserPhone(): String {
-        return phone
+        return prefs.getString(KEY_USER_PHONE, "") ?: ""
     }
 
     override fun getUserAvatarFileName(): String {
-        return fileName
+        return prefs.getString(KEY_USER_AVATAR_FILE_NAME, "") ?: ""
+    }
+
+    override fun isApplicationAlreadyRatedFlag(): Boolean {
+        return prefs.getBoolean(KEY_APPLICATION_RATED_FLAG, false)
+    }
+
+    override fun setApplicationRatedFlag() {
+        prefs.edit()
+            .putBoolean(KEY_APPLICATION_RATED_FLAG, true)
+            .apply()
+    }
+
+    override fun getApplicationRunNumber(): Int {
+        return prefs.getInt(KEY_APPLICATION_RUN_NUMBER, 0)
+    }
+
+    override fun updateApplicationRunNumber() {
+        val count = getApplicationRunNumber()
+        prefs.edit()
+            .putInt(KEY_APPLICATION_RUN_NUMBER, count + 1)
+            .apply()
+    }
+
+    override fun getLastApplicationRunDate(): Long {
+        return prefs.getLong(KEY_LAST_APPLICATION_RUN_DATE, 0)
+    }
+
+    override fun updateLastApplicationRunDate() {
+        val calendar = Calendar.getInstance()
+        prefs.edit()
+            .putLong(KEY_LAST_APPLICATION_RUN_DATE, calendar.timeInMillis)
+            .apply()
     }
 
 }
