@@ -4,7 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import io.reactivex.Single
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.models.ArticleComments
+import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
@@ -46,7 +46,7 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
             .toList()
     }
 
-    override fun getArticleComments(): Single<List<ArticleComments>> {
+    override fun getArticleComments(): Single<List<ArticleComment>> {
         return database.articleCommentsDao.getArticleComments()
             .flattenAsFlowable { it }
             .map { articleCommentsMapper.map(it) }

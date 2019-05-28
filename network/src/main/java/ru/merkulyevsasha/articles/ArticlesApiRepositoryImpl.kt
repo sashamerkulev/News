@@ -1,18 +1,15 @@
 package ru.merkulyevsasha.articles
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.models.ArticleComments
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.network.data.ArticlesApi
 import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.network.mappers.ArticleMapper
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
 
@@ -51,20 +48,5 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
     override fun getArticle(articleId: Int): Single<Article> {
         return api.getArticle(articleId)
             .map { articlesMapper.map(it) }
-    }
-
-    override fun getArticleComments(articleId: Int): Single<List<ArticleComments>> {
-        return api.getArticleComments(articleId)
-            .flattenAsFlowable { it }
-            .map { articleCommentsMapper.map(it) }
-            .toList()
-    }
-
-    override fun likeArticleComment(articleId: Int, commentId: Int): Completable {
-        return api.likeArticleComment(articleId, commentId)
-    }
-
-    override fun dislikeArticleComment(articleId: Int, commentId: Int): Completable {
-        return api.dislikeArticleComment(articleId, commentId)
     }
 }

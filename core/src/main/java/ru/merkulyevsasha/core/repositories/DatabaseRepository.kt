@@ -2,14 +2,14 @@ package ru.merkulyevsasha.core.repositories
 
 import io.reactivex.Single
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.models.ArticleComments
+import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.RssSource
 import java.util.*
 
 interface DatabaseRepository {
     fun removeOldArticles(cleanDate: Date)
     fun getArticles(): Single<List<Article>>
-    fun getArticleComments(): Single<List<ArticleComments>>
+    fun getArticleComments(): Single<List<ArticleComment>>
 
     fun saveRssSources(sources: List<RssSource>)
     fun getRssSources(): List<RssSource>
