@@ -6,7 +6,6 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.network.data.ArticlesApi
-import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.network.mappers.ArticleMapper
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,7 +13,6 @@ import java.util.*
 class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
 
     private val articlesMapper = ArticleMapper()
-    private val articleCommentsMapper = ArticleCommentsMapper()
 
     private val api: ArticlesApi = retrofit.create(ArticlesApi::class.java)
 

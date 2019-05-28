@@ -7,7 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import ru.merkulyevsasha.network.models.ArticleCommentResponse
 import ru.merkulyevsasha.network.models.ArticleResponse
 
 interface ArticlesApi {
@@ -28,12 +27,4 @@ interface ArticlesApi {
     @GET("/articles/{articleId}")
     fun getArticle(@Path("articleId") articleId: Int): Single<ArticleResponse>
 
-    @GET("/articles/{articleId}/comments")
-    fun getArticleComments(@Path("articleId") articleId: Int): Single<List<ArticleCommentResponse>>
-
-    @PUT("/articles/comments/{commentId}/like")
-    fun likeArticleComment(@Path("commentId") commentId: Int): Single<ArticleCommentResponse>
-
-    @PUT("/articles/comments/{commentId}/dislike")
-    fun dislikeArticleComment(@Path("commentId") commentId: Int): Single<ArticleCommentResponse>
 }
