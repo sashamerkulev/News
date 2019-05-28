@@ -26,7 +26,9 @@ class ArticlesInteractorImpl(
         return Single.fromCallable {
             val cleanDate = Calendar.getInstance()
             cleanDate.add(Calendar.HOUR, -NOT_USER_ACTIVITIES_HOURS)
-            databaseRepository.removeOldArticles(cleanDate.time)
+            databaseRepository.removeOldNotUserActivityArticles(cleanDate.time)
+            cleanDate.add(Calendar.HOUR, -USER_ACTIVITIES_HOURS)
+            databaseRepository.removeOldUserActivityArticles(cleanDate.time)
         }
             .flatMap {
                 databaseRepository.getArticles()

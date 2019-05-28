@@ -35,8 +35,12 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
             .toList()
     }
 
-    override fun removeOldArticles(cleanDate: Date) {
+    override fun removeOldNotUserActivityArticles(cleanDate: Date) {
         database.articleDao.removeOldNotUserActivityArticles(cleanDate)
+    }
+
+    override fun removeOldUserActivityArticles(cleanDate: Date) {
+        database.articleDao.removeOldUserActivityArticles(cleanDate)
     }
 
     override fun getUserActivityArticles(): Single<List<Article>> {

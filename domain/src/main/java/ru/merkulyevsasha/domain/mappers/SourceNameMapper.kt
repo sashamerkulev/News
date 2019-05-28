@@ -19,6 +19,7 @@ class SourceNameMapper(private val databaseRepository: DatabaseRepository) : Map
             item.link,
             item.description,
             item.pubDate,
+            item.lastActivityDate,
             item.category,
             item.pictureUrl,
             item.usersLikeCount,

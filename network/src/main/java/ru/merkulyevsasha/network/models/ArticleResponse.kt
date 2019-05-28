@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.network.models
 
 import com.google.gson.annotations.SerializedName
-import java.util.Date
+import java.util.*
 
 data class ArticleResponse(
     @field:SerializedName("ArticleId") val articleId: Int,
@@ -10,6 +10,7 @@ data class ArticleResponse(
     @field:SerializedName("Link") val link: String,
     @field:SerializedName("Description") val description: String?,
     @field:SerializedName("PubDate") val pubDate: Date,
+    @field:SerializedName("LastActivityDate") val lastActivityDate: Date?,
     @field:SerializedName("Category") val category: String,
     @field:SerializedName("PictureUrl") val pictureUrl: String?,
     @field:SerializedName("Likes") val likes: Int,

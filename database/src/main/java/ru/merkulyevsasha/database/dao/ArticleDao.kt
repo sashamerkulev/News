@@ -17,8 +17,11 @@ interface ArticleDao {
     @Query("select * from articles where isUserLiked or isUserCommented or isUserDisliked order by pubDate desc")
     fun getUserActivityArticles(): Single<List<ArticleEntity>>
 
-    @Query("delete from articles where pubDate < :cleanDate and  not (isUserLiked or isUserCommented or isUserDisliked)")
+    @Query("delete from articles where pubDate < :cleanDate and lastActivityDate < :cleanDate and not (isUserLiked or isUserCommented or isUserDisliked)")
     fun removeOldNotUserActivityArticles(cleanDate: Date)
+
+    @Query("delete from articles where pubDate < :cleanDate and lastActivityDate < :cleanDate and (isUserLiked or isUserCommented or isUserDisliked)")
+    fun removeOldUserActivityArticles(cleanDate: Date)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(items: List<ArticleEntity>)

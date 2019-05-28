@@ -9,6 +9,7 @@ class Article(
     val link: String,
     val description: String?,
     val pubDate: Date,
+    val lastActivityDate: Date,
     val category: String,
     val pictureUrl: String?,
     var usersLikeCount: Int,

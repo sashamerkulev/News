@@ -7,7 +7,8 @@ import ru.merkulyevsasha.core.models.RssSource
 import java.util.*
 
 interface DatabaseRepository {
-    fun removeOldArticles(cleanDate: Date)
+    fun removeOldNotUserActivityArticles(cleanDate: Date)
+    fun removeOldUserActivityArticles(cleanDate: Date)
     fun getArticles(): Single<List<Article>>
     fun getArticleComments(): Single<List<ArticleComment>>
 

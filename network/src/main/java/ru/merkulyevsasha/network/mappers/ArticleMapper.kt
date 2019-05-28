@@ -3,6 +3,7 @@ package ru.merkulyevsasha.network.mappers
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.network.models.ArticleResponse
+import java.util.*
 
 class ArticleMapper : Mapper<ArticleResponse, Article> {
     override fun map(item: ArticleResponse): Article {
@@ -13,6 +14,7 @@ class ArticleMapper : Mapper<ArticleResponse, Article> {
             item.link,
             item.description,
             item.pubDate,
+            item.lastActivityDate ?: Date(0),
             item.category,
             item.pictureUrl,
             item.likes,
