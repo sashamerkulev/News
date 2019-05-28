@@ -15,9 +15,6 @@ interface ArticlesApi {
     @FormUrlEncoded
     fun getArticles(@Field("lastArticleReadDate") lastArticleReadDate: String?): Single<List<ArticleResponse>>
 
-    @GET("/articles/users")
-    fun getUserActivityArticles(): Single<List<ArticleResponse>>
-
     @PUT("/articles/{articleId}/like")
     fun likeArticle(@Path("articleId") articleId: Int): Single<ArticleResponse>
 

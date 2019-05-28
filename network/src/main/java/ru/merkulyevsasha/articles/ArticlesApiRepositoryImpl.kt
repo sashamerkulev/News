@@ -26,13 +26,6 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
             .toList()
     }
 
-    override fun getUserActivityArticles(): Single<List<Article>> {
-        return api.getUserActivityArticles()
-            .flattenAsFlowable { it }
-            .map { articlesMapper.map(it) }
-            .toList()
-    }
-
     override fun likeArticle(articleId: Int): Single<Article> {
         return api.likeArticle(articleId)
             .map { articlesMapper.map(it) }
