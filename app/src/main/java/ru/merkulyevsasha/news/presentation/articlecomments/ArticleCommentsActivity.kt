@@ -8,13 +8,13 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_articlecomments.progressbar
+import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
-import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 
-class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView {
+class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, RequireServiceLocator {
 
     companion object {
         private const val ARTICLE_ID = "ARTICLE_ID"
@@ -31,6 +31,10 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView {
     private lateinit var colorThemeResolver: ColorThemeResolver
 
     private var articleId = 0
+
+    override fun setServiceLocator(serviceLocator: ServiceLocator) {
+        this.serviceLocator = serviceLocator
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_Normal)
@@ -53,7 +57,6 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView {
 //            presenter?.onShareClicked(articleId)
 //        }
 
-        serviceLocator = (application as NewsApp).getServiceLocator()
         articleId = intent.getIntExtra(ArticleCommentsActivity.ARTICLE_ID, 0)
         if (articleId > 0) {
             val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)

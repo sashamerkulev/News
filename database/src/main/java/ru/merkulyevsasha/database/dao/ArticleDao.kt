@@ -11,7 +11,7 @@ import java.util.*
 
 @Dao
 interface ArticleDao {
-    @Query("select * from articles order by lastActivityDate desc")
+    @Query("select * from articles order by pubDate desc")
     fun getArticles(): Single<List<ArticleEntity>>
 
     @Query("select * from articles where isUserLiked or isUserCommented or isUserDisliked order by lastActivityDate desc")

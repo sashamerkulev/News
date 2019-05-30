@@ -13,17 +13,18 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.bottomNav
 import kotlinx.android.synthetic.main.activity_main.drawer
 import kotlinx.android.synthetic.main.activity_main.navigation
+import ru.merkulyevsasha.RequireServiceLocator
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.core.domain.SetupInteractor
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.BuildConfig
-import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.presentation.common.MainActivityRouterImpl
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 
 class MainActivity : AppCompatActivity(),
     NavigationView.OnNavigationItemSelectedListener, MainView,
-    ToolbarCombinator {
+    ToolbarCombinator, RequireServiceLocator {
 
     companion object {
         @JvmStatic
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private lateinit var mainActivityRouter: MainActivityRouterImpl
+    private lateinit var serviceLocator: ServiceLocator
+    private lateinit var mainActivityRouter: MainActivityRouter
     private lateinit var presenter: MainPresenter
 
     private val navigationItemSelectedListener =
@@ -55,16 +57,18 @@ class MainActivity : AppCompatActivity(),
             false
         }
 
+    override fun setServiceLocator(serviceLocator: ServiceLocator) {
+        this.serviceLocator = serviceLocator
+        mainActivityRouter = serviceLocator.getMainActivityRouter()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_Normal)
         super.onCreate(savedInstanceState)
 
-        mainActivityRouter = MainActivityRouterImpl(supportFragmentManager)
-
         setContentView(R.layout.activity_main)
         navigation.setNavigationItemSelectedListener(this)
 
-        val serviceLocator = (application as NewsApp).getServiceLocator()
         val interactor = serviceLocator.get(SetupInteractor::class.java)
         presenter = MainPresenter(interactor)
 

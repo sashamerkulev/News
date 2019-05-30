@@ -6,31 +6,33 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.SetupInteractor
-import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.presentation.main.MainActivity
 import java.util.*
 
-class SplashActivity : AppCompatActivity(), SplashView {
+class SplashActivity : AppCompatActivity(), SplashView, RequireServiceLocator {
 
     private var presenter: SplashPresenterImpl? = null
 
     private lateinit var serviceLocator: ServiceLocator
+
+    override fun setServiceLocator(serviceLocator: ServiceLocator) {
+        this.serviceLocator = serviceLocator
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         registerNewsChannel()
 
-        serviceLocator = (application as NewsApp).getServiceLocator()
         val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
         presenter = SplashPresenterImpl(setupInteractor)
     }
 
     override fun showMainScreen() {
-        MainActivity.show(this)
+        serviceLocator.getApplicationRouter().showMainActivity()
         finish()
     }
 
@@ -53,7 +55,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
     override fun onDestroy() {
         presenter?.onDestroy()
         presenter = null
-        serviceLocator.release(SetupInteractor::class.java)
+        serviceLocator.releaseAll()
         super.onDestroy()
     }
 

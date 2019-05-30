@@ -22,14 +22,14 @@ import kotlinx.android.synthetic.main.activity_articledetails.textViewComment
 import kotlinx.android.synthetic.main.activity_articledetails.textViewDislike
 import kotlinx.android.synthetic.main.activity_articledetails.textViewLike
 import kotlinx.android.synthetic.main.activity_articledetails.webview
+import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 
-class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
+class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireServiceLocator {
 
     companion object {
         private const val ARTICLE_ID = "ARTICLE_ID"
@@ -46,6 +46,10 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
     private lateinit var colorThemeResolver: ColorThemeResolver
 
     private var articleId = 0
+
+    override fun setServiceLocator(serviceLocator: ServiceLocator) {
+        this.serviceLocator = serviceLocator
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_Normal)
@@ -68,7 +72,6 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView {
             presenter?.onShareClicked(articleId)
         }
 
-        serviceLocator = (application as NewsApp).getServiceLocator()
         articleId = intent.getIntExtra(ARTICLE_ID, 0)
         if (articleId > 0) {
             val interactor = serviceLocator.get(ArticlesInteractor::class.java)

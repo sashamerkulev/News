@@ -4,8 +4,13 @@ import android.content.Context
 import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.news.presentation.articlecomments.ArticleCommentsActivity
 import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsActivity
+import ru.merkulyevsasha.news.presentation.main.MainActivity
 
 class ApplicationRouterImpl(private val applicationContext: Context) : ApplicationRouter {
+    override fun showMainActivity() {
+        MainActivity.show(applicationContext)
+    }
+
     override fun showArticleDetails(articleId: Int) {
         ArticleDetailsActivity.show(applicationContext, articleId)
     }

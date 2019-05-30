@@ -16,10 +16,10 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
 import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
 import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
+import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
@@ -28,7 +28,7 @@ import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import ru.merkulyevsasha.news.presentation.common.newsadapter.NewsViewAdapter
 
-class UserActivitiesFragment : Fragment(), UserActivitiesView {
+class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLocator {
 
     companion object {
         @JvmStatic
@@ -59,9 +59,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     private var expanded = true
     private var position = 0
 
+    override fun setServiceLocator(serviceLocator: ServiceLocator) {
+        this.serviceLocator = serviceLocator
+    }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         if (context is ToolbarCombinator) {
             combinator = context
         }

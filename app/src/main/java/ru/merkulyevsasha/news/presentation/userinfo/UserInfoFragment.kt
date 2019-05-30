@@ -24,17 +24,18 @@ import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
 import kotlinx.android.synthetic.main.fragment_userinfo.saveButton
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
+import ru.merkulyevsasha.RequireServiceLocator
+import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.news.BuildConfig
-import ru.merkulyevsasha.news.NewsApp
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 import java.io.IOException
 
-class UserInfoFragment : Fragment(), UserInfoView {
+class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     companion object {
         @JvmStatic
@@ -53,6 +54,7 @@ class UserInfoFragment : Fragment(), UserInfoView {
         }
     }
 
+    private lateinit var serviceLocator: ServiceLocator
     private var presenter: UserInfoPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
 
@@ -65,6 +67,10 @@ class UserInfoFragment : Fragment(), UserInfoView {
         if (context is ToolbarCombinator) {
             combinator = context
         }
+    }
+
+    override fun setServiceLocator(serviceLocator: ServiceLocator) {
+        this.serviceLocator = serviceLocator
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -85,7 +91,6 @@ class UserInfoFragment : Fragment(), UserInfoView {
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.combine(toolbar)
 
-        val serviceLocator = (requireActivity().application as NewsApp).getServiceLocator()
         val interactor = serviceLocator.get(UsersInteractor::class.java)
         presenter = UserInfoPresenterImpl(interactor)
         presenter?.bindView(this)
