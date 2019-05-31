@@ -84,7 +84,16 @@ class NewsViewAdapter constructor(
     }
 
     fun updateItems(items: List<Article>) {
-        this.items.addAll(0, items) // TODO update existing items in the collection
+        var index = 0
+        for (item in items) {
+            val oldItemIndex = this.items.indexOfFirst { it.articleId == item.articleId }
+            if (oldItemIndex >= 0) {
+                this.items.set(oldItemIndex, item)
+            } else {
+                this.items.add(index, item)
+                index++
+            }
+        }
         this.notifyDataSetChanged()
     }
 
