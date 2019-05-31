@@ -91,7 +91,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         toolbar.setTitle(R.string.fragment_actions_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false;
-        combinator?.combine(toolbar)
+        combinator?.bindToolbar(toolbar)
 
         appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
             override fun onShowActionBar(show: Boolean) {
@@ -166,6 +166,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     }
 
     override fun onDestroyView() {
+        combinator?.unbindToolbar()
         presenter?.onDestroy()
         saveFragmentState(arguments ?: Bundle())
         super.onDestroyView()

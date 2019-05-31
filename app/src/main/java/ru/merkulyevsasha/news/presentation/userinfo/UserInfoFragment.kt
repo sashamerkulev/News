@@ -89,7 +89,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
         toolbar.setTitle(R.string.fragment_user_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
-        combinator?.combine(toolbar)
+        combinator?.bindToolbar(toolbar)
 
         val interactor = serviceLocator.get(UsersInteractor::class.java)
         presenter = UserInfoPresenterImpl(interactor)
@@ -119,6 +119,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     }
 
     override fun onDestroyView() {
+        combinator?.unbindToolbar()
         saveFragmentState(arguments ?: Bundle())
         presenter?.onDestroy()
         super.onDestroyView()

@@ -126,12 +126,16 @@ class MainActivity : AppCompatActivity(),
 //        }
     }
 
-    override fun combine(toolbar: Toolbar) {
+    override fun bindToolbar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar,
             R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
+    }
+
+    override fun unbindToolbar() {
+        setSupportActionBar(null)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

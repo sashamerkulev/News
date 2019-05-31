@@ -95,7 +95,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         toolbar.setTitle(R.string.fragment_articles_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false;
-        combinator?.combine(toolbar)
+        combinator?.bindToolbar(toolbar)
 
         appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
             override fun onShowActionBar(show: Boolean) {
@@ -170,6 +170,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
     }
 
     override fun onDestroyView() {
+        combinator?.unbindToolbar()
         presenter?.onDestroy()
         saveFragmentState(arguments ?: Bundle())
         super.onDestroyView()
