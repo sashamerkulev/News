@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -149,6 +150,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
                 .skipMemoryCache(false)
                 .onlyRetrieveFromCache(false)
             Glide.with(this).load(url).apply(options).into(imageViewAvatar)
+                .onLoadFailed(ContextCompat.getDrawable(requireContext(), R.drawable.ic_avatar_empty))
         }
     }
 

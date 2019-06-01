@@ -2,11 +2,13 @@ package ru.merkulyevsasha
 
 import android.content.Context
 import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.comments.ArticleCommentsApiRepositoryImpl
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
+import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
@@ -32,6 +34,7 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
         maps[KeyValueStorage::class.java] = prefs
         maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs)
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs)
+        maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
         maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context)
         maps[ApplicationRouter::class.java] = applicationRouter
@@ -59,6 +62,7 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
             )
             ArticleCommentsInteractor::class.java -> maps[clazz] = ArticleCommentsInteractorImpl(
                 getArticlesApiRepository(),
+                getArticleCommentsApiRepository(),
                 getDatabaseRepository()
             )
             SetupInteractor::class.java -> maps[clazz] = SetupInteractorImpl(
@@ -86,6 +90,10 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
 
     private fun getArticlesApiRepository(): ArticlesApiRepository {
         return maps[ArticlesApiRepository::class.java] as ArticlesApiRepository
+    }
+
+    private fun getArticleCommentsApiRepository(): ArticleCommentsApiRepository {
+        return maps[ArticleCommentsApiRepository::class.java] as ArticleCommentsApiRepository
     }
 
     private fun getUsersApiRepository(): UsersApiRepository {

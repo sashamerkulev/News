@@ -18,4 +18,4 @@ class Article(
     var isUserLiked: Boolean,
     var isUserDisliked: Boolean,
     var isUserCommented: Boolean
-)
+): ArticleOrComment

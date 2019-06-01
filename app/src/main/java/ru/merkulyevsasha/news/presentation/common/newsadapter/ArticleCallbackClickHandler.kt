@@ -2,7 +2,7 @@ package ru.merkulyevsasha.news.presentation.common.newsadapter
 
 import ru.merkulyevsasha.core.models.Article
 
-interface CallbackClickHandler {
+interface ArticleCallbackClickHandler {
     fun onArticleCliked(item: Article)
     fun onLikeClicked(item: Article)
     fun onCommentClicked(articleId: Int)

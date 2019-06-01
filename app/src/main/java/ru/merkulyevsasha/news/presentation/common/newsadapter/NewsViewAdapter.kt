@@ -6,20 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.row_news_item.view.imageViewComment
-import kotlinx.android.synthetic.main.row_news_item.view.imageViewDislike
-import kotlinx.android.synthetic.main.row_news_item.view.imageViewLike
-import kotlinx.android.synthetic.main.row_news_item.view.imageViewThumb
-import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonComment
-import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonDislike
-import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonLike
-import kotlinx.android.synthetic.main.row_news_item.view.layoutButtonShare
-import kotlinx.android.synthetic.main.row_news_item.view.newsDateSource
-import kotlinx.android.synthetic.main.row_news_item.view.newsDescription
-import kotlinx.android.synthetic.main.row_news_item.view.newsTitle
-import kotlinx.android.synthetic.main.row_news_item.view.textViewComment
-import kotlinx.android.synthetic.main.row_news_item.view.textViewDislike
-import kotlinx.android.synthetic.main.row_news_item.view.textViewLike
+import kotlinx.android.synthetic.main.row_news.view.imageViewComment
+import kotlinx.android.synthetic.main.row_news.view.imageViewDislike
+import kotlinx.android.synthetic.main.row_news.view.imageViewLike
+import kotlinx.android.synthetic.main.row_news.view.imageViewThumb
+import kotlinx.android.synthetic.main.row_news.view.layoutButtonComment
+import kotlinx.android.synthetic.main.row_news.view.layoutButtonDislike
+import kotlinx.android.synthetic.main.row_news.view.layoutButtonLike
+import kotlinx.android.synthetic.main.row_news.view.layoutButtonShare
+import kotlinx.android.synthetic.main.row_news.view.newsDateSource
+import kotlinx.android.synthetic.main.row_news.view.newsDescription
+import kotlinx.android.synthetic.main.row_news.view.newsTitle
+import kotlinx.android.synthetic.main.row_news.view.textViewComment
+import kotlinx.android.synthetic.main.row_news.view.textViewDislike
+import kotlinx.android.synthetic.main.row_news.view.textViewLike
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
@@ -28,7 +28,7 @@ import java.util.*
 
 class NewsViewAdapter constructor(
     private val context: Context,
-    private val callbackClickHandler: CallbackClickHandler?,
+    private val callbackClickHandler: ArticleCallbackClickHandler?,
     private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<Article>
 ) : RecyclerView.Adapter<ItemViewHolder>() {
@@ -36,7 +36,7 @@ class NewsViewAdapter constructor(
     private val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_news_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_news, parent, false)
         return ItemViewHolder(view)
     }
 
