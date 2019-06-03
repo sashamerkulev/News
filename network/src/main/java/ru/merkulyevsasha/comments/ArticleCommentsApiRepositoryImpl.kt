@@ -20,8 +20,8 @@ class ArticleCommentsApiRepositoryImpl(sharedPreferences: KeyValueStorage) : Bas
     private val format = "yyyy-MM-dd'T'HH:mm:ss"
     private val simpleDateFormat = SimpleDateFormat(format, Locale.getDefault())
 
-    override fun getArticleComments(articleId: Int): Single<List<ArticleComment>> {
-        return api.getArticleComments(articleId)
+    override fun getArticleComments(articleId: Int, lastArticleCommentsReadDate: Date): Single<List<ArticleComment>> {
+        return api.getArticleComments(articleId, simpleDateFormat.format(lastArticleCommentsReadDate))
             .flattenAsFlowable { it }
             .map { articleCommentsMapper.map(it) }
             .toList()

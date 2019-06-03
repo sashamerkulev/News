@@ -10,6 +10,7 @@ class KeyValueStorageImpl(context: Context) : KeyValueStorage {
         private val KEY_TOKEN = "KEY_TOKEN"
         private val KEY_SETUP_ID = "KEY_SETUP_ID"
         private val KEY_LAST_ARTICLE_READ = "KEY_LAST_ARTICLE_READ"
+        private val KEY_LAST_ARTICLE_COMMENT_READ = "KEY_LAST_ARTICLE_COMMENT_READ"
         private val KEY_USER_NAME = "KEY_USER_NAME"
         private val KEY_USER_PHONE = "KEY_USER_PHONE"
         private val KEY_USER_AVATAR_FILE_NAME = "KEY_USER_AVATAR_FILE_NAME"
@@ -43,6 +44,14 @@ class KeyValueStorageImpl(context: Context) : KeyValueStorage {
 
     override fun setLastArticleReadDate(lastDate: Date) {
         prefs.edit().putLong(KEY_LAST_ARTICLE_READ, lastDate.time).apply()
+    }
+
+    override fun getLastArticleCommentReadDate(): Date? {
+        return Date(prefs.getLong(KEY_LAST_ARTICLE_COMMENT_READ, 0))
+    }
+
+    override fun setLastArticleCommentReadDate(lastDate: Date) {
+        prefs.edit().putLong(KEY_LAST_ARTICLE_COMMENT_READ, lastDate.time).apply()
     }
 
     override fun saveNameAndPhone(name: String, phone: String) {

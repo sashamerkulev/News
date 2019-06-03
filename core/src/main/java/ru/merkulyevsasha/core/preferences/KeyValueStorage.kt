@@ -9,6 +9,8 @@ interface KeyValueStorage {
     fun setSetupId(setupId: String)
     fun getLastArticleReadDate(): Date?
     fun setLastArticleReadDate(lastDate: Date)
+    fun getLastArticleCommentReadDate(): Date?
+    fun setLastArticleCommentReadDate(lastDate: Date)
     fun saveNameAndPhone(name: String, phone: String)
     fun saveProfileFileName(profileFileName: String)
     fun getUserName(): String

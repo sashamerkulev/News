@@ -19,6 +19,21 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe({
+                    val result = listOf<ArticleOrComment>(it.first) + it.second
+                    view?.showComments(result)
+                }, {
+                    Timber.e(it)
+                    view?.showError()
+                }))
+    }
+
+    fun onRefresh(articleId: Int) {
+        compositeDisposable.add(
+            articleCommentsInteractor.refreshAndGetArticleComments(articleId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe({
                     val aaa = listOf<ArticleOrComment>(it.first) + it.second
                     view?.showComments(aaa)
                 }, {

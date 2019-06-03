@@ -6,6 +6,19 @@ import ru.merkulyevsasha.network.models.ArticleCommentResponse
 
 class ArticleCommentsMapper : Mapper<ArticleCommentResponse, ArticleComment> {
     override fun map(item: ArticleCommentResponse): ArticleComment {
-        return ArticleComment()
+        return ArticleComment(
+            item.articleId,
+            item.commentId,
+            item.userId,
+            item.userName,
+            item.pubDate,
+            item.comment,
+            item.status,
+            item.likes,
+            item.dislike,
+            item.like > 0,
+            item.dislike > 0,
+            item.owner
+        )
     }
 }

@@ -14,8 +14,8 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.activity_articlecomments.layoutAddCommentButton
-import kotlinx.android.synthetic.main.activity_articlecomments.progressbar
-import kotlinx.android.synthetic.main.fragment_articles.recyclerView
+import kotlinx.android.synthetic.main.activity_articlecomments.recyclerView
+import kotlinx.android.synthetic.main.activity_articlecomments.swipeRefreshLayout
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewDislike
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewLike
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewThumb
@@ -32,6 +32,7 @@ import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleCallbackClickHandler
 import java.text.SimpleDateFormat
@@ -57,6 +58,7 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
     private lateinit var layoutManager: LinearLayoutManager
 
     private var articleId = 0
+    private var position = 0
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
@@ -83,7 +85,13 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 //            presenter?.onShareClicked(articleId)
 //        }
 
-        articleId = intent.getIntExtra(ArticleCommentsActivity.ARTICLE_ID, 0)
+        if (savedInstanceState == null) {
+            articleId = intent.getIntExtra(ARTICLE_ID, 0)
+        } else {
+            articleId = savedInstanceState.getInt(ARTICLE_ID, 0)
+            position = savedInstanceState.getInt(ArticlesFragment.KEY_POSITION, 0)
+        }
+
         if (articleId <= 0) {
             finish()
             return
@@ -98,6 +106,11 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 
         layoutAddCommentButton.setOnClickListener {
             presenter?.onAddCommentClicked(articleId, editTextComment.text.toString())
+        }
+
+        initSwipeRefreshColorScheme()
+        swipeRefreshLayout.setOnRefreshListener {
+            presenter?.onRefresh(articleId)
         }
     }
 
@@ -118,12 +131,18 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         super.onDestroy()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        saveFragmentState(outState)
+    }
+
     override fun showProgress() {
-        progressbar.visibility = View.VISIBLE
+        swipeRefreshLayout.isRefreshing = true
     }
 
     override fun hideProgress() {
-        progressbar.visibility = View.GONE
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun showError() {
@@ -145,6 +164,17 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
             ArrayList()
         )
         recyclerView.adapter = adapter
+    }
+
+    private fun initSwipeRefreshColorScheme() {
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.colorControlNormal))
+    }
+
+    private fun saveFragmentState(state: Bundle) {
+        position = layoutManager.findFirstVisibleItemPosition()
+        state.putInt(ArticlesFragment.KEY_POSITION, position)
+        state.putInt(ARTICLE_ID, articleId)
     }
 
     class CommentsViewAdapter constructor(

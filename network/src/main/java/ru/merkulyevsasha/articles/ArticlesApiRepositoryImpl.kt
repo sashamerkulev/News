@@ -19,7 +19,7 @@ class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRep
     private val format = "yyyy-MM-dd'T'HH:mm:ss"
     private val simpleDateFormat = SimpleDateFormat(format, Locale.getDefault())
 
-    override fun getArticles(lastArticleReadDate: Date?): Single<List<Article>> {
+    override fun getArticles(lastArticleReadDate: Date): Single<List<Article>> {
         return api.getArticles(simpleDateFormat.format(lastArticleReadDate))
             .flattenAsFlowable { it }
             .map { articlesMapper.map(it) }

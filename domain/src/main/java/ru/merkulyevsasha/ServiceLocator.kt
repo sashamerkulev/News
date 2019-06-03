@@ -63,7 +63,9 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
             ArticleCommentsInteractor::class.java -> maps[clazz] = ArticleCommentsInteractorImpl(
                 getArticlesApiRepository(),
                 getArticleCommentsApiRepository(),
-                getDatabaseRepository()
+                getPreferences(),
+                getDatabaseRepository(),
+                SourceNameMapper(getDatabaseRepository())
             )
             SetupInteractor::class.java -> maps[clazz] = SetupInteractorImpl(
                 getPreferences(),

@@ -6,16 +6,16 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Update
 import io.reactivex.Single
-import ru.merkulyevsasha.database.entities.ArticleCommentsEntity
+import ru.merkulyevsasha.database.entities.ArticleCommentEntity
 
 @Dao
 interface ArticleCommentsDao {
-    @Query("select * from comments order by pubDate desc")
-    fun getArticleComments(): Single<List<ArticleCommentsEntity>>
+    @Query("select * from comments where articleId = :articleId order by pubDate desc")
+    fun getArticleComments(articleId: Int): Single<List<ArticleCommentEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdate(items: List<ArticleCommentsEntity>)
+    fun insertOrUpdate(items: List<ArticleCommentEntity>)
 
     @Update
-    fun update(item: ArticleCommentsEntity)
+    fun update(item: ArticleCommentEntity)
 }

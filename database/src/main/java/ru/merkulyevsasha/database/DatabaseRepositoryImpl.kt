@@ -8,7 +8,8 @@ import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
-import ru.merkulyevsasha.database.mappers.ArticleCommentsMapper
+import ru.merkulyevsasha.database.mappers.ArticleCommentEntityMapper
+import ru.merkulyevsasha.database.mappers.ArticleCommentMapper
 import ru.merkulyevsasha.database.mappers.ArticleEntityMapper
 import ru.merkulyevsasha.database.mappers.ArticleMapper
 import ru.merkulyevsasha.database.mappers.RssSourceEntityMapper
@@ -19,7 +20,8 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
 
     private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
-    private val articleCommentsMapper = ArticleCommentsMapper()
+    private val articleCommentEntityMapper = ArticleCommentEntityMapper()
+    private val articleCommentMapper = ArticleCommentMapper()
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()
 
@@ -33,6 +35,11 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
             .flattenAsFlowable { it }
             .map { articleEntityMapper.map(it) }
             .toList()
+    }
+
+    override fun getArticle(articleId: Int): Single<Article> {
+        return database.articleDao.getArticle(articleId)
+            .map { articleEntityMapper.map(it) }
     }
 
     override fun removeOldNotUserActivityArticles(cleanDate: Date) {
@@ -50,10 +57,10 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
             .toList()
     }
 
-    override fun getArticleComments(): Single<List<ArticleComment>> {
-        return database.articleCommentsDao.getArticleComments()
+    override fun getArticleComments(articleId: Int): Single<List<ArticleComment>> {
+        return database.articleCommentsDao.getArticleComments(articleId)
             .flattenAsFlowable { it }
-            .map { articleCommentsMapper.map(it) }
+            .map { articleCommentEntityMapper.map(it) }
             .toList()
     }
 
@@ -77,4 +84,13 @@ class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
     override fun updateArticle(article: Article) {
         database.articleDao.update(articleMapper.map(article))
     }
+
+    override fun addOrUpdateArticleComments(comments: List<ArticleComment>) {
+        database.articleCommentsDao.insertOrUpdate(comments.map { articleCommentMapper.map(it) })
+    }
+
+    override fun updateArticleComment(comment: ArticleComment) {
+        database.articleCommentsDao.update(articleCommentMapper.map(comment))
+    }
+
 }
