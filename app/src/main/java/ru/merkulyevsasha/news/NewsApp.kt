@@ -38,6 +38,7 @@ class NewsApp : Application() {
                 .detectNetwork()   // or .detectAll() for all detectable problems
                 .penaltyLog()
                 .build())
+
             StrictMode.setVmPolicy(VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects()
                 //.detectLeakedClosableObjects()

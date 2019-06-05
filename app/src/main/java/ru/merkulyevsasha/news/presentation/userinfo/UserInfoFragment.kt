@@ -141,6 +141,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         if (userInfo.avatarUrl.isNotEmpty()) {
             avatarShower.showWithoutCache(requireContext(), userInfo.avatarUrl, userInfo.authorization, imageViewAvatar)
         }
+        userName.setText(userInfo.name)
     }
 
     override fun takeGalleryPicture() {
