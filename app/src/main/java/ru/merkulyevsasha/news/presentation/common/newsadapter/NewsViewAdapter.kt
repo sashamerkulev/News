@@ -28,7 +28,10 @@ import java.util.*
 
 class NewsViewAdapter constructor(
     private val context: Context,
-    private val callbackClickHandler: ArticleCallbackClickHandler?,
+    private val articleCallbackClickHandler: ArticleCallbackClickHandler?,
+    private val likeCallbackClickHandler: LikeArticleCallbackClickHandler?,
+    private val commentCallbackClickHandler: CommentArticleCallbackClickHandler?,
+    private val shareCallbackClickHandler: ShareArticleCallbackClickHandler?,
     private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<Article>
 ) : RecyclerView.Adapter<ItemViewHolder>() {
@@ -116,27 +119,27 @@ class NewsViewAdapter constructor(
     private fun initClickListeners(holder: ItemViewHolder) {
         holder.itemView.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onArticleCliked(newItem)
+            articleCallbackClickHandler?.onArticleCliked(newItem)
         }
 
         holder.itemView.layoutButtonLike.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onLikeClicked(newItem)
+            likeCallbackClickHandler?.onLikeClicked(newItem)
         }
 
         holder.itemView.layoutButtonComment.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onCommentClicked(newItem.articleId)
+            commentCallbackClickHandler?.onCommentClicked(newItem.articleId)
         }
 
         holder.itemView.layoutButtonDislike.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onDislikeClicked(newItem)
+            likeCallbackClickHandler?.onDislikeClicked(newItem)
         }
 
         holder.itemView.layoutButtonShare.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            callbackClickHandler?.onShareClicked(newItem)
+            shareCallbackClickHandler?.onShareClicked(newItem)
         }
     }
 }

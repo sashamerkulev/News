@@ -36,7 +36,7 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs)
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
-        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context)
+        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context, prefs)
         maps[ApplicationRouter::class.java] = applicationRouter
         mainActivityRouter?.apply {
             maps[MainActivityRouter::class.java] = this

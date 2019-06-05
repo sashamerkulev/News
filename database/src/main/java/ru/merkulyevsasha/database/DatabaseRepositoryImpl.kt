@@ -6,6 +6,7 @@ import io.reactivex.Single
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.RssSource
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.database.data.Database
 import ru.merkulyevsasha.database.mappers.ArticleCommentEntityMapper
@@ -16,11 +17,11 @@ import ru.merkulyevsasha.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.database.mappers.RssSourceMapper
 import java.util.*
 
-class DatabaseRepositoryImpl(context: Context) : DatabaseRepository {
+class DatabaseRepositoryImpl(context: Context, keyValueStorage: KeyValueStorage) : DatabaseRepository {
 
     private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
-    private val articleCommentEntityMapper = ArticleCommentEntityMapper()
+    private val articleCommentEntityMapper = ArticleCommentEntityMapper(keyValueStorage.getAccessToken())
     private val articleCommentMapper = ArticleCommentMapper()
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()

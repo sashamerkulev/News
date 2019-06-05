@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -15,10 +14,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
@@ -31,6 +26,7 @@ import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.common.AvatarShower
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
@@ -60,6 +56,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     private var combinator: ToolbarCombinator? = null
 
     private lateinit var colorThemeResolver: ColorThemeResolver
+    private val avatarShower = AvatarShower()
 
     private var profileFileName: String = ""
 
@@ -141,16 +138,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     }
 
     override fun showUserInfo(userInfo: UserInfo) {
-        if (userInfo.fileName.isNotEmpty()) {
-            val url = GlideUrl(userInfo.fileName, LazyHeaders.Builder()
-                .addHeader("Authorization", userInfo.authorization)
-                .build())
-            val options = RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(false)
-                .onlyRetrieveFromCache(false)
-            Glide.with(this).load(url).apply(options).into(imageViewAvatar)
-                .onLoadFailed(ContextCompat.getDrawable(requireContext(), R.drawable.ic_avatar_empty))
+        if (userInfo.avatarUrl.isNotEmpty()) {
+            avatarShower.showWithoutCache(requireContext(), userInfo.avatarUrl, userInfo.authorization, imageViewAvatar)
         }
     }
 

@@ -26,4 +26,5 @@
     <string name="newnews_select_image_label">Выберите изображение</string>
     <string name="user_name_hint">Введите имя</string>
     <string name="save_button_title">Сохранить</string>
+    <string name="comment">Комментарий</string>
 </resources>

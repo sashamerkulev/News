@@ -13,7 +13,7 @@ import java.util.*
 
 class ArticleCommentsApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticleCommentsApiRepository {
 
-    private val articleCommentsMapper = ArticleCommentsMapper()
+    private val articleCommentsMapper = ArticleCommentsMapper("bearer " + sharedPreferences.getAccessToken())
 
     private val api: CommentsApi = retrofit.create(CommentsApi::class.java)
 

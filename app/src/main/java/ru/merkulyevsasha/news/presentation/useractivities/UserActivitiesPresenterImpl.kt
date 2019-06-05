@@ -6,12 +6,16 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.CommentArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.LikeArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ShareArticleCallbackClickHandler
 import timber.log.Timber
 
 class UserActivitiesPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
     private val applicationRouter: ApplicationRouter
-) : BasePresenterImpl<UserActivitiesView>(), ArticleCallbackClickHandler {
+) : BasePresenterImpl<UserActivitiesView>(),
+    ArticleCallbackClickHandler, LikeArticleCallbackClickHandler, ShareArticleCallbackClickHandler, CommentArticleCallbackClickHandler {
     fun onFirstLoad() {
         compositeDisposable.add(
             articlesInteractor.getUserActivityArticles()

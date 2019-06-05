@@ -6,7 +6,9 @@
     <dimen name="up_button_width">130dp</dimen>
     <dimen name="up_button_height">35dp</dimen>
 
+    <dimen name="size_18dp">18dp</dimen>
     <dimen name="size_24dp">24dp</dimen>
+    <dimen name="size_30dp">30dp</dimen>
     <dimen name="size_40dp">40dp</dimen>
     <dimen name="size_80dp">80dp</dimen>
 

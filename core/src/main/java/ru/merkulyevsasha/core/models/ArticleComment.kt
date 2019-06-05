@@ -14,5 +14,7 @@ data class ArticleComment(
     var usersDislikeCount: Int,
     var isUserLiked: Boolean,
     var isUserDisliked: Boolean,
-    val owner: Boolean
+    val owner: Boolean,
+    val avatarUrl: String,
+    val authorization: String
 ) : ArticleOrComment

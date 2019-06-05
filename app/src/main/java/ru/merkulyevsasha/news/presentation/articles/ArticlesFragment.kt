@@ -147,6 +147,9 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         adapter = NewsViewAdapter(
             requireContext(),
             presenter,
+            presenter,
+            presenter,
+            presenter,
             colorThemeResolver,
             ArrayList()
         )

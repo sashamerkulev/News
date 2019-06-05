@@ -119,6 +119,9 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         adapter = NewsViewAdapter(
             requireContext(),
             presenter,
+            presenter,
+            presenter,
+            presenter,
             colorThemeResolver,
             ArrayList()
         )

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
@@ -29,6 +31,19 @@ class NewsApp : Application() {
 
         if (BuildConfig.DEBUG_MODE) {
             Stetho.initializeWithDefaults(this)
+
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()   // or .detectAll() for all detectable problems
+                .penaltyLog()
+                .build())
+            StrictMode.setVmPolicy(VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                //.detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build())
         }
 
         if (LeakCanary.isInAnalyzerProcess(this)) {

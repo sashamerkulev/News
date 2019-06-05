@@ -16,6 +16,14 @@ import kotlinx.android.synthetic.main.activity_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.activity_articlecomments.layoutAddCommentButton
 import kotlinx.android.synthetic.main.activity_articlecomments.recyclerView
 import kotlinx.android.synthetic.main.activity_articlecomments.swipeRefreshLayout
+import kotlinx.android.synthetic.main.row_comment.view.commentImageViewDislike
+import kotlinx.android.synthetic.main.row_comment.view.commentImageViewLike
+import kotlinx.android.synthetic.main.row_comment.view.commentTextViewDislike
+import kotlinx.android.synthetic.main.row_comment.view.commentTextViewLike
+import kotlinx.android.synthetic.main.row_comment.view.commenter
+import kotlinx.android.synthetic.main.row_comment.view.imageViewCommentAvatar
+import kotlinx.android.synthetic.main.row_comment.view.textViewComment
+import kotlinx.android.synthetic.main.row_comment.view.textViewCommentDate
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewDislike
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewLike
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewThumb
@@ -30,11 +38,15 @@ import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.models.Article
+import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
+import ru.merkulyevsasha.news.presentation.common.AvatarShower
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
-import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.LikeArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ShareArticleCallbackClickHandler
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -100,7 +112,7 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         initRecyclerView()
 
         val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
-        presenter = ArticleCommentsPresenterImpl(interactor)
+        presenter = ArticleCommentsPresenterImpl(interactor, serviceLocator.get(KeyValueStorage::class.java))
         presenter?.bindView(this)
         presenter?.onFirstLoad(articleId)
 
@@ -160,6 +172,7 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         adapter = CommentsViewAdapter(
             this,
             presenter,
+            presenter,
             colorThemeResolver,
             ArrayList()
         )
@@ -179,7 +192,8 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 
     class CommentsViewAdapter constructor(
         private val context: Context,
-        private val callbackClickHandler: ArticleCallbackClickHandler?,
+        private val likeCallbackClickHandler: LikeArticleCallbackClickHandler?,
+        private val shareCallbackClickHandler: ShareArticleCallbackClickHandler?,
         private val colorThemeResolver: ColorThemeResolver,
         private val items: MutableList<ArticleOrComment>
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -190,6 +204,7 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         }
 
         private val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        private val avatarShower = AvatarShower()
 
         override fun getItemViewType(position: Int): Int {
             return if (position == 0) ARTICLE_DETAIL_VIEW_TYPE else COMMENT_VIEW_TYPE
@@ -206,11 +221,23 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (holder is ArticleViewHolder) bindArticleViewHolder(holder, position)
-            else bindCommentViewHolder(holder, position)
+            else bindCommentViewHolder(holder as CommentViewHolder, position)
         }
 
-        private fun bindCommentViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        private fun bindCommentViewHolder(holder: CommentViewHolder, position: Int) {
+            val item = items[position] as ArticleComment
+            holder.itemView.commenter.text = item.userName
+            holder.itemView.textViewComment.text = item.comment
+            val pubDate = item.pubDate
+            holder.itemView.textViewCommentDate.text = format.format(pubDate)
 
+            avatarShower.showWithCache(context, item.avatarUrl, item.authorization, holder.itemView.imageViewCommentAvatar)
+
+            holder.itemView.commentTextViewLike.text = item.usersLikeCount.toString()
+            holder.itemView.commentTextViewDislike.text = item.usersDislikeCount.toString()
+
+            colorThemeResolver.setArticleActivityColor(item.isUserLiked, holder.itemView.commentTextViewLike, holder.itemView.commentImageViewLike)
+            colorThemeResolver.setArticleActivityColor(item.isUserDisliked, holder.itemView.commentTextViewDislike, holder.itemView.commentImageViewDislike)
         }
 
         private fun bindArticleViewHolder(holder: ArticleViewHolder, position: Int) {
@@ -242,17 +269,16 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 //            colorThemeResolver.setArticleActivityColor(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
 
             holder.itemView.layoutButtonLike.setOnClickListener {
-                callbackClickHandler?.onLikeClicked(item)
+                likeCallbackClickHandler?.onLikeClicked(item)
             }
 
             holder.itemView.layoutButtonDislike.setOnClickListener {
-                callbackClickHandler?.onDislikeClicked(item)
+                likeCallbackClickHandler?.onDislikeClicked(item)
             }
 
             holder.itemView.layoutButtonShare.setOnClickListener {
-                callbackClickHandler?.onShareClicked(item)
+                shareCallbackClickHandler?.onShareClicked(item)
             }
-
         }
 
         override fun getItemCount(): Int {
