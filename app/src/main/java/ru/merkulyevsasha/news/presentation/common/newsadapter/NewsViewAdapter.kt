@@ -28,10 +28,10 @@ import java.util.*
 
 class NewsViewAdapter constructor(
     private val context: Context,
-    private val articleCallbackClickHandler: ArticleCallbackClickHandler?,
-    private val likeCallbackClickHandler: LikeArticleCallbackClickHandler?,
+    private val articleCallbackClickHandler: ArticleClickCallbackHandler?,
+    private val likeCallbackClickHandler: ArticleLikeCallbackClickHandler?,
     private val commentCallbackClickHandler: CommentArticleCallbackClickHandler?,
-    private val shareCallbackClickHandler: ShareArticleCallbackClickHandler?,
+    private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
     private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<Article>
 ) : RecyclerView.Adapter<ItemViewHolder>() {
@@ -124,22 +124,22 @@ class NewsViewAdapter constructor(
 
         holder.itemView.layoutButtonLike.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            likeCallbackClickHandler?.onLikeClicked(newItem)
+            likeCallbackClickHandler?.onArticleLikeClicked(newItem)
         }
 
         holder.itemView.layoutButtonComment.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            commentCallbackClickHandler?.onCommentClicked(newItem.articleId)
+            commentCallbackClickHandler?.onCommentArticleClicked(newItem.articleId)
         }
 
         holder.itemView.layoutButtonDislike.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            likeCallbackClickHandler?.onDislikeClicked(newItem)
+            likeCallbackClickHandler?.onArticleDislikeClicked(newItem)
         }
 
         holder.itemView.layoutButtonShare.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            shareCallbackClickHandler?.onShareClicked(newItem)
+            shareCallbackClickHandler?.onArticleShareClicked(newItem)
         }
     }
 }

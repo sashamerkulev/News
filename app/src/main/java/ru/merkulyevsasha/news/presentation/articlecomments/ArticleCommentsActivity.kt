@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.row_comment.view.commentTextViewDislike
 import kotlinx.android.synthetic.main.row_comment.view.commentTextViewLike
 import kotlinx.android.synthetic.main.row_comment.view.commenter
 import kotlinx.android.synthetic.main.row_comment.view.imageViewCommentAvatar
+import kotlinx.android.synthetic.main.row_comment.view.layoutCommentButtonDislike
+import kotlinx.android.synthetic.main.row_comment.view.layoutCommentButtonLike
+import kotlinx.android.synthetic.main.row_comment.view.layoutCommentButtonShare
 import kotlinx.android.synthetic.main.row_comment.view.textViewComment
 import kotlinx.android.synthetic.main.row_comment.view.textViewCommentDate
 import kotlinx.android.synthetic.main.row_comment_article.view.imageViewDislike
@@ -37,6 +40,7 @@ import kotlinx.android.synthetic.main.row_comment_article.view.textViewLike
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
+import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
@@ -45,8 +49,10 @@ import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.AvatarShower
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
-import ru.merkulyevsasha.news.presentation.common.newsadapter.LikeArticleCallbackClickHandler
-import ru.merkulyevsasha.news.presentation.common.newsadapter.ShareArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleLikeCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleShareCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.CommentLikeCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.CommentShareCallbackClickHandler
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -84,19 +90,6 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), theme)
 
-//        layoutButtonLike.setOnClickListener {
-//            presenter?.onLikeClicked(articleId)
-//        }
-//        layoutButtonComment.setOnClickListener {
-//            presenter?.onCommentClicked(articleId)
-//        }
-//        layoutButtonDislike.setOnClickListener {
-//            presenter?.onDislikeClicked(articleId)
-//        }
-//        layoutButtonShare.setOnClickListener {
-//            presenter?.onShareClicked(articleId)
-//        }
-
         if (savedInstanceState == null) {
             articleId = intent.getIntExtra(ARTICLE_ID, 0)
         } else {
@@ -109,11 +102,13 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
             return
         }
 
+        val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
+        val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)
+        presenter = ArticleCommentsPresenterImpl(interactor, articleInteractor, serviceLocator.get(KeyValueStorage::class.java))
+        presenter?.bindView(this)
+
         initRecyclerView()
 
-        val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
-        presenter = ArticleCommentsPresenterImpl(interactor, serviceLocator.get(KeyValueStorage::class.java))
-        presenter?.bindView(this)
         presenter?.onFirstLoad(articleId)
 
         layoutAddCommentButton.setOnClickListener {
@@ -165,12 +160,22 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         adapter.setItems(items)
     }
 
+    override fun updateItem(item: Article) {
+        adapter.updateArticleItem(item)
+    }
+
+    override fun updateCommentItem(item: ArticleComment) {
+        adapter.updateCommentItem(item)
+    }
+
     private fun initRecyclerView() {
         layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
         adapter = CommentsViewAdapter(
             this,
+            presenter,
+            presenter,
             presenter,
             presenter,
             colorThemeResolver,
@@ -180,8 +185,8 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
     }
 
     private fun initSwipeRefreshColorScheme() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.colorAccent))
-        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(ru.merkulyevsasha.news.R.attr.colorControlNormal))
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
     }
 
     private fun saveFragmentState(state: Bundle) {
@@ -192,8 +197,10 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 
     class CommentsViewAdapter constructor(
         private val context: Context,
-        private val likeCallbackClickHandler: LikeArticleCallbackClickHandler?,
-        private val shareCallbackClickHandler: ShareArticleCallbackClickHandler?,
+        private val likeCallbackClickHandler: ArticleLikeCallbackClickHandler?,
+        private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
+        private val commentLikeCallbackClickHandler: CommentLikeCallbackClickHandler?,
+        private val commentShareCallbackClickHandler: CommentShareCallbackClickHandler?,
         private val colorThemeResolver: ColorThemeResolver,
         private val items: MutableList<ArticleOrComment>
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -238,6 +245,19 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 
             colorThemeResolver.setArticleActivityColor(item.isUserLiked, holder.itemView.commentTextViewLike, holder.itemView.commentImageViewLike)
             colorThemeResolver.setArticleActivityColor(item.isUserDisliked, holder.itemView.commentTextViewDislike, holder.itemView.commentImageViewDislike)
+
+            holder.itemView.layoutCommentButtonLike.setOnClickListener {
+                commentLikeCallbackClickHandler?.onCommentLikeClicked(items[holder.adapterPosition] as ArticleComment)
+            }
+
+            holder.itemView.layoutCommentButtonDislike.setOnClickListener {
+                commentLikeCallbackClickHandler?.onCommentDislikeClicked(items[holder.adapterPosition] as ArticleComment)
+            }
+
+            holder.itemView.layoutCommentButtonShare.setOnClickListener {
+                commentShareCallbackClickHandler?.onCommentShareClicked(items[holder.adapterPosition] as ArticleComment)
+            }
+
         }
 
         private fun bindArticleViewHolder(holder: ArticleViewHolder, position: Int) {
@@ -269,15 +289,15 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
 //            colorThemeResolver.setArticleActivityColor(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
 
             holder.itemView.layoutButtonLike.setOnClickListener {
-                likeCallbackClickHandler?.onLikeClicked(item)
+                likeCallbackClickHandler?.onArticleLikeClicked(items[holder.adapterPosition] as Article)
             }
 
             holder.itemView.layoutButtonDislike.setOnClickListener {
-                likeCallbackClickHandler?.onDislikeClicked(item)
+                likeCallbackClickHandler?.onArticleDislikeClicked(items[holder.adapterPosition] as Article)
             }
 
             holder.itemView.layoutButtonShare.setOnClickListener {
-                shareCallbackClickHandler?.onShareClicked(item)
+                shareCallbackClickHandler?.onArticleShareClicked(items[holder.adapterPosition] as Article)
             }
         }
 
@@ -289,6 +309,19 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
             this.items.clear()
             this.items.addAll(items)
             notifyDataSetChanged()
+        }
+
+        fun updateArticleItem(item: Article) {
+            this.items[0] = item
+            notifyItemChanged(0)
+        }
+
+        fun updateCommentItem(item: ArticleComment) {
+            val index = items.filter { it is ArticleComment }.map { it as ArticleComment }.indexOfFirst { it.commentId == item.commentId }
+            if (index >= 0) {
+                this.items[index] = item
+                notifyItemChanged(index)
+            }
         }
 
     }

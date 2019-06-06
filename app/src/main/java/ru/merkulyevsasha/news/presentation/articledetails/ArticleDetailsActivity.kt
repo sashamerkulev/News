@@ -60,13 +60,13 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireS
         colorThemeResolver = ColorThemeResolver(TypedValue(), theme)
 
         layoutButtonLike.setOnClickListener {
-            presenter?.onLikeClicked(articleId)
+            presenter?.onArticleLikeClicked(articleId)
         }
         layoutButtonComment.setOnClickListener {
             presenter?.onCommentClicked(articleId)
         }
         layoutButtonDislike.setOnClickListener {
-            presenter?.onDislikeClicked(articleId)
+            presenter?.onArticleDislikeClicked(articleId)
         }
         layoutButtonShare.setOnClickListener {
             presenter?.onShareClicked(articleId)

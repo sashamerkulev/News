@@ -4,12 +4,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
+import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
 import timber.log.Timber
 
 class ArticleDetailsPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
     private val applicationRouter: ApplicationRouter
 ) : BasePresenterImpl<ArticleDetailsView>() {
+
+    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
+        { view?.updateItem(it) },
+        { view?.showError() })
+
     fun onFirstLoad(articleId: Int) {
         compositeDisposable.add(
             articlesInteractor.getArticle(articleId)
@@ -24,28 +30,12 @@ class ArticleDetailsPresenterImpl(
                     }))
     }
 
-    fun onLikeClicked(articleId: Int) {
-        compositeDisposable.add(
-            articlesInteractor.likeArticle(articleId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { item -> view?.updateItem(item) },
-                    {
-                        Timber.e(it)
-                        view?.showError()
-                    }))
+    fun onArticleLikeClicked(articleId: Int) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleLikeClicked(articleId))
     }
 
-    fun onDislikeClicked(articleId: Int) {
-        compositeDisposable.add(
-            articlesInteractor.dislikeArticle(articleId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { item -> view?.updateItem(item) },
-                    {
-                        Timber.e(it)
-                        view?.showError()
-                    }))
+    fun onArticleDislikeClicked(articleId: Int) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleDislikeClicked(articleId))
     }
 
     fun onCommentClicked(articleId: Int) {

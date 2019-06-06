@@ -1,5 +1,7 @@
 package ru.merkulyevsasha.news.presentation.articlecomments
 
+import ru.merkulyevsasha.core.models.Article
+import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.news.presentation.base.BaseView
 
@@ -8,4 +10,6 @@ interface ArticleCommentsView : BaseView {
     fun hideProgress()
     fun showError()
     fun showComments(items: List<ArticleOrComment>)
+    fun updateItem(item: Article)
+    fun updateCommentItem(item: ArticleComment)
 }

@@ -2,21 +2,31 @@ package ru.merkulyevsasha.news.presentation.articlecomments
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
+import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
-import ru.merkulyevsasha.news.presentation.common.newsadapter.LikeArticleCallbackClickHandler
-import ru.merkulyevsasha.news.presentation.common.newsadapter.ShareArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleLikeCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleShareCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.CommentLikeCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.CommentShareCallbackClickHandler
 import timber.log.Timber
 import java.util.*
 
 class ArticleCommentsPresenterImpl(
     private val articleCommentsInteractor: ArticleCommentsInteractor,
+    private val articlesInteractor: ArticlesInteractor,
     private val keyValueStorage: KeyValueStorage
-) : BasePresenterImpl<ArticleCommentsView>(), LikeArticleCallbackClickHandler, ShareArticleCallbackClickHandler {
+) : BasePresenterImpl<ArticleCommentsView>(),
+    ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentLikeCallbackClickHandler, CommentShareCallbackClickHandler {
+
+    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
+        { view?.updateItem(it) },
+        { view?.showError() })
 
     private val random = Random()
 
@@ -58,13 +68,24 @@ class ArticleCommentsPresenterImpl(
     fun onAddCommentClicked(articleId: Int, comment: String) {
     }
 
-    override fun onLikeClicked(item: Article) {
+    override fun onArticleLikeClicked(item: Article) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleLikeClicked(item.articleId))
     }
 
-    override fun onDislikeClicked(item: Article) {
+    override fun onArticleDislikeClicked(item: Article) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleDislikeClicked(item.articleId))
     }
 
-    override fun onShareClicked(item: Article) {
+    override fun onArticleShareClicked(item: Article) {
+    }
+
+    override fun onCommentLikeClicked(item: ArticleComment) {
+    }
+
+    override fun onCommentDislikeClicked(item: ArticleComment) {
+    }
+
+    override fun onCommentShareClicked(item: ArticleComment) {
     }
 
     private fun testArticleComment(first: Article, userId: Int, owner: Boolean = false): ArticleComment {

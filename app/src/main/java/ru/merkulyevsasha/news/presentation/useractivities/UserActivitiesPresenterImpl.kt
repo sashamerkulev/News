@@ -5,17 +5,23 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
-import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleClickCallbackHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleLikeCallbackClickHandler
+import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleShareCallbackClickHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.CommentArticleCallbackClickHandler
-import ru.merkulyevsasha.news.presentation.common.newsadapter.LikeArticleCallbackClickHandler
-import ru.merkulyevsasha.news.presentation.common.newsadapter.ShareArticleCallbackClickHandler
 import timber.log.Timber
 
 class UserActivitiesPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
     private val applicationRouter: ApplicationRouter
 ) : BasePresenterImpl<UserActivitiesView>(),
-    ArticleCallbackClickHandler, LikeArticleCallbackClickHandler, ShareArticleCallbackClickHandler, CommentArticleCallbackClickHandler {
+    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentArticleCallbackClickHandler {
+
+    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
+        { view?.updateItem(it) },
+        { view?.showError() })
+
     fun onFirstLoad() {
         compositeDisposable.add(
             articlesInteractor.getUserActivityArticles()
@@ -38,35 +44,19 @@ class UserActivitiesPresenterImpl(
         applicationRouter.showArticleDetails(item.articleId)
     }
 
-    override fun onLikeClicked(item: Article) {
-        compositeDisposable.add(
-            articlesInteractor.likeArticle(item.articleId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { newItem -> view?.updateItem(newItem) },
-                    {
-                        Timber.e(it)
-                        view?.showError()
-                    }))
+    override fun onArticleLikeClicked(item: Article) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleLikeClicked(item.articleId))
     }
 
-    override fun onDislikeClicked(item: Article) {
-        compositeDisposable.add(
-            articlesInteractor.dislikeArticle(item.articleId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { newItem -> view?.updateItem(newItem) },
-                    {
-                        Timber.e(it)
-                        view?.showError()
-                    }))
+    override fun onArticleDislikeClicked(item: Article) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleDislikeClicked(item.articleId))
     }
 
-    override fun onCommentClicked(articleId: Int) {
+    override fun onCommentArticleClicked(articleId: Int) {
         applicationRouter.showArticleComments(articleId)
     }
 
-    override fun onShareClicked(item: Article) {
+    override fun onArticleShareClicked(item: Article) {
     }
 
 }
