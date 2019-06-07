@@ -20,7 +20,8 @@ interface CommentsApi {
     fun deleteArticleComment(@Path("commentId") commentId: Int): Completable
 
     @POST("/articles/{articleId}/comment/")
-    fun addArticleComment(@Path("articleId") articleId: Int, comment: String): Single<ArticleCommentResponse>
+    @FormUrlEncoded
+    fun addArticleComment(@Path("articleId") articleId: Int, @Field("comments") comments: String): Single<ArticleCommentResponse>
 
     @PUT("/articles/comments/{commentId}/like")
     fun likeArticleComment(@Path("commentId") commentId: Int): Single<ArticleCommentResponse>

@@ -321,6 +321,9 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
             if (index >= 0) {
                 this.items[index] = item
                 notifyItemChanged(index)
+            } else {
+                this.items.add(0, item)
+                notifyDataSetChanged()
             }
         }
 

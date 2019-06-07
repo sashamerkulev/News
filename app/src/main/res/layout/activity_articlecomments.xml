@@ -60,6 +60,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:tint="?attr/separatorColor"
+        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="@+id/layoutAddCommentButton"
         app:layout_constraintEnd_toEndOf="@+id/layoutAddCommentButton"
         app:layout_constraintStart_toStartOf="@+id/layoutAddCommentButton"

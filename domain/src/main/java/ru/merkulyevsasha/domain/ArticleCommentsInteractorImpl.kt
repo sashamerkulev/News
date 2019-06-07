@@ -74,18 +74,22 @@ class ArticleCommentsInteractorImpl(
     }
 
     override fun commentArticle(articleId: Int, comment: String): Single<ArticleComment> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return articleCommentsApiRepository.addArticleComment(articleId, comment)
+            .subscribeOn(Schedulers.io())
     }
 
     override fun likeArticleComment(commentId: Int): Single<ArticleComment> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return articleCommentsApiRepository.likeArticleComment(commentId)
+            .subscribeOn(Schedulers.io())
     }
 
     override fun dislikeArticleComment(commentId: Int): Single<ArticleComment> {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return articleCommentsApiRepository.dislikeArticleComment(commentId)
+            .subscribeOn(Schedulers.io())
     }
 
     override fun deleteArticleComment(commentId: Int): Completable {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        return articleCommentsApiRepository.deleteArticleComment(commentId)
+            .subscribeOn(Schedulers.io())
     }
 }

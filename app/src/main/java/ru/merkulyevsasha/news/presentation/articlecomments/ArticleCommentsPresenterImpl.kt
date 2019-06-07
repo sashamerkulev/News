@@ -37,12 +37,13 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe({
-                    val testResult = listOf<ArticleComment>(
-                        testArticleComment(it.first, 1),
-                        testArticleComment(it.first, 2),
-                        testArticleComment(it.first, 3, true)
-                    )
-                    val result = listOf<ArticleOrComment>(it.first) + testResult // it.second
+//                    val testResult = listOf<ArticleComment>(
+//                        testArticleComment(it.first, 1),
+//                        testArticleComment(it.first, 2),
+//                        testArticleComment(it.first, 3, true)
+//                    )
+//                    val result = listOf<ArticleOrComment>(it.first) + testResult // it.second
+                    val result = listOf<ArticleOrComment>(it.first) + it.second
                     view?.showComments(result)
                 }, {
                     Timber.e(it)
@@ -66,6 +67,21 @@ class ArticleCommentsPresenterImpl(
     }
 
     fun onAddCommentClicked(articleId: Int, comment: String) {
+        if (comment.isEmpty()) {
+            view?.showError()
+            return
+        }
+        compositeDisposable.add(
+            articleCommentsInteractor.commentArticle(articleId, comment)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe({
+                    view?.updateCommentItem(it)
+                }, {
+                    Timber.e(it)
+                    view?.showError()
+                }))
     }
 
     override fun onArticleLikeClicked(item: Article) {
@@ -80,9 +96,31 @@ class ArticleCommentsPresenterImpl(
     }
 
     override fun onCommentLikeClicked(item: ArticleComment) {
+        compositeDisposable.add(
+            articleCommentsInteractor.likeArticleComment(item.commentId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe({
+                    view?.updateCommentItem(it)
+                }, {
+                    Timber.e(it)
+                    view?.showError()
+                }))
     }
 
     override fun onCommentDislikeClicked(item: ArticleComment) {
+        compositeDisposable.add(
+            articleCommentsInteractor.dislikeArticleComment(item.commentId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe({
+                    view?.updateCommentItem(it)
+                }, {
+                    Timber.e(it)
+                    view?.showError()
+                }))
     }
 
     override fun onCommentShareClicked(item: ArticleComment) {
