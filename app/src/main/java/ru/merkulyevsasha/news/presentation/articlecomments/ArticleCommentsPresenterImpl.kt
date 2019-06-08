@@ -72,7 +72,7 @@ class ArticleCommentsPresenterImpl(
             return
         }
         compositeDisposable.add(
-            articleCommentsInteractor.commentArticle(articleId, comment)
+            articleCommentsInteractor.addArticleComment(articleId, comment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }

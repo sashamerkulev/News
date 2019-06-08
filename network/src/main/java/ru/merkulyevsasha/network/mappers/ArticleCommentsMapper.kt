@@ -11,7 +11,7 @@ class ArticleCommentsMapper(private val authorization: String) : Mapper<ArticleC
             item.articleId,
             item.commentId,
             item.userId,
-            item.userName,
+            item.userName ?: "",
             item.pubDate,
             item.comment,
             item.status,
@@ -19,7 +19,7 @@ class ArticleCommentsMapper(private val authorization: String) : Mapper<ArticleC
             item.dislike,
             item.like > 0,
             item.dislike > 0,
-            item.owner,
+            item.owner == 1,
             BuildConfig.API_URL + "/users/${item.userId}/downloadPhoto",
             authorization
         )

@@ -73,7 +73,7 @@ class ArticleCommentsInteractorImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override fun commentArticle(articleId: Int, comment: String): Single<ArticleComment> {
+    override fun addArticleComment(articleId: Int, comment: String): Single<ArticleComment> {
         return articleCommentsApiRepository.addArticleComment(articleId, comment)
             .subscribeOn(Schedulers.io())
     }
