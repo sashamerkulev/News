@@ -2,7 +2,6 @@ package ru.merkulyevsasha.news
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
@@ -13,14 +12,15 @@ import com.facebook.stetho.Stetho
 import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import ru.merkulyevsasha.RequireServiceLocator
-import ru.merkulyevsasha.ServiceLocator
-import ru.merkulyevsasha.news.presentation.common.MainActivityRouterImpl
+import ru.merkulyevsasha.ServiceLocatorImpl
 import ru.merkulyevsasha.news.presentation.main.MainActivity
-import ru.merkulyevsasha.news.presentation.splash.SplashActivity
+import ru.merkulyevsasha.news.presentation.main.MainFragment
+import ru.merkulyevsasha.news.presentation.routers.MainActivityRouterImpl
+import ru.merkulyevsasha.news.presentation.routers.MainFragmentRouterImpl
 
 class NewsApp : Application() {
 
-    private lateinit var serviceLocator: ServiceLocator
+    private lateinit var serviceLocator: ServiceLocatorImpl
 
     override fun onCreate() {
         super.onCreate()
@@ -57,16 +57,21 @@ class NewsApp : Application() {
 
     inner class LifeCycleCallbacks : FragmentManager.FragmentLifecycleCallbacks(), ActivityLifecycleCallbacks {
 
-        override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
-            super.onFragmentAttached(fm, f, context)
-
-            if (f is RequireServiceLocator) {
-                f.setServiceLocator(serviceLocator)
+        override fun onFragmentCreated(fm: FragmentManager, fragment: Fragment, savedInstanceState: Bundle?) {
+            if (fragment.javaClass.simpleName == MainFragment::class.java.simpleName) {
+                serviceLocator.addFragmentRouter(MainFragmentRouterImpl(fragment.childFragmentManager))
             }
+            if (fragment is RequireServiceLocator) {
+                fragment.setServiceLocator(serviceLocator)
+            }
+            super.onFragmentCreated(fm, fragment, savedInstanceState)
         }
 
-        override fun onFragmentDetached(fm: FragmentManager, f: Fragment) {
-            super.onFragmentDetached(fm, f)
+        override fun onFragmentDestroyed(fm: FragmentManager, fragment: Fragment) {
+            if (fragment.javaClass.simpleName == MainFragment::class.java.simpleName) {
+                serviceLocator.releaseFragmentRouter()
+            }
+            super.onFragmentDestroyed(fm, fragment)
         }
 
         override fun onActivityPaused(activity: Activity?) {
@@ -96,18 +101,11 @@ class NewsApp : Application() {
 
         override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
             activity?.let { activityInstance ->
-                if (activityInstance.javaClass.simpleName == SplashActivity::class.java.simpleName) {
-                    if (activityInstance is RequireServiceLocator) {
-                        val serviceLocator = ServiceLocator(this@NewsApp, ApplicationRouterImpl(this@NewsApp))
-                        activityInstance.setServiceLocator(serviceLocator)
-                    }
-                    return@let
-                }
                 if (activityInstance.javaClass.simpleName == MainActivity::class.java.simpleName) {
                     val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
                     supportFragmentManager.registerFragmentLifecycleCallbacks(this, true)
                     val mainActivityRouter = MainActivityRouterImpl(supportFragmentManager)
-                    serviceLocator = ServiceLocator(this@NewsApp, ApplicationRouterImpl(this@NewsApp), mainActivityRouter)
+                    serviceLocator = ServiceLocatorImpl(this@NewsApp, mainActivityRouter)
                 }
                 if (activityInstance is RequireServiceLocator) {
                     activityInstance.setServiceLocator(serviceLocator)

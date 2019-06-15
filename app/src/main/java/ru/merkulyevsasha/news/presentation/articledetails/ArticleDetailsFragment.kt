@@ -1,12 +1,12 @@
 package ru.merkulyevsasha.news.presentation.articledetails
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.Fragment
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -30,15 +30,19 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 
-class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireServiceLocator {
-
+class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLocator {
     companion object {
         private const val ARTICLE_ID = "ARTICLE_ID"
         @JvmStatic
-        fun show(context: Context, articleId: Int) {
-            val intent = Intent(context, ArticleDetailsActivity::class.java)
-            intent.putExtra(ARTICLE_ID, articleId)
-            context.startActivity(intent)
+        val TAG: String = ArticleDetailsFragment::class.java.simpleName
+
+        @JvmStatic
+        fun newInstance(articleId: Int): Fragment {
+            val fragment = ArticleDetailsFragment()
+            val args = Bundle()
+            args.putInt(ARTICLE_ID, articleId)
+            fragment.arguments = args
+            return fragment
         }
     }
 
@@ -52,13 +56,13 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireS
         this.serviceLocator = serviceLocator
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme_Normal)
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.activity_articledetails, container, false)
 
-        setContentView(R.layout.activity_articledetails)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        colorThemeResolver = ColorThemeResolver(TypedValue(), theme)
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         layoutButtonLike.setOnClickListener {
             presenter?.onArticleLikeClicked(articleId)
@@ -73,15 +77,13 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireS
             presenter?.onShareClicked(articleId)
         }
 
-        articleId = intent.getIntExtra(ARTICLE_ID, 0)
-        if (articleId > 0) {
-            val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-            presenter = ArticleDetailsPresenterImpl(interactor, serviceLocator.get(MainActivityRouter::class.java))
-            presenter?.bindView(this)
-            presenter?.onFirstLoad(articleId)
-        } else {
-            finish()
-        }
+        val bundle = savedInstanceState ?: arguments ?: return
+
+        articleId = bundle.getInt(ARTICLE_ID, 0)
+        val interactor = serviceLocator.get(ArticlesInteractor::class.java)
+        presenter = ArticleDetailsPresenterImpl(interactor, serviceLocator.get(MainActivityRouter::class.java))
+        presenter?.bindView(this)
+        presenter?.onFirstLoad(articleId)
     }
 
     override fun onPause() {
@@ -99,14 +101,6 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireS
         presenter = null
         serviceLocator.release(ArticlesInteractor::class.java)
         super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        if (webview.canGoBack()) {
-            webview.goBack()
-        } else {
-            super.onBackPressed()
-        }
     }
 
     override fun showProgress() {
@@ -135,7 +129,7 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireS
     }
 
     override fun showError() {
-        Toast.makeText(this, "Ooops!", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
     }
 
     private inner class ArticleDetailsViewClient : WebViewClient() {
@@ -154,4 +148,5 @@ class ArticleDetailsActivity : AppCompatActivity(), ArticleDetailsView, RequireS
             super.onPageStarted(view, url, favicon)
         }
     }
+
 }

@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_userinfo.saveButton
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
 import ru.merkulyevsasha.RequireServiceLocator
-import ru.merkulyevsasha.ServiceLocator
+import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.news.BuildConfig

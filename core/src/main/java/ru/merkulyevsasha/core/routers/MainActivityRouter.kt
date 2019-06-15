@@ -1,7 +1,8 @@
 package ru.merkulyevsasha.core.routers
 
 interface MainActivityRouter {
-    fun showArticles()
-    fun showUserActivities()
-    fun showUserInfo()
+    fun showMain()
+    fun showSplash()
+    fun showArticleDetails(articleId: Int)
+    fun showArticleComments(articleId: Int)
 }

@@ -2,14 +2,14 @@ package ru.merkulyevsasha.news.presentation.articledetails
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
-import ru.merkulyevsasha.core.routers.ApplicationRouter
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
 import timber.log.Timber
 
 class ArticleDetailsPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
-    private val applicationRouter: ApplicationRouter
+    private val applicationRouter: MainActivityRouter
 ) : BasePresenterImpl<ArticleDetailsView>() {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,

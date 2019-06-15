@@ -1,11 +1,12 @@
 package ru.merkulyevsasha.news.presentation.articlecomments
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.activity_articlecomments.layoutAddCommentButton
@@ -24,15 +25,20 @@ import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import java.util.*
 
-class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, RequireServiceLocator {
+class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceLocator {
 
     companion object {
         private const val ARTICLE_ID = "ARTICLE_ID"
         @JvmStatic
-        fun show(context: Context, articleId: Int) {
-            val intent = Intent(context, ArticleCommentsActivity::class.java)
-            intent.putExtra(ARTICLE_ID, articleId)
-            context.startActivity(intent)
+        val TAG: String = ArticleCommentsFragment::class.java.simpleName
+
+        @JvmStatic
+        fun newInstance(articleId: Int): Fragment {
+            val fragment = ArticleCommentsFragment()
+            val args = Bundle()
+            args.putInt(ARTICLE_ID, articleId)
+            fragment.arguments = args
+            return fragment
         }
     }
 
@@ -50,25 +56,17 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         this.serviceLocator = serviceLocator
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme_Normal)
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.activity_articlecomments, container, false)
 
-        setContentView(R.layout.activity_articlecomments)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        colorThemeResolver = ColorThemeResolver(TypedValue(), theme)
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
-        if (savedInstanceState == null) {
-            articleId = intent.getIntExtra(ARTICLE_ID, 0)
-        } else {
-            articleId = savedInstanceState.getInt(ARTICLE_ID, 0)
-            position = savedInstanceState.getInt(ArticlesFragment.KEY_POSITION, 0)
-        }
-
-        if (articleId <= 0) {
-            finish()
-            return
-        }
+        val bundle = savedInstanceState ?: arguments ?: return
+        articleId = bundle.getInt(ARTICLE_ID, 0)
+        position = bundle.getInt(ArticlesFragment.KEY_POSITION, 0)
 
         val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
         val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)
@@ -121,7 +119,7 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
     }
 
     override fun showError() {
-        Toast.makeText(this, "Ooops!", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
     }
 
     override fun showComments(items: List<ArticleOrComment>) {
@@ -136,22 +134,6 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         adapter.updateCommentItem(item)
     }
 
-    private fun initRecyclerView() {
-        layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
-        adapter = CommentsViewAdapter(
-            this,
-            presenter,
-            presenter,
-            presenter,
-            presenter,
-            colorThemeResolver,
-            ArrayList()
-        )
-        recyclerView.adapter = adapter
-    }
-
     private fun initSwipeRefreshColorScheme() {
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
         swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
@@ -163,4 +145,19 @@ class ArticleCommentsActivity : AppCompatActivity(), ArticleCommentsView, Requir
         state.putInt(ARTICLE_ID, articleId)
     }
 
+    private fun initRecyclerView() {
+        layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        recyclerView.setHasFixedSize(true)
+        adapter = CommentsViewAdapter(
+            requireContext(),
+            presenter,
+            presenter,
+            presenter,
+            presenter,
+            colorThemeResolver,
+            ArrayList()
+        )
+        recyclerView.adapter = adapter
+    }
 }

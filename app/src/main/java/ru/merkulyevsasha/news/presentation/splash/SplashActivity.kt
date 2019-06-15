@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import ru.merkulyevsasha.RequireServiceLocator
-import ru.merkulyevsasha.ServiceLocator
+import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.news.R
 import java.util.*
@@ -15,7 +15,6 @@ import java.util.*
 class SplashActivity : AppCompatActivity(), SplashView, RequireServiceLocator {
 
     private var presenter: SplashPresenterImpl? = null
-
     private lateinit var serviceLocator: ServiceLocator
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
@@ -32,7 +31,7 @@ class SplashActivity : AppCompatActivity(), SplashView, RequireServiceLocator {
     }
 
     override fun showMainScreen() {
-        serviceLocator.getApplicationRouter().showMainActivity()
+//        serviceLocator.getApplicationRouter().showMainActivity()
         finish()
     }
 

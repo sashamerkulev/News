@@ -3,6 +3,7 @@ package ru.merkulyevsasha
 import android.content.Context
 import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.comments.ArticleCommentsApiRepositoryImpl
+import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.domain.SetupInteractor
@@ -13,8 +14,8 @@ import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
-import ru.merkulyevsasha.core.routers.ApplicationRouter
 import ru.merkulyevsasha.core.routers.MainActivityRouter
+import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.database.DatabaseRepositoryImpl
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
@@ -25,7 +26,7 @@ import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 
-class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mainActivityRouter: MainActivityRouter? = null) {
+class ServiceLocatorImpl(context: Context, mainActivityRouter: MainActivityRouter) : ServiceLocator {
 
     private val maps = HashMap<Any, Any>()
 
@@ -37,14 +38,11 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
         maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context, prefs)
-        maps[ApplicationRouter::class.java] = applicationRouter
-        mainActivityRouter?.apply {
-            maps[MainActivityRouter::class.java] = this
-        }
+        maps[MainActivityRouter::class.java] = mainActivityRouter
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> get(clazz: Class<T>): T {
+    override fun <T> get(clazz: Class<T>): T {
         if (maps.containsKey(clazz)) {
             return maps[clazz] as T
         }
@@ -76,18 +74,30 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
         return maps[clazz] as T
     }
 
-    fun <T> release(clazz: Class<T>) {
+    override fun <T> release(clazz: Class<T>) {
         if (maps.containsKey(clazz)) {
             maps.remove(clazz)
         }
     }
 
-    fun getApplicationRouter(): ApplicationRouter {
-        return maps[ApplicationRouter::class.java] as ApplicationRouter
+    override fun releaseAll() {
+        maps.clear()
     }
 
-    fun getMainActivityRouter(): MainActivityRouter {
+    override fun addFragmentRouter(mainFragmentRouter: MainFragmentRouter) {
+        maps[MainFragmentRouter::class.java] = mainFragmentRouter
+    }
+
+    override fun releaseFragmentRouter() {
+
+    }
+
+    private fun getMainActivityRouter(): MainActivityRouter {
         return maps[MainActivityRouter::class.java] as MainActivityRouter
+    }
+
+    private fun getMainFragmentRouter(): MainFragmentRouter {
+        return maps[MainFragmentRouter::class.java] as MainFragmentRouter
     }
 
     private fun getArticlesApiRepository(): ArticlesApiRepository {
@@ -113,9 +123,4 @@ class ServiceLocator(context: Context, applicationRouter: ApplicationRouter, mai
     private fun getPreferences(): KeyValueStorage {
         return maps[KeyValueStorage::class.java] as KeyValueStorage
     }
-
-    fun releaseAll() {
-        maps.clear()
-    }
-
 }
