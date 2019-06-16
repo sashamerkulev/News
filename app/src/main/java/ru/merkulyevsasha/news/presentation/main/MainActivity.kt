@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.widget.Toast
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.core.ServiceLocator
@@ -13,6 +14,7 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : AppCompatActivity(),
     MainView, ToolbarCombinator, RequireServiceLocator {
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var serviceLocator: ServiceLocator
     private lateinit var mainActivityRouter: MainActivityRouter
     private lateinit var presenter: MainPresenter
+    private val aaa = AtomicBoolean(false)
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
@@ -66,6 +69,12 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
+        if (supportFragmentManager.fragments.size <= 2 && aaa.compareAndSet(false, true)) {
+            Toast.makeText(this, "press twice back button to exit.", Toast.LENGTH_LONG).show()
+        } else {
+            aaa.set(false)
+        }
+
         if (supportFragmentManager.fragments.size <= 1) {
             finish()
         } else {

@@ -1,5 +1,8 @@
 package ru.merkulyevsasha.news.presentation.splash
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -34,6 +37,7 @@ class SplashFragment : Fragment(), SplashView, RequireServiceLocator {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerNewsChannel()
         val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
         presenter = SplashPresenterImpl(setupInteractor)
     }
@@ -64,6 +68,20 @@ class SplashFragment : Fragment(), SplashView, RequireServiceLocator {
     }
 
     override fun showFatalError() {
+    }
+
+    private fun registerNewsChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.download_channel_name)
+            val description = getString(R.string.download_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(getString(R.string.notification_channell_id), name, importance)
+            channel.description = description
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            val notificationManager = requireContext().getSystemService(NotificationManager::class.java)
+            notificationManager?.createNotificationChannel(channel)
+        }
     }
 
 }

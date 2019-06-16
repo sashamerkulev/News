@@ -8,10 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_articlecomments.editTextComment
-import kotlinx.android.synthetic.main.activity_articlecomments.layoutAddCommentButton
-import kotlinx.android.synthetic.main.activity_articlecomments.recyclerView
-import kotlinx.android.synthetic.main.activity_articlecomments.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
+import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
+import kotlinx.android.synthetic.main.fragment_articlecomments.recyclerView
+import kotlinx.android.synthetic.main.fragment_articlecomments.swipeRefreshLayout
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
@@ -23,6 +23,7 @@ import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
+import ru.merkulyevsasha.news.presentation.common.KbUtils
 import java.util.*
 
 class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceLocator {
@@ -57,7 +58,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.activity_articlecomments, container, false)
+        inflater.inflate(R.layout.fragment_articlecomments, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -131,6 +132,8 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     }
 
     override fun updateCommentItem(item: ArticleComment) {
+        editTextComment.setText("")
+        KbUtils.hideKeyboard(requireActivity())
         adapter.updateCommentItem(item)
     }
 

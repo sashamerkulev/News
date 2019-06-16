@@ -10,18 +10,18 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_articledetails.imageViewComment
-import kotlinx.android.synthetic.main.activity_articledetails.imageViewDislike
-import kotlinx.android.synthetic.main.activity_articledetails.imageViewLike
-import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonComment
-import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonDislike
-import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonLike
-import kotlinx.android.synthetic.main.activity_articledetails.layoutButtonShare
-import kotlinx.android.synthetic.main.activity_articledetails.progressbar
-import kotlinx.android.synthetic.main.activity_articledetails.textViewComment
-import kotlinx.android.synthetic.main.activity_articledetails.textViewDislike
-import kotlinx.android.synthetic.main.activity_articledetails.textViewLike
-import kotlinx.android.synthetic.main.activity_articledetails.webview
+import kotlinx.android.synthetic.main.fragment_articledetails.imageViewComment
+import kotlinx.android.synthetic.main.fragment_articledetails.imageViewDislike
+import kotlinx.android.synthetic.main.fragment_articledetails.imageViewLike
+import kotlinx.android.synthetic.main.fragment_articledetails.layoutButtonComment
+import kotlinx.android.synthetic.main.fragment_articledetails.layoutButtonDislike
+import kotlinx.android.synthetic.main.fragment_articledetails.layoutButtonLike
+import kotlinx.android.synthetic.main.fragment_articledetails.layoutButtonShare
+import kotlinx.android.synthetic.main.fragment_articledetails.progressbar
+import kotlinx.android.synthetic.main.fragment_articledetails.textViewComment
+import kotlinx.android.synthetic.main.fragment_articledetails.textViewDislike
+import kotlinx.android.synthetic.main.fragment_articledetails.textViewLike
+import kotlinx.android.synthetic.main.fragment_articledetails.webview
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
@@ -57,7 +57,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.activity_articledetails, container, false)
+        inflater.inflate(R.layout.fragment_articledetails, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

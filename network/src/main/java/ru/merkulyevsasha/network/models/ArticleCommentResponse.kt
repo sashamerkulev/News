@@ -7,7 +7,7 @@ data class ArticleCommentResponse(
     @field:SerializedName("ArticleId") val articleId: Int,
     @field:SerializedName("CommentId") val commentId: Int,
     @field:SerializedName("UserId") val userId: Int,
-    @field:SerializedName("UserName") val userName: String?,
+    @field:SerializedName("Name") val userName: String?,
     @field:SerializedName("PubDate") val pubDate: Date,
     @field:SerializedName("Comment") val comment: String,
     @field:SerializedName("Likes") var likes: Int,

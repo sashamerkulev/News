@@ -167,7 +167,7 @@ class CommentsViewAdapter constructor(
             this.items[index] = item
             notifyItemChanged(index)
         } else {
-            this.items.add(0, item)
+            this.items.add(item)
             notifyDataSetChanged()
         }
     }
