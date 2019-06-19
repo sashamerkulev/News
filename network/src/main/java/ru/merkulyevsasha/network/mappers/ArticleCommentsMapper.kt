@@ -13,6 +13,7 @@ class ArticleCommentsMapper(private val authorization: String) : Mapper<ArticleC
             item.userId,
             item.userName ?: "",
             item.pubDate,
+            item.lastActivityDate,
             item.comment,
             item.status,
             item.likes,

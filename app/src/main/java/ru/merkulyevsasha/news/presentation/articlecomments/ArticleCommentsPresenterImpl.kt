@@ -7,7 +7,6 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleLikeCallbackClickHandler
@@ -124,25 +123,6 @@ class ArticleCommentsPresenterImpl(
     }
 
     override fun onCommentShareClicked(item: ArticleComment) {
-    }
-
-    private fun testArticleComment(first: Article, userId: Int, owner: Boolean = false): ArticleComment {
-        return ArticleComment(
-            first.articleId,
-            userId,
-            userId,
-            "ddd",
-            Date(),
-            "sss",
-            0,
-            random.nextInt(100),
-            random.nextInt(100),
-            false,
-            true,
-            owner,
-            BuildConfig.API_URL + "/users/$userId/downloadPhoto",
-            keyValueStorage.getAccessToken()
-        )
     }
 
 }

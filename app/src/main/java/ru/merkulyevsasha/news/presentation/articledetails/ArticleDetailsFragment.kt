@@ -104,11 +104,11 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     }
 
     override fun showProgress() {
-        progressbar.visibility = View.VISIBLE
+        progressbar?.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
-        progressbar.visibility = View.GONE
+        progressbar?.visibility = View.GONE
     }
 
     override fun showItem(item: Article) {

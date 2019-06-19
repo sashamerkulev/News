@@ -16,6 +16,7 @@ class ArticleCommentEntity(
     val userId: Int,
     val userName: String,
     val pubDate: Date,
+    val lastActivityDate: Date,
     val comment: String,
     val status: Int,
     val usersLikeCount: Int,

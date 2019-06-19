@@ -162,14 +162,16 @@ class CommentsViewAdapter constructor(
     }
 
     fun updateCommentItem(item: ArticleComment) {
-        val index = items.filter { it is ArticleComment }.map { it as ArticleComment }.indexOfFirst { it.commentId == item.commentId }
-        if (index >= 0) {
-            this.items[index] = item
-            notifyItemChanged(index)
-        } else {
-            this.items.add(item)
-            notifyDataSetChanged()
+        for (index in 0 until items.size) {
+            val itemm = items[index]
+            if (itemm is ArticleComment && itemm.commentId == item.commentId) {
+                this.items[index] = item
+                notifyItemChanged(index)
+                return
+            }
         }
+        this.items.add(item)
+        notifyDataSetChanged()
     }
 
 }

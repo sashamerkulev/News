@@ -13,6 +13,7 @@ class ArticleCommentEntityMapper(private val authorization: String) : Mapper<Art
             item.userId,
             item.userName,
             item.pubDate,
+            item.lastActivityDate,
             item.comment,
             item.status,
             item.usersLikeCount,

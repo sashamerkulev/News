@@ -181,11 +181,11 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     }
 
     override fun showProgress() {
-        swipeRefreshLayout.isRefreshing = true
+        swipeRefreshLayout?.isRefreshing = true
     }
 
     override fun hideProgress() {
-        swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayout?.isRefreshing = false
     }
 
     override fun showItems(items: List<Article>) {

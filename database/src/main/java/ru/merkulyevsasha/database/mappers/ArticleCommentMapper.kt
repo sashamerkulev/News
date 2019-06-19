@@ -12,6 +12,7 @@ class ArticleCommentMapper : Mapper<ArticleComment, ArticleCommentEntity> {
             item.userId,
             item.userName,
             item.pubDate,
+            item.lastActivityDate,
             item.comment,
             item.statusId,
             item.usersLikeCount,

@@ -112,11 +112,11 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     }
 
     override fun showProgress() {
-        swipeRefreshLayout.isRefreshing = true
+        swipeRefreshLayout?.isRefreshing = true
     }
 
     override fun hideProgress() {
-        swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayout?.isRefreshing = false
     }
 
     override fun showError() {
@@ -134,6 +134,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     override fun updateCommentItem(item: ArticleComment) {
         editTextComment.setText("")
         KbUtils.hideKeyboard(requireActivity())
+        if (item.articleId == 0 || item.commentId == 0) return // TODO
         adapter.updateCommentItem(item)
     }
 

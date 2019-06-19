@@ -8,6 +8,7 @@ data class ArticleComment(
     val userId: Int,
     val userName: String,
     val pubDate: Date,
+    val lastActivityDate: Date,
     val comment: String,
     val statusId: Int,
     var usersLikeCount: Int,
