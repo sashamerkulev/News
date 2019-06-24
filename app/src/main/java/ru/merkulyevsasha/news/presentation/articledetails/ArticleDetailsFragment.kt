@@ -130,7 +130,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     }
 
     override fun showError() {
-        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), getString(R.string.article_details_loading_error_message), Toast.LENGTH_LONG).show()
     }
 
     private inner class ArticleDetailsViewClient : WebViewClient() {

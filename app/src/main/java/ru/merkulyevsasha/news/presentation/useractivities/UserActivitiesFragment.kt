@@ -178,7 +178,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     }
 
     override fun showError() {
-        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), getString(R.string.articles_activities_loading_error_message), Toast.LENGTH_LONG).show()
     }
 
     override fun showProgress() {

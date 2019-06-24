@@ -27,4 +27,10 @@
     <string name="user_name_hint">Введите имя</string>
     <string name="save_button_title">Сохранить</string>
     <string name="comment">Комментарий</string>
+    <string name="comment_loading_error_message">Ошибка загрузки комментов - проверьте соединение с интернет.</string>
+    <string name="article_details_loading_error_message">Ошибка загрузки новости - проверьте соединение с интернет.</string>
+    <string name="article_loading_error_message">Ошибка загрузки новостей - проверьте соединение с интернет.</string>
+    <string name="articles_activities_loading_error_message">Ошибка загрузки истории активности - проверьте соединение с интернет.</string>
+    <string name="user_info_loading_error_message">Ошибка загрузки информации - проверьте соединение с интернет.</string>
+    <string name="user_info_name_require_error_message">Имя обязательное поле - придумайте что-нибудь.</string>
 </resources>

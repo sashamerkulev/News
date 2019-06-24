@@ -68,6 +68,7 @@ class SplashFragment : Fragment(), SplashView, RequireServiceLocator {
     }
 
     override fun showFatalError() {
+        serviceLocator.get(MainActivityRouter::class.java).showMain()
     }
 
     private fun registerNewsChannel() {

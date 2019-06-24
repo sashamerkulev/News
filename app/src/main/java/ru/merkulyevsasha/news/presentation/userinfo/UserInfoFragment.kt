@@ -124,11 +124,11 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     }
 
     override fun showError() {
-        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), getString(R.string.user_info_loading_error_message), Toast.LENGTH_LONG).show()
     }
 
     override fun showNameRequiredValidationMessage() {
-        Toast.makeText(requireContext(), "Ooops!", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), getString(R.string.user_info_name_require_error_message), Toast.LENGTH_LONG).show()
     }
 
     override fun showProgress() {
