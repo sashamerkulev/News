@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
 import ru.merkulyevsasha.RequireServiceLocator
+import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
@@ -108,7 +109,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         initSwipeRefreshColorScheme()
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(MainActivityRouter::class.java))
+        presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java), serviceLocator.get(MainActivityRouter::class.java))
         presenter?.bindView(this)
 
         initRecyclerView()

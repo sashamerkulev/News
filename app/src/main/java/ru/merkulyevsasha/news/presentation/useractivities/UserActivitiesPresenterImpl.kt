@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.news.presentation.useractivities
 
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
@@ -14,6 +15,7 @@ import timber.log.Timber
 
 class UserActivitiesPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
+    private val newsDistributor: NewsDistributor,
     private val applicationRouter: MainActivityRouter
 ) : BasePresenterImpl<UserActivitiesView>(),
     ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentArticleCallbackClickHandler {
@@ -57,6 +59,7 @@ class UserActivitiesPresenterImpl(
     }
 
     override fun onArticleShareClicked(item: Article) {
+        newsDistributor.distribute(item)
     }
 
 }

@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_articledetails.textViewDislike
 import kotlinx.android.synthetic.main.fragment_articledetails.textViewLike
 import kotlinx.android.synthetic.main.fragment_articledetails.webview
 import ru.merkulyevsasha.RequireServiceLocator
+import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
@@ -81,7 +82,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
 
         articleId = bundle.getInt(ARTICLE_ID, 0)
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticleDetailsPresenterImpl(interactor, serviceLocator.get(MainActivityRouter::class.java))
+        presenter = ArticleDetailsPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java), serviceLocator.get(MainActivityRouter::class.java))
         presenter?.bindView(this)
         presenter?.onFirstLoad(articleId)
     }

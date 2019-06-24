@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.news.presentation.articledetails
 
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
@@ -9,6 +10,7 @@ import timber.log.Timber
 
 class ArticleDetailsPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
+    private val newsDistributor: NewsDistributor,
     private val applicationRouter: MainActivityRouter
 ) : BasePresenterImpl<ArticleDetailsView>() {
 
@@ -43,5 +45,18 @@ class ArticleDetailsPresenterImpl(
     }
 
     fun onShareClicked(articleId: Int) {
+        compositeDisposable.add(
+            articlesInteractor.getArticle(articleId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe(
+                    {
+                        newsDistributor.distribute(it)
+                    },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    }))
     }
 }

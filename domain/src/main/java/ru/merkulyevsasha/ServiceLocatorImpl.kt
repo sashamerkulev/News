@@ -3,6 +3,8 @@ package ru.merkulyevsasha
 import android.content.Context
 import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.comments.ArticleCommentsApiRepositoryImpl
+import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
@@ -19,6 +21,8 @@ import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.database.DatabaseRepositoryImpl
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
+import ru.merkulyevsasha.domain.NewsDistributorImpl
+import ru.merkulyevsasha.domain.ResourceProviderImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
 import ru.merkulyevsasha.domain.mappers.SourceNameMapper
@@ -32,7 +36,10 @@ class ServiceLocatorImpl(context: Context, mainActivityRouter: MainActivityRoute
 
     init {
         val prefs = KeyValueStorageImpl(context)
+        val resourceProvider = ResourceProviderImpl(context)
         maps[KeyValueStorage::class.java] = prefs
+        maps[ResourceProvider::class.java] = resourceProvider
+        maps[NewsDistributor::class.java] = NewsDistributorImpl(context, resourceProvider)
         maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs)
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs)
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
@@ -90,14 +97,6 @@ class ServiceLocatorImpl(context: Context, mainActivityRouter: MainActivityRoute
 
     override fun releaseFragmentRouter() {
 
-    }
-
-    private fun getMainActivityRouter(): MainActivityRouter {
-        return maps[MainActivityRouter::class.java] as MainActivityRouter
-    }
-
-    private fun getMainFragmentRouter(): MainFragmentRouter {
-        return maps[MainFragmentRouter::class.java] as MainFragmentRouter
     }
 
     private fun getArticlesApiRepository(): ArticlesApiRepository {
