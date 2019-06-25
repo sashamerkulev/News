@@ -75,6 +75,9 @@ class ArticleCommentsInteractorImpl(
 
     override fun addArticleComment(articleId: Int, comment: String): Single<ArticleComment> {
         return articleCommentsApiRepository.addArticleComment(articleId, comment)
+            .doOnSuccess {
+                databaseRepository.updateArticleComment(it, 1)
+            }
             .subscribeOn(Schedulers.io())
     }
 

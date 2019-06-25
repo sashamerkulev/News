@@ -22,5 +22,5 @@ interface DatabaseRepository {
     fun getUserActivityArticles(): Single<List<Article>>
 
     fun addOrUpdateArticleComments(comments: List<ArticleComment>)
-    fun updateArticleComment(comment: ArticleComment)
+    fun updateArticleComment(comment: ArticleComment, commentsCount: Int)
 }

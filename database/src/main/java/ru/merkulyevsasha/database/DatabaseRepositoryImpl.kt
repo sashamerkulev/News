@@ -90,8 +90,9 @@ class DatabaseRepositoryImpl(context: Context, keyValueStorage: KeyValueStorage)
         database.articleCommentsDao.insertOrUpdate(comments.map { articleCommentMapper.map(it) })
     }
 
-    override fun updateArticleComment(comment: ArticleComment) {
+    override fun updateArticleComment(comment: ArticleComment, commentsCount: Int) {
         database.articleCommentsDao.update(articleCommentMapper.map(comment))
+        database.articleCommentsDao.updateArticle(comment.articleId, commentsCount)
     }
 
 }

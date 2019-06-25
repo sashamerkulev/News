@@ -18,4 +18,8 @@ interface ArticleCommentsDao {
 
     @Update
     fun update(item: ArticleCommentEntity)
+
+    @Query("update articles set usersCommentCount = usersCommentCount + :commentsCount, isUserCommented = 1 where articleId = :articleId")
+    fun updateArticle(articleId: Int, commentsCount: Int)
+
 }
