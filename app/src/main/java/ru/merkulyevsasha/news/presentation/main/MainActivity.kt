@@ -14,6 +14,7 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : AppCompatActivity(),
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity(),
     private lateinit var serviceLocator: ServiceLocator
     private lateinit var mainActivityRouter: MainActivityRouter
     private lateinit var presenter: MainPresenter
-    private val aaa = AtomicBoolean(false)
+    private val backButtonState = AtomicBoolean(false)
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
@@ -49,30 +50,22 @@ class MainActivity : AppCompatActivity(),
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID)
 
         if (savedInstanceState == null) {
-            mainActivityRouter.showSplash()
+            presenter.bindView(this)
+            presenter.onSetup(getFirebaseId = { UUID.randomUUID().toString() })
         }
     }
 
-    override fun onPause() {
-        presenter.unbindView()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.bindView(this)
-    }
-
     override fun onDestroy() {
+        presenter.unbindView()
         presenter.onDestroy()
         super.onDestroy()
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.fragments.size <= 2 && aaa.compareAndSet(false, true)) {
-            Toast.makeText(this, "press twice back button to exit.", Toast.LENGTH_LONG).show()
+        if (supportFragmentManager.fragments.size <= 2 && backButtonState.compareAndSet(false, true)) {
+            Toast.makeText(this, getString(R.string.twice_back_button_press_message), Toast.LENGTH_LONG).show()
         } else {
-            aaa.set(false)
+            backButtonState.set(false)
         }
 
         if (supportFragmentManager.fragments.size <= 1) {
@@ -80,6 +73,14 @@ class MainActivity : AppCompatActivity(),
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun showMainScreen() {
+        serviceLocator.get(MainActivityRouter::class.java).showMain()
+    }
+
+    override fun showFatalError() {
+        serviceLocator.get(MainActivityRouter::class.java).showMain()
     }
 
     override fun bindToolbar(toolbar: Toolbar) {
