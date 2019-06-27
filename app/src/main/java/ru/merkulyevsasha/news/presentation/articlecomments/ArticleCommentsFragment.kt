@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_articlecomments.adView
 import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
 import kotlinx.android.synthetic.main.fragment_articlecomments.recyclerView
@@ -22,6 +23,7 @@ import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
+import ru.merkulyevsasha.news.presentation.common.AdViewHelper
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.KbUtils
 import java.util.*
@@ -69,6 +71,8 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
         articleId = bundle.getInt(ARTICLE_ID, 0)
         position = bundle.getInt(ArticlesFragment.KEY_POSITION, 0)
 
+        AdViewHelper.loadBannerAd(adView)
+
         val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
         val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = ArticleCommentsPresenterImpl(interactor, articleInteractor, serviceLocator.get(NewsDistributor::class.java))
@@ -89,12 +93,14 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     }
 
     override fun onPause() {
+        adView?.pause()
         presenter?.unbindView()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
+        adView?.resume()
         presenter?.bindView(this)
     }
 

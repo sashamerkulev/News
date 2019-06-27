@@ -13,6 +13,18 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            app:adSize="BANNER"
+            app:adUnitId="@string/APP_UNIT_ID"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <Button
             android:id="@+id/buttonUp"
             style="@style/AppButtonStyle"
@@ -24,12 +36,16 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/adView" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/adView">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -38,7 +54,7 @@
                 android:clipToPadding="false"
                 android:paddingTop="@dimen/margin_8dp"
                 android:paddingBottom="@dimen/margin_8dp"
-                tools:listitem="@layout/row_news_item" />
+                tools:listitem="@layout/row_news" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
