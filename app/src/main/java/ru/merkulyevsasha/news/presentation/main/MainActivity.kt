@@ -48,9 +48,12 @@ class MainActivity : AppCompatActivity(),
 
         AppRateRequester.Run(this, BuildConfig.APPLICATION_ID)
 
+        //FirebaseInstanceId.getInstance().getToken("", "")
         if (savedInstanceState == null) {
             presenter.bindView(this)
-            presenter.onSetup(getFirebaseId = { UUID.randomUUID().toString() })
+            presenter.onSetup(getFirebaseId = {
+                UUID.randomUUID().toString()
+            })
         }
     }
 
