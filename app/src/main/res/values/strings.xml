@@ -33,5 +33,4 @@
     <string name="articles_activities_loading_error_message">Ошибка загрузки истории активности - проверьте соединение с интернет.</string>
     <string name="user_info_loading_error_message">Ошибка загрузки информации - проверьте соединение с интернет.</string>
     <string name="user_info_name_require_error_message">Имя обязательное поле - придумайте что-нибудь.</string>
-    <string name="twice_back_button_press_message">Для выхода из приложения нажмите кнопку \'назад\' дважды.</string>
 </resources>

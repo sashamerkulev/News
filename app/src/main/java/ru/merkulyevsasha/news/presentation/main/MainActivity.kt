@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.widget.Toast
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.core.ServiceLocator
@@ -62,12 +61,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.fragments.size <= 2 && backButtonState.compareAndSet(false, true)) {
-            Toast.makeText(this, getString(R.string.twice_back_button_press_message), Toast.LENGTH_LONG).show()
-        } else {
-            backButtonState.set(false)
-        }
-
         if (supportFragmentManager.fragments.size <= 1) {
             finish()
         } else {
