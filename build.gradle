@@ -7,6 +7,7 @@ buildscript {
     ext.rxjava2 = '2.2.2'
     ext.rxjava2Android = '2.1.0'
     ext.junit = '4.12'
+    ext.testRunner = '1.2.0'
     ext.assertJ = '3.8.0'
     ext.mockito = '1.10.19'
     ext.supportTest = '1.0.2'

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.firebase.iid.FirebaseInstanceId
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.core.ServiceLocator
@@ -13,7 +14,6 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
-import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : AppCompatActivity(),
@@ -48,11 +48,10 @@ class MainActivity : AppCompatActivity(),
 
         AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
 
-        //FirebaseInstanceId.getInstance().getToken("", "")
         if (savedInstanceState == null) {
             presenter.bindView(this)
             presenter.onSetup(getFirebaseId = {
-                UUID.randomUUID().toString()
+                FirebaseInstanceId.getInstance().getToken("", "")
             })
         }
     }

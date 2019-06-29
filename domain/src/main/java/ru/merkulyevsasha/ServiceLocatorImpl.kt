@@ -30,7 +30,17 @@ import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 
-class ServiceLocatorImpl(context: Context, mainActivityRouter: MainActivityRouter) : ServiceLocator {
+class ServiceLocatorImpl private constructor(context: Context, mainActivityRouter: MainActivityRouter?) : ServiceLocator {
+
+    companion object {
+        private lateinit var _instance: ServiceLocator
+        fun getInstance(context: Context, mainActivityRouter: MainActivityRouter?): ServiceLocator {
+            if (!::_instance.isInitialized) {
+                _instance = ServiceLocatorImpl(context, mainActivityRouter)
+            }
+            return _instance
+        }
+    }
 
     private val maps = HashMap<Any, Any>()
 
@@ -45,7 +55,9 @@ class ServiceLocatorImpl(context: Context, mainActivityRouter: MainActivityRoute
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
         maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context, prefs)
-        maps[MainActivityRouter::class.java] = mainActivityRouter
+        mainActivityRouter?.let {
+            maps[MainActivityRouter::class.java] = it
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

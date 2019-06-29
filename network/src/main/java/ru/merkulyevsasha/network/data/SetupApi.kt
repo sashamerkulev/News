@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.network.data
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -16,4 +17,8 @@ interface SetupApi {
 
     @GET("/setup/sources")
     fun getRssSources(): Single<List<RssSourceResponse>>
+
+    @POST("/setup/firebase")
+    @FormUrlEncoded
+    fun updateFirebaseToken(@Field("firebaseId") firebaseId: String): Completable
 }

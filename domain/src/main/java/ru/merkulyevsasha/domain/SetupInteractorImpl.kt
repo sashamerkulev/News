@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.domain
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.SetupInteractor
@@ -14,6 +15,7 @@ class SetupInteractorImpl(
     private val setupApiRepository: SetupApiRepository,
     private val databaseRepository: DatabaseRepository
 ) : SetupInteractor {
+
     override fun registerSetup(getFirebaseId: () -> String): Single<List<RssSource>> {
         return Single.fromCallable { preferences.getSetupId() }
             .flatMap { savedSetupId ->
@@ -39,6 +41,11 @@ class SetupInteractorImpl(
                         else Single.just(sources)
                     }
             }
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun updateFirebaseToken(firebaseId: String): Completable {
+        return setupApiRepository.updateFirebaseToken(firebaseId)
             .subscribeOn(Schedulers.io())
     }
 }

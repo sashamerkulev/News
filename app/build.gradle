@@ -20,10 +20,10 @@ android {
     }
 }
 
-def firebaseCore = "16.0.9"
+def firebaseCore = "17.0.0"
 def firebaseCrash = "16.2.1"
-def firebaseAds = "17.2.1"
-def firebaseMessaging = "17.3.3"
+def firebaseAds = "18.0.0"
+def firebaseMessaging = "19.0.1"
 def glide = "4.6.1"
 def timber = "4.7.1"
 def swiperefresh = "1.0.0"

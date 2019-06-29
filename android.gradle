@@ -42,13 +42,13 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat"
     implementation "com.google.android.material:material:$material"
 
-    testImplementation "junit:junit:${junit}"
-    testImplementation "org.assertj:assertj-core:${assertJ}"
-    testImplementation "org.mockito:mockito-core:${mockito}"
-    androidTestImplementation "junit:junit:${junit}"
-    androidTestImplementation "org.assertj:assertj-core:${assertJ}"
-    androidTestImplementation "org.mockito:mockito-core:${mockito}"
-    androidTestImplementation 'androidx.test:runner:1.2.0'
+    testImplementation "junit:junit:$junit"
+    testImplementation "org.assertj:assertj-core:$assertJ"
+    testImplementation "org.mockito:mockito-core:$mockito"
+    androidTestImplementation "junit:junit:$junit"
+    androidTestImplementation "org.assertj:assertj-core:$assertJ"
+    androidTestImplementation "org.mockito:mockito-core:$mockito"
+    androidTestImplementation "androidx.test:runner:$testRunner"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

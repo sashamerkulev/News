@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.setup
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import ru.merkulyevsasha.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.RssSource
@@ -18,6 +19,10 @@ class SetupApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiReposi
     override fun registerSetup(setupId: String, firebaseId: String): Single<Token> {
         return api.registerSetup(setupId, firebaseId)
             .map { Token(it.token) }
+    }
+
+    override fun updateFirebaseToken(firebaseId: String): Completable {
+        return api.updateFirebaseToken(firebaseId)
     }
 
     override fun getRssSources(): Single<List<RssSource>> {

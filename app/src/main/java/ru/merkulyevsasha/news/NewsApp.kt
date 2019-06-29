@@ -13,6 +13,7 @@ import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocatorImpl
+import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import ru.merkulyevsasha.news.presentation.main.MainFragment
 import ru.merkulyevsasha.news.presentation.routers.MainActivityRouterImpl
@@ -20,7 +21,7 @@ import ru.merkulyevsasha.news.presentation.routers.MainFragmentRouterImpl
 
 class NewsApp : Application() {
 
-    private lateinit var serviceLocator: ServiceLocatorImpl
+    private lateinit var serviceLocator: ServiceLocator
 
     override fun onCreate() {
         super.onCreate()
@@ -105,7 +106,7 @@ class NewsApp : Application() {
                     val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
                     supportFragmentManager.registerFragmentLifecycleCallbacks(this, true)
                     val mainActivityRouter = MainActivityRouterImpl(supportFragmentManager)
-                    serviceLocator = ServiceLocatorImpl(this@NewsApp, mainActivityRouter)
+                    serviceLocator = ServiceLocatorImpl.getInstance(this@NewsApp, mainActivityRouter)
                 }
                 if (activityInstance is RequireServiceLocator) {
                     activityInstance.setServiceLocator(serviceLocator)
