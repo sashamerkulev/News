@@ -1,10 +1,10 @@
 package ru.merkulyevsasha.news.presentation.articlecomments
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.row_comment.view.commentImageViewDislike
 import kotlinx.android.synthetic.main.row_comment.view.commentImageViewLike
@@ -89,7 +89,8 @@ class CommentsViewAdapter constructor(
         holder.itemView.commentTextViewDislike.text = item.usersDislikeCount.toString()
 
         colorThemeResolver.setArticleActivityColor(item.isUserLiked, holder.itemView.commentTextViewLike, holder.itemView.commentImageViewLike)
-        colorThemeResolver.setArticleActivityColor(item.isUserDisliked, holder.itemView.commentTextViewDislike, holder.itemView.commentImageViewDislike)
+        colorThemeResolver.setArticleActivityColor(item.isUserDisliked,
+            holder.itemView.commentTextViewDislike, holder.itemView.commentImageViewDislike)
 
         holder.itemView.layoutCommentButtonLike.setOnClickListener {
             commentLikeCallbackClickHandler?.onCommentLikeClicked(items[holder.adapterPosition] as ArticleComment)

@@ -1,6 +1,6 @@
 package ru.merkulyevsasha.news.presentation.routers
 
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment

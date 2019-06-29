@@ -2,7 +2,6 @@ package ru.merkulyevsasha.news.presentation.articledetails
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_articledetails.imageViewComment
 import kotlinx.android.synthetic.main.fragment_articledetails.imageViewDislike
 import kotlinx.android.synthetic.main.fragment_articledetails.imageViewLike
@@ -82,7 +82,8 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
 
         articleId = bundle.getInt(ARTICLE_ID, 0)
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticleDetailsPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java), serviceLocator.get(MainActivityRouter::class.java))
+        presenter = ArticleDetailsPresenterImpl(interactor,
+            serviceLocator.get(NewsDistributor::class.java), serviceLocator.get(MainActivityRouter::class.java))
         presenter?.bindView(this)
         presenter?.onFirstLoad(articleId)
     }

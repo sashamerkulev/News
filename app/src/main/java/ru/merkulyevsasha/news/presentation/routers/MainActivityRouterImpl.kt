@@ -1,12 +1,11 @@
 package ru.merkulyevsasha.news.presentation.routers
 
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articlecomments.ArticleCommentsFragment
 import ru.merkulyevsasha.news.presentation.articledetails.ArticleDetailsFragment
 import ru.merkulyevsasha.news.presentation.main.MainFragment
-
 
 class MainActivityRouterImpl(fragmentManager: FragmentManager) : BaseRouter(R.id.container, fragmentManager), MainActivityRouter {
 

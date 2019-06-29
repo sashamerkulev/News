@@ -39,7 +39,7 @@ class ArticleCommentsInteractorImpl(
                 Single.zip(
                     databaseRepository.getArticle(articleId),
                     databaseRepository.getArticleComments(articleId),
-                    BiFunction { t1: Article, t2: List<ArticleComment> -> Pair(t1, t2) }
+                    BiFunction { t1: Article, t2: List<ArticleComment> -> t1 to t2 }
                 ).flatMap { pair ->
                     if (pair.second.isEmpty()) refreshAndGetArticleComments(articleId)
                     else Single.just(pair)
@@ -67,7 +67,7 @@ class ArticleCommentsInteractorImpl(
                             }
                         }
                     ,
-                    BiFunction { t1: Article, t2: List<ArticleComment> -> Pair(t1, t2) }
+                    BiFunction { t1: Article, t2: List<ArticleComment> -> t1 to t2 }
                 )
             }
             .subscribeOn(Schedulers.io())

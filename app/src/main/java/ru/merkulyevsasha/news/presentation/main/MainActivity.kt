@@ -3,8 +3,8 @@ package ru.merkulyevsasha.news.presentation.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.core.ServiceLocator
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(),
         val interactor = serviceLocator.get(SetupInteractor::class.java)
         presenter = MainPresenter(interactor)
 
-        AppRateRequester.Run(this, BuildConfig.APPLICATION_ID)
+        AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
 
         //FirebaseInstanceId.getInstance().getToken("", "")
         if (savedInstanceState == null) {

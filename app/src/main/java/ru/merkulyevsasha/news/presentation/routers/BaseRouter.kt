@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.news.presentation.routers
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 open class BaseRouter(private val containerId: Int, private val fragmentManager: FragmentManager) {
 

@@ -1,8 +1,8 @@
 package ru.merkulyevsasha.news.presentation.common
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.model.GlideUrl

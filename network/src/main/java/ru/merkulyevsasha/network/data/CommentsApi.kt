@@ -15,14 +15,16 @@ import ru.merkulyevsasha.network.models.ArticleCommentResponse
 interface CommentsApi {
 
     @GET("/articles/{articleId}/comments")
-    fun getArticleComments(@Path("articleId") articleId: Int, @Query("lastCommentsReadDate") lastCommentsReadDate: String?): Single<List<ArticleCommentResponse>>
+    fun getArticleComments(@Path("articleId") articleId: Int,
+                           @Query("lastCommentsReadDate") lastCommentsReadDate: String?): Single<List<ArticleCommentResponse>>
 
     @DELETE("/articles/comments/{commentId}")
     fun deleteArticleComment(@Path("commentId") commentId: Int): Completable
 
     @FormUrlEncoded
     @POST("/articles/{articleId}/comments")
-    fun addArticleComment(@Path("articleId") articleId: Int, @Field("comments") comments: String): Single<ArticleCommentResponse>
+    fun addArticleComment(@Path("articleId") articleId: Int,
+                          @Field("comments") comments: String): Single<ArticleCommentResponse>
 
     @PUT("/articles/comments/{commentId}/like")
     fun likeArticleComment(@Path("commentId") commentId: Int): Single<ArticleCommentResponse>

@@ -1,6 +1,6 @@
 package ru.merkulyevsasha.news.presentation.common
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 
 interface ToolbarCombinator {
     fun bindToolbar(toolbar: Toolbar)

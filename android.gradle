@@ -6,7 +6,7 @@ android {
         targetSdkVersion 28
         versionCode 40
         versionName "2.0.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -39,7 +39,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
     implementation "io.reactivex.rxjava2:rxandroid:$rxjava2Android"
 
-    implementation "com.android.support:appcompat-v7:$support7"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "com.google.android.material:material:$material"
 
     testImplementation "junit:junit:${junit}"
     testImplementation "org.assertj:assertj-core:${assertJ}"
@@ -47,8 +48,8 @@ dependencies {
     androidTestImplementation "junit:junit:${junit}"
     androidTestImplementation "org.assertj:assertj-core:${assertJ}"
     androidTestImplementation "org.mockito:mockito-core:${mockito}"
-    androidTestImplementation "com.android.support.test:runner:$supportTest"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso"
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

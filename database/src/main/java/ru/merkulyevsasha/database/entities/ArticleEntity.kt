@@ -1,8 +1,8 @@
 package ru.merkulyevsasha.database.entities
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity(tableName = "articles", indices = [Index("sourceName"), Index("search"), Index("pubDate")])

@@ -1,13 +1,13 @@
 package ru.merkulyevsasha.news.presentation.articlecomments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_articlecomments.adView
 import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
