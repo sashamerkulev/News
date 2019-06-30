@@ -41,6 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_margin="@dimen/margin_16dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -50,17 +51,49 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_margin="@dimen/margin_16dp"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageViewAvatar"
             app:layout_constraintTop_toBottomOf="@+id/layoutButtonCamera" />
+
+        <ImageView
+            android:id="@+id/imageViewCamera"
+            android:layout_width="@dimen/size_24dp"
+            android:layout_height="@dimen/size_24dp"
+            android:layout_marginEnd="@dimen/margin_8dp"
+            android:layout_marginRight="@dimen/margin_8dp"
+            android:clickable="false"
+            android:tint="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonCamera"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonCamera"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonCamera"
+            app:srcCompat="@drawable/ic_keyboard_arrow_right_24px"
+            tools:ignore="ContentDescription,VectorDrawableCompat" />
+
+        <ImageView
+            android:id="@+id/imageViewGallery"
+            android:layout_width="@dimen/size_24dp"
+            android:layout_height="@dimen/size_24dp"
+            android:layout_marginEnd="@dimen/margin_8dp"
+            android:layout_marginRight="@dimen/margin_8dp"
+            android:clickable="false"
+            android:tint="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutButtonGallery"
+            app:layout_constraintEnd_toEndOf="@+id/layoutButtonGallery"
+            app:layout_constraintTop_toTopOf="@+id/layoutButtonGallery"
+            app:srcCompat="@drawable/ic_keyboard_arrow_right_24px"
+            tools:ignore="ContentDescription,VectorDrawableCompat" />
 
         <TextView
             android:id="@+id/textViewCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_8dp"
+            android:layout_marginRight="@dimen/margin_8dp"
             android:text="@string/userinfo_button_camera_title"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/layoutButtonCamera"
-            app:layout_constraintEnd_toEndOf="@+id/layoutButtonCamera"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewCamera"
             app:layout_constraintStart_toStartOf="@+id/layoutButtonCamera"
             app:layout_constraintTop_toTopOf="@+id/layoutButtonCamera" />
 
@@ -68,9 +101,12 @@
             android:id="@+id/textViewGallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_8dp"
+            android:layout_marginRight="@dimen/margin_8dp"
             android:text="@string/userinfo_button_gallery_title"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/layoutButtonGallery"
-            app:layout_constraintEnd_toEndOf="@+id/layoutButtonGallery"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewGallery"
             app:layout_constraintStart_toStartOf="@+id/layoutButtonGallery"
             app:layout_constraintTop_toTopOf="@+id/layoutButtonGallery" />
 

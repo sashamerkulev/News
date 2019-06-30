@@ -95,12 +95,12 @@ class ServiceLocatorImpl private constructor(context: Context, mainActivityRoute
 
     override fun <T> release(clazz: Class<T>) {
         if (maps.containsKey(clazz)) {
-            maps.remove(clazz)
+            //maps.remove(clazz)
         }
     }
 
     override fun releaseAll() {
-        maps.clear()
+        //maps.clear()
     }
 
     override fun addFragmentRouter(mainFragmentRouter: MainFragmentRouter) {
