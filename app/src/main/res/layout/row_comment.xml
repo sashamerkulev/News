@@ -161,6 +161,6 @@
         android:background="?attr/separatorColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageViewAvatar" />
+        app:layout_constraintStart_toEndOf="@+id/imageViewCommentAvatar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
