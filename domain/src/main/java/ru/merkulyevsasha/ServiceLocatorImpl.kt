@@ -37,6 +37,10 @@ class ServiceLocatorImpl private constructor(context: Context, mainActivityRoute
         fun getInstance(context: Context, mainActivityRouter: MainActivityRouter?): ServiceLocator {
             if (!::_instance.isInitialized) {
                 _instance = ServiceLocatorImpl(context, mainActivityRouter)
+            } else {
+                mainActivityRouter?.let {
+                    _instance.set(MainActivityRouter::class.java, it)
+                }
             }
             return _instance
         }
@@ -58,6 +62,10 @@ class ServiceLocatorImpl private constructor(context: Context, mainActivityRoute
         mainActivityRouter?.let {
             maps[MainActivityRouter::class.java] = it
         }
+    }
+
+    override fun <T> set(clazz: Class<T>, instance: Any) {
+        maps[clazz] = instance
     }
 
     @Suppress("UNCHECKED_CAST")

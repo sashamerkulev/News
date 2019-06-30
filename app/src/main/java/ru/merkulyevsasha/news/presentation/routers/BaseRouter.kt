@@ -15,7 +15,7 @@ open class BaseRouter(private val containerId: Int, private val fragmentManager:
         if (addToBackStack) {
             fragmentTransaction.addToBackStack(tag)
         }
-        fragmentTransaction.commit()
+        fragmentTransaction.commitAllowingStateLoss()
     }
 
 }
