@@ -17,4 +17,15 @@ class MainPresenter(private val setupInteractor: SetupInteractor) : BasePresente
                         view?.showFatalError()
                     }))
     }
+
+    fun onUpdateFirebaseId(firebaseId: String) {
+        compositeDisposable.add(
+            setupInteractor.updateFirebaseToken(firebaseId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { },
+                    {
+                        Timber.e(it)
+                    }))
+    }
 }

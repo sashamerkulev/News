@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.apprate.AppRateRequester
@@ -51,8 +52,21 @@ class MainActivity : AppCompatActivity(),
         if (savedInstanceState == null) {
             presenter.bindView(this)
             presenter.onSetup(getFirebaseId = {
-                FirebaseInstanceId.getInstance().getToken("", "")
+                ""
             })
+
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+                    // Get new Instance ID token
+                    val token = task.result?.token
+                    // Log and toast
+                    token?.let {
+                        presenter.onUpdateFirebaseId(it)
+                    }
+                })
         }
     }
 
