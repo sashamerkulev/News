@@ -3,6 +3,7 @@ package ru.merkulyevsasha.news.presentation.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.tasks.OnCompleteListener
@@ -89,7 +90,8 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun showFatalError() {
-        serviceLocator.get(MainActivityRouter::class.java).showMain()
+        Toast.makeText(this, getString(R.string.first_loading_error_message), Toast.LENGTH_LONG).show()
+        finish()
     }
 
     override fun bindToolbar(toolbar: Toolbar) {

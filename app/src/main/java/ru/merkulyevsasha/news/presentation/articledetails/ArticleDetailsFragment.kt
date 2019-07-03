@@ -79,7 +79,6 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
         }
 
         val bundle = savedInstanceState ?: arguments ?: return
-
         articleId = bundle.getInt(ARTICLE_ID, 0)
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = ArticleDetailsPresenterImpl(interactor,
@@ -96,6 +95,12 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     override fun onResume() {
         super.onResume()
         presenter?.bindView(this)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        saveFragmentState(outState)
     }
 
     override fun onDestroy() {
@@ -132,6 +137,10 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
 
     override fun showError() {
         Toast.makeText(requireContext(), getString(R.string.article_details_loading_error_message), Toast.LENGTH_LONG).show()
+    }
+
+    private fun saveFragmentState(state: Bundle) {
+        state.putInt(ARTICLE_ID, articleId)
     }
 
     private inner class ArticleDetailsViewClient : WebViewClient() {

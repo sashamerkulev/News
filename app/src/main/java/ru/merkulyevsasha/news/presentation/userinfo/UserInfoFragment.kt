@@ -41,7 +41,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         private const val KEY_FILE_NAME = "key_file_name"
 
         private const val GALLERY_TAKE_IMAGE_REQUEST = 1001
-        private const val CAMERA_TAKE_IMAGE_REQUEST = 1001
+        private const val CAMERA_TAKE_IMAGE_REQUEST = 1003
 
         @JvmStatic
         fun newInstance(): Fragment {

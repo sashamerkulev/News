@@ -12,22 +12,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class ImageFileHelper {
 
     private final File imageFile;
 
-    public ImageFileHelper(Context context, String fileName){
-        String imageFilename = fileName + ".png";
+    public ImageFileHelper(Context context, String fileName) {
+        String imageFilename = fileName.contains(".png") ? "" : ".png";
         imageFile = new File(context.getFilesDir(), imageFilename);
     }
 
-    public boolean exists(){
+    public boolean exists() {
         return imageFile.exists();
     }
 
-    public File file(){
+    public File file() {
         return imageFile;
     }
 
@@ -36,6 +37,7 @@ public class ImageFileHelper {
         options.inSampleSize = 4;
 
         Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+        if (myBitmap == null) return;
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(imageFile);
             BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
@@ -66,9 +68,9 @@ public class ImageFileHelper {
         fos.close();
     }
 
-    public static String getTempFileName(){
-        DateFormat format = new SimpleDateFormat("yyyyMMdd-hhmmss");
-        return "File"+format.format(new Date());
+    public static String getTempFileName() {
+        DateFormat format = new SimpleDateFormat("yyyyMMdd-hhmmss", Locale.getDefault());
+        return "File" + format.format(Calendar.getInstance().getTime());
     }
 
     void createFile(Bitmap bitmap) throws IOException {
@@ -86,5 +88,4 @@ public class ImageFileHelper {
         fos.flush();
         fos.close();
     }
-
 }

@@ -18,6 +18,11 @@ android {
         resValue "string", "APP_UNIT_ID", appUnitId
         multiDexEnabled true
     }
+    buildTypes {
+        release {
+            shrinkResources false
+        }
+    }
 }
 
 def firebaseCore = "17.0.0"
