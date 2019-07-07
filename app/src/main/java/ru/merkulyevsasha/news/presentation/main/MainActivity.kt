@@ -16,7 +16,6 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
-import java.util.concurrent.atomic.AtomicBoolean
 
 class MainActivity : AppCompatActivity(),
     MainView, ToolbarCombinator, RequireServiceLocator {
@@ -32,7 +31,6 @@ class MainActivity : AppCompatActivity(),
     private lateinit var serviceLocator: ServiceLocator
     private lateinit var mainActivityRouter: MainActivityRouter
     private lateinit var presenter: MainPresenter
-    private val backButtonState = AtomicBoolean(false)
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
@@ -52,9 +50,7 @@ class MainActivity : AppCompatActivity(),
 
         if (savedInstanceState == null) {
             presenter.bindView(this)
-            presenter.onSetup(getFirebaseId = {
-                ""
-            })
+            presenter.onSetup()
 
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener(OnCompleteListener { task ->

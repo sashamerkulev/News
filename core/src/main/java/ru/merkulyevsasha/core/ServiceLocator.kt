@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.core
 
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 
 interface ServiceLocator {
@@ -9,4 +10,6 @@ interface ServiceLocator {
     fun releaseAll()
     fun addFragmentRouter(mainFragmentRouter: MainFragmentRouter)
     fun releaseFragmentRouter()
+    fun addMainRouter(mainActivityRouter: MainActivityRouter)
+    fun releaseMainRouter()
 }

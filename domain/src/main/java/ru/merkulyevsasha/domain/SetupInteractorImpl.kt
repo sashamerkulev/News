@@ -16,20 +16,20 @@ class SetupInteractorImpl(
     private val databaseRepository: DatabaseRepository
 ) : SetupInteractor {
 
-    override fun registerSetup(getFirebaseId: () -> String): Single<List<RssSource>> {
+    override fun registerSetup(): Single<List<RssSource>> {
         return Single.fromCallable { preferences.getSetupId() }
             .flatMap { savedSetupId ->
                 if (savedSetupId.isEmpty()) {
                     val setupId = UUID.randomUUID().toString()
-                    setupApiRepository.registerSetup(setupId, getFirebaseId())
+                    setupApiRepository.registerSetup(setupId)
                         .doOnSuccess { token ->
                             preferences.setAccessToken(token.token)
                             preferences.setSetupId(setupId)
                         }
-                }
-                else Single.fromCallable { preferences.getAccessToken() }
+                        .map { it.token }
+                } else Single.fromCallable { preferences.getAccessToken() }
             }
-            .flatMap {
+            .flatMap { token ->
                 setupApiRepository.getRssSources()
                     .doOnSuccess { sources ->
                         databaseRepository.deleteRssSources()

@@ -6,9 +6,9 @@ import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
 import timber.log.Timber
 
 class MainPresenter(private val setupInteractor: SetupInteractor) : BasePresenterImpl<MainView>() {
-    fun onSetup(getFirebaseId: () -> String) {
+    fun onSetup() {
         compositeDisposable.add(
-            setupInteractor.registerSetup(getFirebaseId)
+            setupInteractor.registerSetup()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { view?.showMainScreen() },

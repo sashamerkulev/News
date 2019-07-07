@@ -16,8 +16,8 @@ class SetupApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiReposi
 
     private val rssSourceMapper = RssSourceMapper()
 
-    override fun registerSetup(setupId: String, firebaseId: String): Single<Token> {
-        return api.registerSetup(setupId, firebaseId)
+    override fun registerSetup(setupId: String): Single<Token> {
+        return api.registerSetup(setupId, "")
             .map { Token(it.token) }
     }
 

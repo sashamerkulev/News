@@ -89,7 +89,7 @@ class NewsApp : Application() {
                 if (activityInstance.javaClass.simpleName == MainActivity::class.java.simpleName) {
                     val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
                     supportFragmentManager.unregisterFragmentLifecycleCallbacks(this)
-                    serviceLocator.releaseAll()
+                    serviceLocator.releaseMainRouter()
                 }
             }
         }
@@ -106,7 +106,8 @@ class NewsApp : Application() {
                     val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
                     supportFragmentManager.registerFragmentLifecycleCallbacks(this, true)
                     val mainActivityRouter = MainActivityRouterImpl(supportFragmentManager)
-                    serviceLocator = ServiceLocatorImpl.getInstance(this@NewsApp, mainActivityRouter)
+                    serviceLocator = ServiceLocatorImpl.getInstance(this@NewsApp)
+                    serviceLocator.addMainRouter(mainActivityRouter)
                 }
                 if (activityInstance is RequireServiceLocator) {
                     activityInstance.setServiceLocator(serviceLocator)

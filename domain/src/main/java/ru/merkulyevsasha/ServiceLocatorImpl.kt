@@ -30,17 +30,13 @@ import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 
-class ServiceLocatorImpl private constructor(context: Context, mainActivityRouter: MainActivityRouter?) : ServiceLocator {
+class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator {
 
     companion object {
         private lateinit var _instance: ServiceLocator
-        fun getInstance(context: Context, mainActivityRouter: MainActivityRouter?): ServiceLocator {
+        fun getInstance(context: Context): ServiceLocator {
             if (!::_instance.isInitialized) {
-                _instance = ServiceLocatorImpl(context, mainActivityRouter)
-            } else {
-                mainActivityRouter?.let {
-                    _instance.set(MainActivityRouter::class.java, it)
-                }
+                _instance = ServiceLocatorImpl(context)
             }
             return _instance
         }
@@ -59,9 +55,6 @@ class ServiceLocatorImpl private constructor(context: Context, mainActivityRoute
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
         maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context, prefs)
-        mainActivityRouter?.let {
-            maps[MainActivityRouter::class.java] = it
-        }
     }
 
     override fun <T> set(clazz: Class<T>, instance: Any) {
@@ -116,6 +109,14 @@ class ServiceLocatorImpl private constructor(context: Context, mainActivityRoute
     }
 
     override fun releaseFragmentRouter() {
+
+    }
+
+    override fun addMainRouter(mainActivityRouter: MainActivityRouter) {
+        maps[MainActivityRouter::class.java] = mainActivityRouter
+    }
+
+    override fun releaseMainRouter() {
 
     }
 
