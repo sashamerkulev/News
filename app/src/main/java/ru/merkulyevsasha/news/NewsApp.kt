@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.facebook.stetho.Stetho
-import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.ServiceLocatorImpl
@@ -34,7 +33,7 @@ class NewsApp : Application() {
 
         registerActivityLifecycleCallbacks(LifeCycleCallbacks())
 
-        MobileAds.initialize(this, getString(R.string.APP_ID))
+//        MobileAds.initialize(this, getString(R.string.APP_ID))
 
         if (BuildConfig.DEBUG_MODE) {
             Stetho.initializeWithDefaults(this)
