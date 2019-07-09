@@ -9,11 +9,9 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import ru.merkulyevsasha.RequireServiceLocator
-import ru.merkulyevsasha.apprate.AppRateRequester
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
 
@@ -46,7 +44,7 @@ class MainActivity : AppCompatActivity(),
         val interactor = serviceLocator.get(SetupInteractor::class.java)
         presenter = MainPresenter(interactor)
 
-        AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
+        //AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
 
         if (savedInstanceState == null) {
             presenter.bindView(this)

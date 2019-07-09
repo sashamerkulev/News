@@ -18,7 +18,6 @@ android {
             testCoverageEnabled = true
         }
         release {
-            minifyEnabled false
             buildConfigField "Boolean", "DEBUG_MODE", "false"
             buildConfigField "String", "API_URL", "\"http://myapp74.ru:9000\""
             buildConfigField "String", "DB_NAME", "\"rssnews\""

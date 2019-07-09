@@ -18,7 +18,7 @@ class ArticlesInteractorImpl(
 ) : ArticlesInteractor {
 
     companion object {
-        private const val NOT_USER_ACTIVITIES_HOURS = 24
+        private const val NOT_USER_ACTIVITIES_HOURS = 24 * 7
         private const val USER_ACTIVITIES_HOURS = 24 * 30
     }
 

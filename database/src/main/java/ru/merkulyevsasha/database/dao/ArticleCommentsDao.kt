@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import io.reactivex.Single
 import ru.merkulyevsasha.database.entities.ArticleCommentEntity
@@ -21,5 +22,11 @@ interface ArticleCommentsDao {
 
     @Query("update articles set usersCommentCount = usersCommentCount + :commentsCount, isUserCommented = 1 where articleId = :articleId")
     fun updateArticle(articleId: Int, commentsCount: Int)
+
+    @Transaction
+    fun updateArticleComment(comment: ArticleCommentEntity, commentsCount: Int) {
+        update(comment)
+        updateArticle(comment.articleId, commentsCount)
+    }
 
 }

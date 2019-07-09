@@ -22,29 +22,15 @@ class ArticleCommentsInteractorImpl(
     private val sourceNameMapper: SourceNameMapper
 ) : ArticleCommentsInteractor {
 
-    companion object {
-        private const val NOT_USER_ACTIVITIES_HOURS = 24
-        private const val USER_ACTIVITIES_HOURS = 24 * 30
-    }
-
     override fun getArticleComments(articleId: Int): Single<Pair<Article, List<ArticleComment>>> {
-        return Single.fromCallable {
-            //            val cleanDate = Calendar.getInstance()
-//            cleanDate.add(Calendar.HOUR, -NOT_USER_ACTIVITIES_HOURS)
-//            databaseRepository.removeOldNotUserActivityArticles(cleanDate.time)
-//            cleanDate.add(Calendar.HOUR, -USER_ACTIVITIES_HOURS)
-//            databaseRepository.removeOldUserActivityArticles(cleanDate.time)
+        return Single.zip(
+            databaseRepository.getArticle(articleId),
+            databaseRepository.getArticleComments(articleId),
+            BiFunction { t1: Article, t2: List<ArticleComment> -> t1 to t2 }
+        ).flatMap { pair ->
+            if (pair.second.isEmpty()) refreshAndGetArticleComments(articleId)
+            else Single.just(pair)
         }
-            .flatMap {
-                Single.zip(
-                    databaseRepository.getArticle(articleId),
-                    databaseRepository.getArticleComments(articleId),
-                    BiFunction { t1: Article, t2: List<ArticleComment> -> t1 to t2 }
-                ).flatMap { pair ->
-                    if (pair.second.isEmpty()) refreshAndGetArticleComments(articleId)
-                    else Single.just(pair)
-                }
-            }
             .subscribeOn(Schedulers.io())
     }
 
@@ -63,7 +49,7 @@ class ArticleCommentsInteractorImpl(
                         .doOnSuccess { items ->
                             if (items.isNotEmpty()) {
                                 databaseRepository.addOrUpdateArticleComments(items)
-                                keyValueStorage.setLastArticleReadDate(Date())
+                                keyValueStorage.setLastArticleCommentReadDate(Date())
                             }
                         }
                     ,
