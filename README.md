@@ -1,17 +1,10 @@
 
 # News
 
-Простенький проект для Android (реализован на Java/Kotlin): новости из публичных rss источников.
+Проект для Android (реализован на Kotlin): новости из публичных rss источников, которые собираются на беке https://github.com/sashamerkulev/rssservice.
 
-https://play.google.com/store/apps/details?id=ru.merkulyevsasha.news
-
-- Главная Activity отображает список новостей (android.support.v7.widget.RecyclerView).
-- Статьи сохраняются в БД (для работы с Sqlite используется Room), и есть поиск по сохраненным данным, используется android.support.v7.widget.SearchView.
-- А с помощью android.support.v4.widget.SwipeRefreshLayout реализован pull-to-refresh (впрочем, кнопка обновить присутствует и в ActionToolBar).
-
-Новость более подробно, по ссылке, отображается с помощью CustomTabsIntent. 
-
-### Архитектура MVP + Clean 
+### Архитектура MVP + Clean
+- Single activity
 - MVP - как можно более пассивная вьюха, которой, управляет презентер, он же взаимодействует с моделью;
 - модель реализована по мотивам Clean Architecture, есть интерактор, взаимодействующий с репозиторием, который, в свою очередь взаимодействует с БД и сетью, о чем интерактор не знает и не хочет знать.
 - для маппига используется [MapperJ](https://github.com/sashamerkulev/MapperJ)
@@ -24,12 +17,6 @@ https://play.google.com/store/apps/details?id=ru.merkulyevsasha.news
 
 ### RxJava2
 - используется для работы с бд и сетью.
-
-### Dagger2
-- используется для внедрения зависимостей
-
-### WorkerManager
-- запускается раз в час и обновляет данные, если дата последней новости отстает от текущей даты более чем 30 минут
 
 ### Glide
 - используется для отображения картинок
