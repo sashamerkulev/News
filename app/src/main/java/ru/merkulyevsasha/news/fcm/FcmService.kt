@@ -8,7 +8,7 @@ import timber.log.Timber
 
 class FcmService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage?) {
-//        message?.let { remoteMessage ->
+        message?.let { remoteMessage ->
 //            val data = remoteMessage.data
 //            if (data.containsKey("commentId")) {
 //                val userName = data["userName"] ?: ""
@@ -35,7 +35,7 @@ class FcmService : FirebaseMessagingService() {
 //                val likeOrDislikePart = if (likeOrDislike) " не" else " "
 //                val notificationMessage = "Пользователю $userName$likeOrDislikePart понравился ваш комментарий"
 //            }
-//        }
+        }
     }
 
     override fun onNewToken(token: String?) {

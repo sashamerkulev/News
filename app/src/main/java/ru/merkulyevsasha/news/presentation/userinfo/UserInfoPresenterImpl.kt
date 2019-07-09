@@ -55,7 +55,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
             usersInteractor.updateUser(userName, "")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    //view?.showUserInfo(it)
+                    view?.showSuccesSaving()
                 },
                     {
                         Timber.e(it)

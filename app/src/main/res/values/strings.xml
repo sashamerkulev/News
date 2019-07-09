@@ -34,4 +34,5 @@
     <string name="user_info_loading_error_message">Ошибка загрузки информации - проверьте соединение с интернет.</string>
     <string name="user_info_name_require_error_message">Имя обязательное поле - придумайте что-нибудь.</string>
     <string name="first_loading_error_message">Ошибка первого запуска - проверьте наличие соединения с интернет.</string>
+    <string name="user_info_name_save_success_message">Сохранено.</string>
 </resources>

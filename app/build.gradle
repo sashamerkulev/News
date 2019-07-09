@@ -10,12 +10,12 @@ apply from: "$rootDir/jacoco.gradle"
 
 //noinspection GroovyMissingReturnStatement
 android {
-//    def appId = findProperty("newsAppId")
-//    def appUnitId = findProperty("newsAppUnitId")
+    def appId = findProperty("newsAppId")
+    def appUnitId = findProperty("newsAppUnitId")
     defaultConfig {
         applicationId "ru.merkulyevsasha.news"
-//        resValue "string", "APP_ID", appId
-//        resValue "string", "APP_UNIT_ID", appUnitId
+        resValue "string", "APP_ID", appId
+        resValue "string", "APP_UNIT_ID", appUnitId
         multiDexEnabled true
     }
     buildTypes {
@@ -74,4 +74,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

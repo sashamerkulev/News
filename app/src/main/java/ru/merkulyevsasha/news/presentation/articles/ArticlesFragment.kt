@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import kotlinx.android.synthetic.main.fragment_articles.adView
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
@@ -23,6 +24,7 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.news.presentation.common.AdViewHelper
 import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
 import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
@@ -108,7 +110,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()
 
-//        AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView)
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java),
@@ -162,27 +164,28 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
     }
 
     override fun onPause() {
-//        adView?.pause()
+        adView?.pause()
         presenter?.unbindView()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-//        adView?.resume()
+        adView?.resume()
         presenter?.bindView(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
         saveFragmentState(outState)
     }
 
     override fun onDestroyView() {
-//        adView?.destroy()
+        adView?.destroy()
         combinator?.unbindToolbar()
         presenter?.onDestroy()
+        presenter = null
+        serviceLocator.release(ArticlesInteractor::class.java)
         saveFragmentState(arguments ?: Bundle())
         super.onDestroyView()
     }
