@@ -51,7 +51,7 @@
 
     <TextView
         android:id="@+id/textViewComment"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/margin_4dp"
@@ -60,6 +60,7 @@
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/imageViewCommentAvatar"
         app:layout_constraintTop_toBottomOf="@+id/commenter"
+        app:layout_constraintEnd_toStartOf="@+id/layoutCommentButtonDislike"
         tools:text="comment" />
 
     <View
