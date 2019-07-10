@@ -112,7 +112,6 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
         saveFragmentState(outState)
     }
 
@@ -142,6 +141,11 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
             avatarShower.showWithoutCache(requireContext(), userInfo.avatarUrl, userInfo.authorization, imageViewAvatar)
         }
         userName.setText(userInfo.name)
+    }
+
+    override fun showSuccesSaving() {
+        userName.clearFocus()
+        Toast.makeText(requireContext(), getString(R.string.user_info_name_save_success_message), Toast.LENGTH_LONG).show()
     }
 
     override fun takeGalleryPicture() {

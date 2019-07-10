@@ -33,12 +33,12 @@ import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator {
 
     companion object {
-        private lateinit var _instance: ServiceLocator
+        private var _instance: ServiceLocator? = null
         fun getInstance(context: Context): ServiceLocator {
-            if (!::_instance.isInitialized) {
+            if (_instance == null) {
                 _instance = ServiceLocatorImpl(context)
             }
-            return _instance
+            return _instance!!
         }
     }
 
@@ -96,12 +96,13 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
 
     override fun <T> release(clazz: Class<T>) {
         if (maps.containsKey(clazz)) {
-            //maps.remove(clazz)
+            maps.remove(clazz)
         }
     }
 
     override fun releaseAll() {
-        //maps.clear()
+        maps.clear()
+        _instance = null
     }
 
     override fun addFragmentRouter(mainFragmentRouter: MainFragmentRouter) {
@@ -109,7 +110,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
     }
 
     override fun releaseFragmentRouter() {
-
+        maps.remove(MainFragmentRouter::class.java)
     }
 
     override fun addMainRouter(mainActivityRouter: MainActivityRouter) {
@@ -117,7 +118,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
     }
 
     override fun releaseMainRouter() {
-
+        maps.remove(MainActivityRouter::class.java)
     }
 
     private fun getArticlesApiRepository(): ArticlesApiRepository {
