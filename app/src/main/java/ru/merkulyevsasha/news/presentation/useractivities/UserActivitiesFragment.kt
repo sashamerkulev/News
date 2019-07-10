@@ -27,10 +27,10 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.AdViewHelper
-import ru.merkulyevsasha.news.presentation.common.AppbarScrollExpander
+import ru.merkulyevsasha.core.common.AppbarScrollExpander
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
-import ru.merkulyevsasha.news.presentation.common.ShowActionBarListener
-import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import ru.merkulyevsasha.core.common.ShowActionBarListener
+import ru.merkulyevsasha.core.common.ToolbarCombinator
 import ru.merkulyevsasha.news.presentation.common.newsadapter.NewsViewAdapter
 
 class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLocator {

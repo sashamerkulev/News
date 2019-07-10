@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation.common
+package ru.merkulyevsasha.core.presentation
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

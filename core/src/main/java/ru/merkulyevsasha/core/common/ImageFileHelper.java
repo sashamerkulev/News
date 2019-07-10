@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation.common;
+package ru.merkulyevsasha.core.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -25,7 +25,7 @@ import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.articles.ArticlesFragment
 import ru.merkulyevsasha.news.presentation.common.AdViewHelper
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
-import ru.merkulyevsasha.news.presentation.common.KbUtils
+import ru.merkulyevsasha.core.common.KbUtils
 import java.util.*
 
 class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceLocator {

@@ -13,7 +13,7 @@ import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import ru.merkulyevsasha.core.common.ToolbarCombinator
 
 class MainActivity : AppCompatActivity(),
     MainView, ToolbarCombinator, RequireServiceLocator {

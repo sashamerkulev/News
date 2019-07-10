@@ -6,7 +6,7 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.base.BasePresenterImpl
-import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
+import ru.merkulyevsasha.core.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleClickCallbackHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleShareCallbackClickHandler

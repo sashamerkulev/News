@@ -28,8 +28,8 @@ import ru.merkulyevsasha.news.BuildConfig
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.common.AvatarShower
 import ru.merkulyevsasha.news.presentation.common.ColorThemeResolver
-import ru.merkulyevsasha.news.presentation.common.ImageFileHelper
-import ru.merkulyevsasha.news.presentation.common.ToolbarCombinator
+import ru.merkulyevsasha.core.common.ImageFileHelper
+import ru.merkulyevsasha.core.common.ToolbarCombinator
 import java.io.IOException
 
 class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
