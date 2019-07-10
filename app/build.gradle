@@ -26,17 +26,7 @@ android {
     }
 }
 
-def firebaseCore = "17.0.0"
-def firebaseCrash = "16.2.1"
-def firebaseAds = "18.0.0"
-def firebaseMessaging = "19.0.1"
 def glide = "4.6.1"
-def timber = "4.7.1"
-def swiperefresh = "1.0.0"
-def recyclerview = "1.0.0"
-def cardview = "1.0.0"
-def browser = "1.0.0"
-def constr = "1.1.3"
 def circleImage = "2.1.0"
 
 dependencies {
@@ -44,34 +34,17 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':domain')
 
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefresh"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview"
-    implementation "androidx.cardview:cardview:$cardview"
-    implementation "androidx.browser:browser:$browser"
-    implementation "androidx.constraintlayout:constraintlayout:$constr"
-
-    implementation "com.google.firebase:firebase-core:$firebaseCore"
-    implementation "com.google.firebase:firebase-crash:$firebaseCrash"
-    implementation "com.google.firebase:firebase-ads:$firebaseAds"
-    implementation "com.google.firebase:firebase-messaging:$firebaseMessaging"
-
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava2"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxjava2Android"
-
     implementation "com.github.bumptech.glide:glide:$glide"
     implementation "de.hdodenhof:circleimageview:$circleImage"
 
     implementation "com.facebook.stetho:stetho:$stetho"
     implementation "com.facebook.stetho:stetho-okhttp3:$stetho"
 
-    implementation "com.jakewharton.timber:timber:$timber"
-
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-apply plugin: 'com.google.gms.google-services'
+apply from: "$rootDir/androidx.gradle"
+apply from: "$rootDir/firebase.gradle"

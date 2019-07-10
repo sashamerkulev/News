@@ -7,7 +7,7 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
-import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
+import ru.merkulyevsasha.core.base.BasePresenterImpl
 import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.news.presentation.common.newsadapter.ArticleShareCallbackClickHandler

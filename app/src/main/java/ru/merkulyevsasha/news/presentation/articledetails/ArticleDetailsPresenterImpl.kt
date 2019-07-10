@@ -4,7 +4,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
+import ru.merkulyevsasha.core.base.BasePresenterImpl
 import ru.merkulyevsasha.news.presentation.common.ArticleLikeClickHandler
 import timber.log.Timber
 

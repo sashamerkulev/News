@@ -41,6 +41,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat"
     implementation "com.google.android.material:material:$material"
 
+    implementation "com.jakewharton.timber:timber:$timber"
+
     testImplementation "junit:junit:$junit"
     testImplementation "org.assertj:assertj-core:$assertJ"
     testImplementation "org.mockito:mockito-core:$mockito"

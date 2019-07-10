@@ -15,6 +15,8 @@ buildscript {
     ext.supportTest = '1.0.2'
     ext.espresso = '3.1.0'
     ext.stetho = '1.5.1'
+    ext.timber = '4.7.1'
+
     repositories {
         google()
         jcenter()

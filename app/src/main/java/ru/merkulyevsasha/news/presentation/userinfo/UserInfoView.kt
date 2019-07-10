@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.news.presentation.userinfo
 
 import ru.merkulyevsasha.core.models.UserInfo
-import ru.merkulyevsasha.news.presentation.base.BaseView
+import ru.merkulyevsasha.core.base.BaseView
 
 interface UserInfoView : BaseView {
     fun showError()

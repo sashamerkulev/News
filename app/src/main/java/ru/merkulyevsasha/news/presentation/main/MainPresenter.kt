@@ -2,7 +2,7 @@ package ru.merkulyevsasha.news.presentation.main
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.SetupInteractor
-import ru.merkulyevsasha.news.presentation.base.BasePresenterImpl
+import ru.merkulyevsasha.core.base.BasePresenterImpl
 import timber.log.Timber
 
 class MainPresenter(private val setupInteractor: SetupInteractor) : BasePresenterImpl<MainView>() {

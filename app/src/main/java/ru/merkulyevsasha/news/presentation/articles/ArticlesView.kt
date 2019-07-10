@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.news.presentation.articles
 
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.news.presentation.base.BaseView
+import ru.merkulyevsasha.core.base.BaseView
 
 interface ArticlesView : BaseView {
     fun showError()
