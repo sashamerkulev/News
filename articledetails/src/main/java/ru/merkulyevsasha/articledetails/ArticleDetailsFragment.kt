@@ -22,8 +22,8 @@ import kotlinx.android.synthetic.main.fragment_articledetails.textViewComment
 import kotlinx.android.synthetic.main.fragment_articledetails.textViewDislike
 import kotlinx.android.synthetic.main.fragment_articledetails.textViewLike
 import kotlinx.android.synthetic.main.fragment_articledetails.webview
-import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.common.ColorThemeResolver
 import ru.merkulyevsasha.core.domain.ArticlesInteractor

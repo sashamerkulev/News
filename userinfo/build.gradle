@@ -14,7 +14,6 @@ apply from: "$rootDir/image.gradle"
 
 dependencies {
     implementation project(path: ':core')
-    implementation project(path: ':domain')
 }
 
 apply from: "$rootDir/firebase.gradle"

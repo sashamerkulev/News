@@ -1,4 +1,4 @@
-package ru.merkulyevsasha
+package ru.merkulyevsasha.core
 
 import ru.merkulyevsasha.core.ServiceLocator
 

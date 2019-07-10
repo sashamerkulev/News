@@ -17,18 +17,18 @@ import kotlinx.android.synthetic.main.fragment_articles.adView
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
-import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.common.AdViewHelper
 import ru.merkulyevsasha.core.common.AppbarScrollExpander
 import ru.merkulyevsasha.core.common.ColorThemeResolver
 import ru.merkulyevsasha.core.common.ShowActionBarListener
 import ru.merkulyevsasha.core.common.ToolbarCombinator
+import ru.merkulyevsasha.core.common.newsadapter.NewsViewAdapter
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.core.common.newsadapter.NewsViewAdapter
 
 class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 

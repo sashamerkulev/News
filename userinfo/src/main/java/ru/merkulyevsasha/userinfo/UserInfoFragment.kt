@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
 import kotlinx.android.synthetic.main.fragment_userinfo.saveButton
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
-import ru.merkulyevsasha.RequireServiceLocator
+import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.common.AvatarShower
 import ru.merkulyevsasha.core.common.ColorThemeResolver

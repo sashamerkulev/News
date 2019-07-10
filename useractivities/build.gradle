@@ -12,7 +12,6 @@ apply from: "$rootDir/androidx.gradle"
 
 dependencies {
     implementation project(path: ':core')
-    implementation project(path: ':domain')
 }
 
 apply from: "$rootDir/firebase.gradle"

@@ -13,8 +13,8 @@ import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
 import kotlinx.android.synthetic.main.fragment_articlecomments.recyclerView
 import kotlinx.android.synthetic.main.fragment_articlecomments.swipeRefreshLayout
-import ru.merkulyevsasha.RequireServiceLocator
 import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.common.AdViewHelper
 import ru.merkulyevsasha.core.common.ColorThemeResolver
