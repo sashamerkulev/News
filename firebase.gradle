@@ -10,4 +10,3 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$firebaseMessaging"
 }
 
-apply plugin: 'com.google.gms.google-services'

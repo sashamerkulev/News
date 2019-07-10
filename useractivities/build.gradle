@@ -1,0 +1,18 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+apply from: "$rootDir/android.gradle"
+apply from: "$rootDir/ktlint.gradle"
+apply from: "$rootDir/detekt.gradle"
+apply from: "$rootDir/jacoco.gradle"
+
+apply from: "$rootDir/androidx.gradle"
+
+dependencies {
+    implementation project(path: ':core')
+    implementation project(path: ':domain')
+}
+
+apply from: "$rootDir/firebase.gradle"

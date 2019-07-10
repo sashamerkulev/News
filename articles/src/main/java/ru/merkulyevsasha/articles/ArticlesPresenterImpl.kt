@@ -1,0 +1,75 @@
+package ru.merkulyevsasha.articles
+
+import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.domain.ArticlesInteractor
+import ru.merkulyevsasha.core.models.Article
+import ru.merkulyevsasha.core.routers.MainActivityRouter
+import ru.merkulyevsasha.core.base.BasePresenterImpl
+import ru.merkulyevsasha.core.presentation.ArticleLikeClickHandler
+import ru.merkulyevsasha.core.common.newsadapter.ArticleClickCallbackHandler
+import ru.merkulyevsasha.core.common.newsadapter.ArticleLikeCallbackClickHandler
+import ru.merkulyevsasha.core.common.newsadapter.ArticleShareCallbackClickHandler
+import ru.merkulyevsasha.core.common.newsadapter.CommentArticleCallbackClickHandler
+import timber.log.Timber
+
+class ArticlesPresenterImpl(
+    private val articlesInteractor: ArticlesInteractor,
+    private val newsDistributor: NewsDistributor,
+    private val applicationRouter: MainActivityRouter
+) : BasePresenterImpl<ArticlesView>(),
+    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentArticleCallbackClickHandler {
+
+    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
+        { view?.updateItem(it) },
+        { view?.showError() })
+
+    fun onFirstLoad() {
+        compositeDisposable.add(
+            articlesInteractor.getArticles()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe(
+                    { view?.showItems(it) },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    }))
+    }
+
+    fun onRefresh() {
+        compositeDisposable.add(
+            articlesInteractor.refreshAndGetArticles()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { view?.showProgress() }
+                .doAfterTerminate { view?.hideProgress() }
+                .subscribe(
+                    { view?.updateItems(it) },
+                    {
+                        Timber.e(it)
+                        view?.showError()
+                    }))
+    }
+
+    override fun onArticleCliked(item: Article) {
+        applicationRouter.showArticleDetails(item.articleId)
+    }
+
+    override fun onArticleLikeClicked(item: Article) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleLikeClicked(item.articleId))
+    }
+
+    override fun onArticleDislikeClicked(item: Article) {
+        compositeDisposable.add(articleLikeClickHandler.onArticleDislikeClicked(item.articleId))
+    }
+
+    override fun onCommentArticleClicked(articleId: Int) {
+        applicationRouter.showArticleComments(articleId)
+    }
+
+    override fun onArticleShareClicked(item: Article) {
+        newsDistributor.distribute(item)
+    }
+
+}
