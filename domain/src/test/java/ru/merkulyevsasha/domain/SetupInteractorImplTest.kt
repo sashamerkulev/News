@@ -4,6 +4,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Matchers.anyString
 import org.mockito.Mockito
 import ru.merkulyevsasha.NewsTestRunner
 import ru.merkulyevsasha.core.models.Token
@@ -28,15 +29,13 @@ class SetupInteractorImplTest {
 
     @Test
     fun registerSetup_calls_repo_registerSetup_if_setup_id_is_empty() {
-        val setupId = UUID.randomUUID().toString()
         val token = UUID.randomUUID().toString()
-        val firebaseId = UUID.randomUUID().toString()
 
         Mockito.`when`(preferences.getSetupId()).thenReturn("")
-        Mockito.`when`(setupApiRepository.registerSetup(setupId, firebaseId)).thenReturn(Single.just(Token(token)))
+        Mockito.`when`(setupApiRepository.registerSetup(anyString())).thenReturn(Single.just(Token(token)))
         Mockito.`when`(setupApiRepository.getRssSources()).thenReturn(Single.just(emptyList()))
 
-        val testObserver = setupInteractor.registerSetup(setupId) { firebaseId }.test()
+        val testObserver = setupInteractor.registerSetup().test()
         NewsTestRunner.testScheduler.triggerActions()
 
         testObserver
@@ -44,8 +43,8 @@ class SetupInteractorImplTest {
 
         Mockito.verify(preferences).getSetupId()
         Mockito.verify(preferences).setAccessToken(token)
-        Mockito.verify(preferences).setSetupId(setupId)
-        Mockito.verify(setupApiRepository).registerSetup(setupId, firebaseId)
+        Mockito.verify(preferences).setSetupId(anyString())
+        Mockito.verify(setupApiRepository).registerSetup(anyString())
         Mockito.verify(setupApiRepository).getRssSources()
         Mockito.verify(databaseRepository).deleteRssSources()
         Mockito.verify(databaseRepository).saveRssSources(emptyList())
@@ -55,13 +54,12 @@ class SetupInteractorImplTest {
     fun registerSetup_calls_repo_registerSetup_if_setup_id_is_not_empty() {
         val setupId = UUID.randomUUID().toString()
         val token = UUID.randomUUID().toString()
-        val firebaseId = UUID.randomUUID().toString()
 
         Mockito.`when`(preferences.getSetupId()).thenReturn(setupId)
         Mockito.`when`(preferences.getAccessToken()).thenReturn(token)
         Mockito.`when`(setupApiRepository.getRssSources()).thenReturn(Single.just(emptyList()))
 
-        val testObserver = setupInteractor.registerSetup(setupId) { firebaseId }.test()
+        val testObserver = setupInteractor.registerSetup().test()
         NewsTestRunner.testScheduler.triggerActions()
 
         testObserver

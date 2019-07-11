@@ -12,7 +12,6 @@ import com.facebook.stetho.Stetho
 import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.sl.ServiceLocatorImpl
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import ru.merkulyevsasha.news.presentation.main.MainFragment

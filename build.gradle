@@ -51,19 +51,31 @@ task allStaticAnalysis(
         dependsOn: [
                 'app:lintDebug',
                 'app:ktlint',
-                'apprate:ktlint',
+                'articlecomments:ktlint',
+                'articledetails:ktlint',
+                'articles:ktlint',
                 'core:ktlint',
+                'coreandroid:ktlint',
                 'database:ktlint',
                 'domain:ktlint',
                 'network:ktlint',
                 'preferences:ktlint',
+                'sl:ktlint',
+                'useractivities:ktlint',
+                'userinfo:ktlint',
                 'app:detekt',
-                'apprate:detekt',
+                'articlecomments:detekt',
+                'articledetails:detekt',
+                'articles:detekt',
                 'core:detekt',
+                'coreandroid:detekt',
                 'database:detekt',
                 'domain:detekt',
                 'network:detekt',
-                'preferences:detekt'
+                'preferences:detekt',
+                'sl:detekt',
+                'useractivities:detekt',
+                'userinfo:detekt'
         ]) {
     group = 'verification'
 }
@@ -71,12 +83,17 @@ task allStaticAnalysis(
 task allDebugUnitTest(
         dependsOn: [
                 'app:testDebugUnitTest',
-                'apprate:testDebugUnitTest',
+                'articlecomments:testDebugUnitTest',
+                'articledetails:testDebugUnitTest',
                 'core:testDebugUnitTest',
+                'coreandroid:testDebugUnitTest',
                 'database:testDebugUnitTest',
                 'domain:testDebugUnitTest',
                 'network:testDebugUnitTest',
-                'preferences:testDebugUnitTest'
+                'preferences:testDebugUnitTest',
+                'sl:testDebugUnitTest',
+                'useractivities:testDebugUnitTest',
+                'userinfo:testDebugUnitTest'
 
         ]) {
     group = 'verification'
@@ -85,12 +102,18 @@ task allDebugUnitTest(
 task allCoverageVerification(
         dependsOn: [
                 'app:testDebugUnitTestCoverageVerification',
-                'apprate:testDebugUnitTestCoverageVerification',
+                'articlecomments:testDebugUnitTestCoverageVerification',
+                'articledetails:testDebugUnitTestCoverageVerification',
+                'articles:testDebugUnitTestCoverageVerification',
                 'core:testDebugUnitTestCoverageVerification',
+                'coreandroid:testDebugUnitTestCoverageVerification',
                 'database:testDebugUnitTestCoverageVerification',
                 'domain:testDebugUnitTestCoverageVerification',
                 'network:testDebugUnitTestCoverageVerification',
-                'preferences:testDebugUnitTestCoverageVerification'
+                'preferences:testDebugUnitTestCoverageVerification',
+                'sl:testDebugUnitTestCoverageVerification',
+                'useractivities:testDebugUnitTestCoverageVerification',
+                'userinfo:testDebugUnitTestCoverageVerification',
 
         ]) {
     group = 'verification'
