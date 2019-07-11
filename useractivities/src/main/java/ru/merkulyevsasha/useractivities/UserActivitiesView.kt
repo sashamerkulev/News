@@ -3,7 +3,7 @@ package ru.merkulyevsasha.useractivities
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.base.BaseView
 
-interface UserActivitiesView : ru.merkulyevsasha.coreandroid.base.BaseView {
+interface UserActivitiesView : BaseView {
     fun showError()
     fun hideProgress()
     fun showProgress()

@@ -29,7 +29,7 @@ class SetupInteractorImpl(
                         .map { it.token }
                 } else Single.fromCallable { preferences.getAccessToken() }
             }
-            .flatMap { token ->
+            .flatMap {
                 setupApiRepository.getRssSources()
                     .doOnSuccess { sources ->
                         databaseRepository.deleteRssSources()

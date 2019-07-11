@@ -33,12 +33,12 @@ import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator {
 
     companion object {
-        private var _instance: ServiceLocator? = null
+        private var instance: ServiceLocator? = null
         fun getInstance(context: Context): ServiceLocator {
-            if (_instance == null) {
-                _instance = ServiceLocatorImpl(context)
+            if (instance == null) {
+                instance = ServiceLocatorImpl(context)
             }
-            return _instance!!
+            return instance!!
         }
     }
 
@@ -75,7 +75,6 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
             )
             UsersInteractor::class.java -> maps[clazz] = UsersInteractorImpl(
                 getUsersApiRepository(),
-                getDatabaseRepository(),
                 getPreferences()
             )
             ArticleCommentsInteractor::class.java -> maps[clazz] = ArticleCommentsInteractorImpl(
@@ -102,7 +101,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
 
     override fun releaseAll() {
         maps.clear()
-        _instance = null
+        instance = null
     }
 
     override fun addFragmentRouter(mainFragmentRouter: MainFragmentRouter) {

@@ -2,19 +2,19 @@ package ru.merkulyevsasha.articledetails
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.NewsDistributor
-import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
-import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.core.routers.MainActivityRouter
+import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import timber.log.Timber
 
 class ArticleDetailsPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: NewsDistributor,
     private val applicationRouter: MainActivityRouter
-) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<ArticleDetailsView>() {
+) : BasePresenterImpl<ArticleDetailsView>() {
 
-    private val articleLikeClickHandler = ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler(articlesInteractor,
+    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
         { view?.showError() })
 

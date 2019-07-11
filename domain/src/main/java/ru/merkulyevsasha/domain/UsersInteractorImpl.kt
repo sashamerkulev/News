@@ -5,12 +5,10 @@ import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 
 class UsersInteractorImpl(
     private val usersApiRepository: UsersApiRepository,
-    private val databaseRepository: DatabaseRepository,
     private val keyValueStorage: KeyValueStorage
 ) : UsersInteractor {
     override fun getUserInfo(): Single<UserInfo> {

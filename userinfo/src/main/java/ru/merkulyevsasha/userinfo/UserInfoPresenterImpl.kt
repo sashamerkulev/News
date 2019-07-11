@@ -5,7 +5,7 @@ import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
 
-class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<UserInfoView>() {
+class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : BasePresenterImpl<UserInfoView>() {
     fun onFirstLoad() {
         compositeDisposable.add(
             usersInteractor.getUserInfo()

@@ -20,15 +20,14 @@ import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
 import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.coreandroid.common.AdViewHelper
+import ru.merkulyevsasha.core.domain.ArticlesInteractor
+import ru.merkulyevsasha.core.models.Article
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ShowActionBarListener
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
-import ru.merkulyevsasha.core.domain.ArticlesInteractor
-import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.routers.MainActivityRouter
 
 class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 
@@ -55,14 +54,14 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 
     private lateinit var serviceLocator: ServiceLocator
     private var presenter: ArticlesPresenterImpl? = null
-    private var combinator: ru.merkulyevsasha.coreandroid.common.ToolbarCombinator? = null
+    private var combinator: ToolbarCombinator? = null
 
-    private lateinit var adapter: ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
+    private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
-    private lateinit var colorThemeResolver: ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+    private lateinit var colorThemeResolver: ColorThemeResolver
 
-    private lateinit var appbarScrollExpander: ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
+    private lateinit var appbarScrollExpander: AppbarScrollExpander
     private var expanded = true
     private var position = 0
 
@@ -72,7 +71,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is ru.merkulyevsasha.coreandroid.common.ToolbarCombinator) {
+        if (context is ToolbarCombinator) {
             combinator = context
         }
     }
@@ -89,7 +88,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
             expanded = this.getBoolean(KEY_EXPANDED, true)
         }
 
-        colorThemeResolver = ru.merkulyevsasha.coreandroid.common.ColorThemeResolver(TypedValue(), requireContext().theme)
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         toolbar = view.findViewById(R.id.toolbar)
         collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
@@ -97,10 +96,10 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 
         toolbar.setTitle(R.string.fragment_articles_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
-        collapsingToolbarLayout.isTitleEnabled = false;
+        collapsingToolbarLayout.isTitleEnabled = false
         combinator?.bindToolbar(toolbar)
 
-        appbarScrollExpander = ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander(recyclerView, object : ru.merkulyevsasha.coreandroid.common.ShowActionBarListener {
+        appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
             override fun onShowActionBar(show: Boolean) {
                 appbarLayout.setExpanded(show)
             }
@@ -150,7 +149,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
-        adapter = ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter(
+        adapter = NewsViewAdapter(
             requireContext(),
             presenter,
             presenter,

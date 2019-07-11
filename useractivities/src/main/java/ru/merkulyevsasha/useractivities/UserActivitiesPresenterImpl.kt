@@ -6,7 +6,6 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
-import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
@@ -17,8 +16,8 @@ class UserActivitiesPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: NewsDistributor,
     private val applicationRouter: MainActivityRouter
-) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<UserActivitiesView>(),
-    ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHandler, ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler, ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler, ru.merkulyevsasha.coreandroid.common.newsadapter.CommentArticleCallbackClickHandler {
+) : BasePresenterImpl<UserActivitiesView>(),
+    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentArticleCallbackClickHandler {
 
     private val articleLikeClickHandler = ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },

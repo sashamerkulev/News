@@ -42,8 +42,8 @@ class ArticleCommentsInteractorImpl(
                         .doOnSuccess { item ->
                             databaseRepository.updateArticle(item)
                         }
-                        .map {
-                            sourceNameMapper.map(it)
+                        .map { item ->
+                            sourceNameMapper.map(item)
                         },
                     articleCommentsApiRepository.getArticleComments(articleId, it)
                         .doOnSuccess { items ->

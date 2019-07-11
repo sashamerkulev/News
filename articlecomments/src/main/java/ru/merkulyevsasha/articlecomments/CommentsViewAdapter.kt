@@ -41,11 +41,11 @@ import java.util.*
 
 class CommentsViewAdapter constructor(
     private val context: Context,
-    private val likeCallbackClickHandler: ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler?,
-    private val shareCallbackClickHandler: ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler?,
-    private val commentLikeCallbackClickHandler: ru.merkulyevsasha.coreandroid.common.newsadapter.CommentLikeCallbackClickHandler?,
-    private val commentShareCallbackClickHandler: ru.merkulyevsasha.coreandroid.common.newsadapter.CommentShareCallbackClickHandler?,
-    private val colorThemeResolver: ru.merkulyevsasha.coreandroid.common.ColorThemeResolver,
+    private val likeCallbackClickHandler: ArticleLikeCallbackClickHandler?,
+    private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
+    private val commentLikeCallbackClickHandler: CommentLikeCallbackClickHandler?,
+    private val commentShareCallbackClickHandler: CommentShareCallbackClickHandler?,
+    private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<ArticleOrComment>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -55,7 +55,7 @@ class CommentsViewAdapter constructor(
     }
 
     private val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-    private val avatarShower = ru.merkulyevsasha.coreandroid.common.AvatarShower()
+    private val avatarShower = AvatarShower()
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) ARTICLE_DETAIL_VIEW_TYPE else COMMENT_VIEW_TYPE

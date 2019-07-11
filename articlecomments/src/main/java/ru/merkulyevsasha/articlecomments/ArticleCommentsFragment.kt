@@ -16,14 +16,13 @@ import kotlinx.android.synthetic.main.fragment_articlecomments.swipeRefreshLayou
 import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.coreandroid.common.AdViewHelper
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
-import ru.merkulyevsasha.coreandroid.common.KbUtils
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
+import ru.merkulyevsasha.coreandroid.common.AdViewHelper
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import java.util.*
 
 class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceLocator {
@@ -46,7 +45,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
     private lateinit var serviceLocator: ServiceLocator
     private var presenter: ArticleCommentsPresenterImpl? = null
-    private lateinit var colorThemeResolver: ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+    private lateinit var colorThemeResolver: ColorThemeResolver
 
     private lateinit var adapter: CommentsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
@@ -64,13 +63,13 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        colorThemeResolver = ru.merkulyevsasha.coreandroid.common.ColorThemeResolver(TypedValue(), requireContext().theme)
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         val bundle = savedInstanceState ?: arguments ?: return
         articleId = bundle.getInt(ARTICLE_ID, 0)
         position = bundle.getInt(KEY_POSITION, 0)
 
-        ru.merkulyevsasha.coreandroid.common.AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView)
 
         val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
         val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)
@@ -139,7 +138,6 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
     override fun updateCommentItem(item: ArticleComment) {
         editTextComment.setText("")
         ru.merkulyevsasha.coreandroid.common.KbUtils.hideKeyboard(requireActivity())
-        if (item.articleId == 0 || item.commentId == 0) return // TODO
         adapter.updateCommentItem(item)
     }
 

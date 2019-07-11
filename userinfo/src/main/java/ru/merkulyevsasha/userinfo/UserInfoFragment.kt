@@ -22,12 +22,11 @@ import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.coreandroid.common.AvatarShower
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
-import ru.merkulyevsasha.coreandroid.common.ImageFileHelper
-import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
+import ru.merkulyevsasha.coreandroid.common.AvatarShower
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import java.io.IOException
 
 class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
@@ -51,16 +50,16 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     private lateinit var serviceLocator: ServiceLocator
     private var presenter: UserInfoPresenterImpl? = null
-    private var combinator: ru.merkulyevsasha.coreandroid.common.ToolbarCombinator? = null
+    private var combinator: ToolbarCombinator? = null
 
-    private lateinit var colorThemeResolver: ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
-    private val avatarShower = ru.merkulyevsasha.coreandroid.common.AvatarShower()
+    private lateinit var colorThemeResolver: ColorThemeResolver
+    private val avatarShower = AvatarShower()
 
     private var profileFileName: String = ""
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is ru.merkulyevsasha.coreandroid.common.ToolbarCombinator) {
+        if (context is ToolbarCombinator) {
             combinator = context
         }
     }
@@ -74,14 +73,14 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         val savedState = savedInstanceState ?: arguments
         savedState?.apply {
             profileFileName = savedState.getString(KEY_FILE_NAME, "")
         }
 
-        colorThemeResolver = ru.merkulyevsasha.coreandroid.common.ColorThemeResolver(TypedValue(), requireContext().theme)
+        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         toolbar.setTitle(R.string.fragment_user_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
@@ -186,10 +185,10 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         }
         if (requestCode == GALLERY_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             intent?.let {
-                it.data?.let {
+                it.data?.let { uri ->
                     profileFileName = ru.merkulyevsasha.coreandroid.common.ImageFileHelper.getTempFileName()
                     val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
-                    helper.createImageFile(requireActivity().contentResolver.openInputStream(it))
+                    helper.createImageFile(requireActivity().contentResolver.openInputStream(uri))
                     helper.compress()
                     profileFileName = helper.file().absolutePath
                     Glide.with(this).load(helper.file()).into(imageViewAvatar)
