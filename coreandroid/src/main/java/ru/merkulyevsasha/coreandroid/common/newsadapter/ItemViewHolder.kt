@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common.newsadapter
+package ru.merkulyevsasha.coreandroid.common.newsadapter
 
 
 import android.view.View

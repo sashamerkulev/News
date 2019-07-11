@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common.newsadapter
+package ru.merkulyevsasha.coreandroid.common.newsadapter
 
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment

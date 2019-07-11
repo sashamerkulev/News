@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.base
+package ru.merkulyevsasha.coreandroid.base
 
 import io.reactivex.disposables.CompositeDisposable
 

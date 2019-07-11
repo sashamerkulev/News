@@ -13,10 +13,10 @@ import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.core.common.ToolbarCombinator
+import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 
 class MainActivity : AppCompatActivity(),
-    MainView, ToolbarCombinator, RequireServiceLocator {
+    MainView, ru.merkulyevsasha.coreandroid.common.ToolbarCombinator, RequireServiceLocator {
 
     companion object {
         @JvmStatic

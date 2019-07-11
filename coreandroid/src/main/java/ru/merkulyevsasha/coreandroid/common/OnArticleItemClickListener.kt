@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common
+package ru.merkulyevsasha.coreandroid.common
 
 import ru.merkulyevsasha.core.models.Article
 

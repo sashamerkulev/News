@@ -1,9 +1,9 @@
 package ru.merkulyevsasha.articles
 
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.base.BaseView
+import ru.merkulyevsasha.coreandroid.base.BaseView
 
-interface ArticlesView : BaseView {
+interface ArticlesView : ru.merkulyevsasha.coreandroid.base.BaseView {
     fun showError()
     fun hideProgress()
     fun showProgress()

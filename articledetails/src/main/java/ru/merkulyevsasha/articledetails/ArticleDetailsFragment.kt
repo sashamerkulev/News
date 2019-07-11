@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_articledetails.webview
 import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
@@ -48,7 +48,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
 
     private lateinit var serviceLocator: ServiceLocator
     private var presenter: ArticleDetailsPresenterImpl? = null
-    private lateinit var colorThemeResolver: ColorThemeResolver
+    private lateinit var colorThemeResolver: ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 
     private var articleId = 0
 
@@ -62,7 +62,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
+        colorThemeResolver = ru.merkulyevsasha.coreandroid.common.ColorThemeResolver(TypedValue(), requireContext().theme)
 
         layoutButtonLike.setOnClickListener {
             presenter?.onArticleLikeClicked(articleId)

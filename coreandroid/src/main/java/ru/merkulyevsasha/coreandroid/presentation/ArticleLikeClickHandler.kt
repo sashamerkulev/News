@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.presentation
+package ru.merkulyevsasha.coreandroid.presentation
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

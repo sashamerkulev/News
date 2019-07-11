@@ -7,22 +7,22 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
-import ru.merkulyevsasha.core.base.BasePresenterImpl
-import ru.merkulyevsasha.core.presentation.ArticleLikeClickHandler
-import ru.merkulyevsasha.core.common.newsadapter.ArticleLikeCallbackClickHandler
-import ru.merkulyevsasha.core.common.newsadapter.ArticleShareCallbackClickHandler
-import ru.merkulyevsasha.core.common.newsadapter.CommentLikeCallbackClickHandler
-import ru.merkulyevsasha.core.common.newsadapter.CommentShareCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentLikeCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentShareCallbackClickHandler
 import timber.log.Timber
 
 class ArticleCommentsPresenterImpl(
     private val articleCommentsInteractor: ArticleCommentsInteractor,
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: NewsDistributor
-) : BasePresenterImpl<ArticleCommentsView>(),
-    ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentLikeCallbackClickHandler, CommentShareCallbackClickHandler {
+) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<ArticleCommentsView>(),
+    ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler, ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler, ru.merkulyevsasha.coreandroid.common.newsadapter.CommentLikeCallbackClickHandler, ru.merkulyevsasha.coreandroid.common.newsadapter.CommentShareCallbackClickHandler {
 
-    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
+    private val articleLikeClickHandler = ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
         { view?.showError() })
 

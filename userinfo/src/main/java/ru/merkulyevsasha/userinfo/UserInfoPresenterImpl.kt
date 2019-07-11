@@ -2,10 +2,10 @@ package ru.merkulyevsasha.userinfo
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.UsersInteractor
-import ru.merkulyevsasha.core.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
 
-class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : BasePresenterImpl<UserInfoView>() {
+class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<UserInfoView>() {
     fun onFirstLoad() {
         compositeDisposable.add(
             usersInteractor.getUserInfo()

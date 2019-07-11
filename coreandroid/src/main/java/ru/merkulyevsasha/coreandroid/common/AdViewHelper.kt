@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common
+package ru.merkulyevsasha.coreandroid.common
 
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView

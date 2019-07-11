@@ -2,10 +2,10 @@ package ru.merkulyevsasha.news.presentation.main
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.SetupInteractor
-import ru.merkulyevsasha.core.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
 
-class MainPresenter(private val setupInteractor: SetupInteractor) : BasePresenterImpl<MainView>() {
+class MainPresenter(private val setupInteractor: SetupInteractor) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<MainView>() {
     fun onSetup() {
         compositeDisposable.add(
             setupInteractor.registerSetup()

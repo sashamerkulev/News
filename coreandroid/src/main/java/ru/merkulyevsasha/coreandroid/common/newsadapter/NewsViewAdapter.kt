@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common.newsadapter
+package ru.merkulyevsasha.coreandroid.common.newsadapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.row_news.view.textViewComment
 import kotlinx.android.synthetic.main.row_news.view.textViewDislike
 import kotlinx.android.synthetic.main.row_news.view.textViewLike
 import ru.merkulyevsasha.core.R
-import ru.merkulyevsasha.core.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.core.models.Article
 import java.text.SimpleDateFormat
 import java.util.*

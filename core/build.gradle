@@ -7,7 +7,3 @@ apply from: "$rootDir/ktlint.gradle"
 apply from: "$rootDir/detekt.gradle"
 apply from: "$rootDir/jacoco.gradle"
 
-apply from: "$rootDir/image.gradle"
-
-
-apply from: "$rootDir/firebase.gradle"

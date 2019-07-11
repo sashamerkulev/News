@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common
+package ru.merkulyevsasha.coreandroid.common
 
 import android.content.res.Resources
 import android.graphics.PorterDuff

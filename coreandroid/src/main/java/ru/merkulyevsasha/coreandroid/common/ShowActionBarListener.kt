@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.core.common
+package ru.merkulyevsasha.coreandroid.common
 
 interface ShowActionBarListener {
     fun onShowActionBar(show: Boolean)

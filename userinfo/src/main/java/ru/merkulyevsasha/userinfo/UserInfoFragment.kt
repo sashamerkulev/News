@@ -22,10 +22,10 @@ import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.common.AvatarShower
-import ru.merkulyevsasha.core.common.ColorThemeResolver
-import ru.merkulyevsasha.core.common.ImageFileHelper
-import ru.merkulyevsasha.core.common.ToolbarCombinator
+import ru.merkulyevsasha.coreandroid.common.AvatarShower
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.ImageFileHelper
+import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.UserInfo
 import java.io.IOException
@@ -51,16 +51,16 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     private lateinit var serviceLocator: ServiceLocator
     private var presenter: UserInfoPresenterImpl? = null
-    private var combinator: ToolbarCombinator? = null
+    private var combinator: ru.merkulyevsasha.coreandroid.common.ToolbarCombinator? = null
 
-    private lateinit var colorThemeResolver: ColorThemeResolver
-    private val avatarShower = AvatarShower()
+    private lateinit var colorThemeResolver: ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+    private val avatarShower = ru.merkulyevsasha.coreandroid.common.AvatarShower()
 
     private var profileFileName: String = ""
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is ToolbarCombinator) {
+        if (context is ru.merkulyevsasha.coreandroid.common.ToolbarCombinator) {
             combinator = context
         }
     }
@@ -81,7 +81,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
             profileFileName = savedState.getString(KEY_FILE_NAME, "")
         }
 
-        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
+        colorThemeResolver = ru.merkulyevsasha.coreandroid.common.ColorThemeResolver(TypedValue(), requireContext().theme)
 
         toolbar.setTitle(R.string.fragment_user_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
@@ -158,8 +158,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
             // Create the File where the photo should go
-            profileFileName = ImageFileHelper.getTempFileName()
-            val helper = ImageFileHelper(requireContext(), profileFileName)
+            profileFileName = ru.merkulyevsasha.coreandroid.common.ImageFileHelper.getTempFileName()
+            val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
             try {
                 helper.file().createNewFile()
                 if (helper.file() != null) {
@@ -178,7 +178,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == CAMERA_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            val helper = ImageFileHelper(requireContext(), profileFileName)
+            val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
             helper.compress()
             profileFileName = helper.file().absolutePath
             Glide.with(this).load(helper.file()).into(imageViewAvatar)
@@ -187,8 +187,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         if (requestCode == GALLERY_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             intent?.let {
                 it.data?.let {
-                    profileFileName = ImageFileHelper.getTempFileName()
-                    val helper = ImageFileHelper(requireContext(), profileFileName)
+                    profileFileName = ru.merkulyevsasha.coreandroid.common.ImageFileHelper.getTempFileName()
+                    val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
                     helper.createImageFile(requireActivity().contentResolver.openInputStream(it))
                     helper.compress()
                     profileFileName = helper.file().absolutePath
