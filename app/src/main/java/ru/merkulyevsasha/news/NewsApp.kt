@@ -12,7 +12,7 @@ import com.facebook.stetho.Stetho
 import com.google.android.gms.ads.MobileAds
 import com.squareup.leakcanary.LeakCanary
 import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.ServiceLocatorImpl
+import ru.merkulyevsasha.sl.ServiceLocatorImpl
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.news.presentation.main.MainActivity
 import ru.merkulyevsasha.news.presentation.main.MainFragment
@@ -105,7 +105,7 @@ class NewsApp : Application() {
                 if (activityInstance.javaClass.simpleName == MainActivity::class.java.simpleName) {
                     val supportFragmentManager = (activity as AppCompatActivity).supportFragmentManager
                     supportFragmentManager.registerFragmentLifecycleCallbacks(this, true)
-                    serviceLocator = ServiceLocatorImpl.getInstance(this@NewsApp)
+                    serviceLocator = ru.merkulyevsasha.sl.ServiceLocatorImpl.getInstance(this@NewsApp)
                     serviceLocator.addMainRouter(MainActivityRouterImpl(supportFragmentManager))
                 }
                 if (activityInstance is RequireServiceLocator) {

@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: "$rootDir/android.gradle"
+apply from: "$rootDir/ktlint.gradle"
+apply from: "$rootDir/detekt.gradle"
+apply from: "$rootDir/jacoco.gradle"
+
+dependencies {
+    implementation project(path: ':core')
+    implementation project(path: ':domain')
+    implementation project(path: ':preferences')
+    implementation project(path: ':database')
+    implementation project(path: ':network')
+}

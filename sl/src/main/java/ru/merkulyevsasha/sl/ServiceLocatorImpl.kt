@@ -1,4 +1,4 @@
-package ru.merkulyevsasha
+package ru.merkulyevsasha.sl
 
 import android.content.Context
 import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
