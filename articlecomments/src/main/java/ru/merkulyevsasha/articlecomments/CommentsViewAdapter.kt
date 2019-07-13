@@ -82,7 +82,7 @@ class CommentsViewAdapter constructor(
         val pubDate = item.pubDate
         holder.itemView.textViewCommentDate.text = format.format(pubDate)
 
-        avatarShower.showWithCache(context, item.avatarUrl, item.authorization, holder.itemView.imageViewCommentAvatar)
+        avatarShower.showWithCache(context, R.drawable.ic_avatar_empty, item.avatarUrl, item.authorization, holder.itemView.imageViewCommentAvatar)
 
         holder.itemView.commentTextViewLike.text = item.usersLikeCount.toString()
         holder.itemView.commentTextViewDislike.text = item.usersDislikeCount.toString()

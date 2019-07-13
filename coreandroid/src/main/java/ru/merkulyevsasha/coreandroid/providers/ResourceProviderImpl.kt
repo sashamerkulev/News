@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.domain
+package ru.merkulyevsasha.coreandroid.providers
 
 import android.content.Context
 import ru.merkulyevsasha.core.ResourceProvider

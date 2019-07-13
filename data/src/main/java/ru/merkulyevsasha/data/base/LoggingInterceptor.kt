@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.base
+package ru.merkulyevsasha.data.base
 
 import android.util.Log
 import okhttp3.Interceptor

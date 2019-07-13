@@ -1,8 +1,6 @@
 package ru.merkulyevsasha.sl
 
 import android.content.Context
-import ru.merkulyevsasha.articles.ArticlesApiRepositoryImpl
-import ru.merkulyevsasha.comments.ArticleCommentsApiRepositoryImpl
 import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.ServiceLocator
@@ -18,17 +16,19 @@ import ru.merkulyevsasha.core.repositories.SetupApiRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
+import ru.merkulyevsasha.coreandroid.providers.ResourceProviderImpl
+import ru.merkulyevsasha.data.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.data.comments.ArticleCommentsApiRepositoryImpl
+import ru.merkulyevsasha.data.setup.SetupApiRepositoryImpl
+import ru.merkulyevsasha.data.users.UsersApiRepositoryImpl
 import ru.merkulyevsasha.database.DatabaseRepositoryImpl
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.NewsDistributorImpl
-import ru.merkulyevsasha.domain.ResourceProviderImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
 import ru.merkulyevsasha.domain.mappers.SourceNameMapper
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
-import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
-import ru.merkulyevsasha.users.UsersApiRepositoryImpl
 
 class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator {
 
@@ -50,10 +50,10 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
         maps[KeyValueStorage::class.java] = prefs
         maps[ResourceProvider::class.java] = resourceProvider
         maps[NewsDistributor::class.java] = NewsDistributorImpl(context, resourceProvider)
-        maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs)
-        maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs)
-        maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs)
-        maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs)
+        maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs, BuildConfig.API_URL)
+        maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL)
+        maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL)
+        maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL)
         maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(context, prefs)
     }
 

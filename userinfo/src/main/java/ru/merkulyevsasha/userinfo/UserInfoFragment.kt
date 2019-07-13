@@ -135,7 +135,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     override fun showUserInfo(userInfo: UserInfo) {
         if (userInfo.avatarUrl.isNotEmpty()) {
-            avatarShower.showWithoutCache(requireContext(), userInfo.avatarUrl, userInfo.authorization, imageViewAvatar)
+            avatarShower.showWithoutCache(requireContext(), R.drawable.ic_avatar_empty, userInfo.avatarUrl, userInfo.authorization, imageViewAvatar)
         }
         userName.setText(userInfo.name)
     }

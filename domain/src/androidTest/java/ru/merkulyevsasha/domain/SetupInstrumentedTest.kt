@@ -9,7 +9,7 @@ import ru.merkulyevsasha.NewsInsrumentalTestRunner
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.database.DatabaseRepositoryImpl
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
-import ru.merkulyevsasha.setup.SetupApiRepositoryImpl
+import ru.merkulyevsasha.data.setup.SetupApiRepositoryImpl
 import java.util.UUID
 
 @RunWith(NewsInsrumentalTestRunner::class)
@@ -18,7 +18,7 @@ class SetupInstrumentedTest {
     private val appContext = InstrumentationRegistry.getTargetContext()
     private val preferences = KeyValueStorageImpl(appContext)
     private val databaseRepository = DatabaseRepositoryImpl(appContext)
-    private val setupApiRepository = SetupApiRepositoryImpl(preferences)
+    private val setupApiRepository = ru.merkulyevsasha.data.setup.SetupApiRepositoryImpl(preferences)
     private val setupInteractor = SetupInteractorImpl(preferences, setupApiRepository, databaseRepository)
 
     @Before

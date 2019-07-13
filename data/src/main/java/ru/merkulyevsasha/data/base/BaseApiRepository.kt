@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.base
+package ru.merkulyevsasha.data.base
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.OkHttpClient
@@ -8,7 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.network.BuildConfig
 
-open class BaseApiRepository(sharedPreferences: KeyValueStorage) {
+open class BaseApiRepository(
+    sharedPreferences: KeyValueStorage,
+    baseUrl: String
+) {
 
     internal val retrofit: Retrofit
 
@@ -29,7 +32,7 @@ open class BaseApiRepository(sharedPreferences: KeyValueStorage) {
 //            .create()
 
         retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.API_URL)
+            .baseUrl(baseUrl)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)

@@ -23,6 +23,7 @@ import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
+import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ShowActionBarListener
@@ -108,7 +109,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()
 
-        ru.merkulyevsasha.coreandroid.common.AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView)
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java),

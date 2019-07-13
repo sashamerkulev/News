@@ -1,7 +1,7 @@
-package ru.merkulyevsasha.articles
+package ru.merkulyevsasha.data.articles
 
 import io.reactivex.Single
-import ru.merkulyevsasha.base.BaseApiRepository
+import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
@@ -10,7 +10,10 @@ import ru.merkulyevsasha.network.mappers.ArticleMapper
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ArticlesApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticlesApiRepository {
+class ArticlesApiRepositoryImpl(
+    sharedPreferences: KeyValueStorage,
+    baseUrl: String
+) : BaseApiRepository(sharedPreferences, baseUrl), ArticlesApiRepository {
 
     private val articlesMapper = ArticleMapper()
 

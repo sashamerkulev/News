@@ -1,8 +1,8 @@
-package ru.merkulyevsasha.comments
+package ru.merkulyevsasha.data.comments
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.merkulyevsasha.base.BaseApiRepository
+import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
@@ -11,7 +11,10 @@ import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ArticleCommentsApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), ArticleCommentsApiRepository {
+class ArticleCommentsApiRepositoryImpl(
+    sharedPreferences: KeyValueStorage,
+    baseUrl: String
+) : BaseApiRepository(sharedPreferences, baseUrl), ArticleCommentsApiRepository {
 
     private val articleCommentsMapper = ArticleCommentsMapper("bearer " + sharedPreferences.getAccessToken())
 

@@ -24,6 +24,7 @@ import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
+import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
@@ -103,7 +104,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
                 appbarLayout.setExpanded(show)
             }
         })
-        ru.merkulyevsasha.coreandroid.common.AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView)
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         initSwipeRefreshColorScheme()

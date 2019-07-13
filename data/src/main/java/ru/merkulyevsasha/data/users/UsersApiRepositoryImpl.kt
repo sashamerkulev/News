@@ -1,10 +1,10 @@
-package ru.merkulyevsasha.users
+package ru.merkulyevsasha.data.users
 
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import ru.merkulyevsasha.base.BaseApiRepository
+import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
@@ -12,7 +12,10 @@ import ru.merkulyevsasha.network.data.UsersApi
 import ru.merkulyevsasha.network.mappers.UserInfoMapper
 import java.io.File
 
-class UsersApiRepositoryImpl(sharedPreferences: KeyValueStorage) : BaseApiRepository(sharedPreferences), UsersApiRepository {
+class UsersApiRepositoryImpl(
+    sharedPreferences: KeyValueStorage,
+    baseUrl: String
+) : BaseApiRepository(sharedPreferences, baseUrl), UsersApiRepository {
 
     private val userInfoMapper: UserInfoMapper by lazy { UserInfoMapper("bearer " + sharedPreferences.getAccessToken()) }
 
