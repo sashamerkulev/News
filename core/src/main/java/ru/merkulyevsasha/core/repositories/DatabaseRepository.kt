@@ -23,4 +23,5 @@ interface DatabaseRepository {
 
     fun addOrUpdateArticleComments(comments: List<ArticleComment>)
     fun updateArticleComment(comment: ArticleComment, commentsCount: Int)
+    fun searchArticles(searchText: String, byUserActivities: Boolean): Single<List<Article>>
 }

@@ -4,9 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +42,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         private const val MAX_POSITION = 5
         private const val KEY_POSITION = "key_position"
         private const val KEY_EXPANDED = "key_expanded"
+        private const val KEY_SEARCH_TEXT = "key_search_text"
 
         @JvmStatic
         val TAG: String = ArticlesFragment::class.java.simpleName
@@ -66,8 +72,17 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
     private var expanded = true
     private var position = 0
 
+    private lateinit var searchItem: MenuItem
+    private lateinit var searchView: SearchView
+    private var searchText: String? = null
+
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onAttach(context: Context?) {
@@ -87,6 +102,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         savedState?.apply {
             position = this.getInt(KEY_POSITION, 0)
             expanded = this.getBoolean(KEY_EXPANDED, true)
+            searchText = this.getString(KEY_SEARCH_TEXT, searchText)
         }
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
@@ -119,47 +135,49 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         initRecyclerView()
         initBottomUp()
 
-        presenter?.onFirstLoad()
-    }
-
-    private fun initBottomUp() {
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (position >= layoutManager.findFirstVisibleItemPosition()) {
-                    position = layoutManager.findFirstVisibleItemPosition()
-                    if (position > MAX_POSITION && !swipeRefreshLayout.isRefreshing) {
-                        buttonUp.visibility = View.VISIBLE
-                    } else {
-                        buttonUp.visibility = View.GONE
-                    }
-                } else {
-                    position = layoutManager.findFirstVisibleItemPosition() - 1
-                    buttonUp.visibility = View.GONE
-                }
-            }
-        })
-        buttonUp.setOnClickListener {
-            layoutManager.scrollToPosition(0)
-            position = 0
-            buttonUp.visibility = View.GONE
-            appbarLayout.setExpanded(true)
+        if (searchText.isNullOrEmpty()) {
+            presenter?.onFirstLoad()
         }
     }
 
-    private fun initRecyclerView() {
-        layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
-        adapter = NewsViewAdapter(
-            requireContext(),
-            presenter,
-            presenter,
-            presenter,
-            presenter,
-            colorThemeResolver,
-            ArrayList()
-        )
-        recyclerView.adapter = adapter
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.articles_menu, menu)
+        menu?.let {
+            searchItem = it.findItem(R.id.action_search)
+            searchView = searchItem.actionView as SearchView
+            val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+            searchEditText.setTextColor(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
+            if (!searchText.isNullOrEmpty()) {
+                searchItem.expandActionView()
+                searchView.setQuery(searchText, false)
+                presenter?.onSearch(searchText)
+            }
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchText = query
+                    presenter?.onSearch(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText.isNullOrEmpty()) {
+                        searchText = ""
+                        presenter?.onSearch(newText)
+                    }
+                    return true
+                }
+            })
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_refresh) {
+            presenter?.onRefresh()
+            return true
+        } else if (item?.itemId == R.id.action_search) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onPause() {
@@ -214,10 +232,51 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         adapter.updateItem(item)
     }
 
+    private fun initBottomUp() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (position >= layoutManager.findFirstVisibleItemPosition()) {
+                    position = layoutManager.findFirstVisibleItemPosition()
+                    if (position > MAX_POSITION && !swipeRefreshLayout.isRefreshing) {
+                        buttonUp.visibility = View.VISIBLE
+                    } else {
+                        buttonUp.visibility = View.GONE
+                    }
+                } else {
+                    position = layoutManager.findFirstVisibleItemPosition() - 1
+                    buttonUp.visibility = View.GONE
+                }
+            }
+        })
+        buttonUp.setOnClickListener {
+            layoutManager.scrollToPosition(0)
+            position = 0
+            buttonUp.visibility = View.GONE
+            appbarLayout.setExpanded(true)
+        }
+    }
+
+    private fun initRecyclerView() {
+        layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        recyclerView.setHasFixedSize(true)
+        adapter = NewsViewAdapter(
+            requireContext(),
+            presenter,
+            presenter,
+            presenter,
+            presenter,
+            colorThemeResolver,
+            ArrayList()
+        )
+        recyclerView.adapter = adapter
+    }
+
     private fun saveFragmentState(state: Bundle) {
         position = layoutManager.findFirstVisibleItemPosition()
         state.putInt(KEY_POSITION, position)
         state.putBoolean(KEY_EXPANDED, expanded)
+        state.putString(KEY_SEARCH_TEXT, searchText)
     }
 
     private fun initSwipeRefreshColorScheme() {

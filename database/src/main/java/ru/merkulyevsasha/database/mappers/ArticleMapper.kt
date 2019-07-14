@@ -22,7 +22,7 @@ class ArticleMapper : Mapper<Article, ArticleEntity> {
             item.isUserLiked,
             item.isUserDisliked,
             item.isUserCommented,
-            ""
+            item.title.toLowerCase() + (item.description ?: "").toLowerCase()
         )
     }
 }

@@ -10,6 +10,8 @@ import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHand
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentArticleCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
+import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
 import timber.log.Timber
 
 class ArticlesPresenterImpl(
@@ -19,8 +21,14 @@ class ArticlesPresenterImpl(
 ) : BasePresenterImpl<ArticlesView>(),
     ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentArticleCallbackClickHandler {
 
-    private val articleLikeClickHandler = ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler(articlesInteractor,
+    private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
+        { view?.showError() })
+
+    private val searchArticleHandler = SearchArticleHandler(articlesInteractor, false,
+        { view?.showProgress() },
+        { view?.hideProgress() },
+        { view?.showItems(it) },
         { view?.showError() })
 
     fun onFirstLoad() {
@@ -49,6 +57,10 @@ class ArticlesPresenterImpl(
                         Timber.e(it)
                         view?.showError()
                     }))
+    }
+
+    fun onSearch(searchText: String?) {
+        compositeDisposable.add(searchArticleHandler.onSearchArticles(searchText))
     }
 
     override fun onArticleCliked(item: Article) {

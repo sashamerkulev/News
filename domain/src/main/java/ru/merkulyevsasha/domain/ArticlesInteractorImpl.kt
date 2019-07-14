@@ -57,6 +57,19 @@ class ArticlesInteractorImpl(
             .subscribeOn(Schedulers.io())
     }
 
+    override fun searchArticles(searchText: String?, byUserActivities: Boolean): Single<List<Article>> {
+        return Single.fromCallable { searchText ?: "" }
+            .flatMap { st: String ->
+                if (st.isEmpty()) getArticles()
+                else
+                    databaseRepository.searchArticles(st, byUserActivities)
+                        .flattenAsFlowable { it }
+                        .map { sourceNameMapper.map(it) }
+                        .toList()
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
     override fun getUserActivityArticles(): Single<List<Article>> {
         return databaseRepository.getUserActivityArticles()
             .flattenAsFlowable { it }

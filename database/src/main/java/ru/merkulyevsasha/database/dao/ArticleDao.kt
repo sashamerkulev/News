@@ -14,6 +14,12 @@ interface ArticleDao {
     @Query("select * from articles order by pubDate desc")
     fun getArticles(): Single<List<ArticleEntity>>
 
+    @Query("select * from articles where search like :searchText order by pubDate desc")
+    fun searchArticles(searchText: String): Single<List<ArticleEntity>>
+
+    @Query("select * from articles where search like :searchText and (isUserLiked or isUserCommented or isUserDisliked) order by pubDate desc")
+    fun searchUserActivitiesArticles(searchText: String): Single<List<ArticleEntity>>
+
     @Query("select * from articles where articleId = :articleId order by pubDate desc")
     fun getArticle(articleId: Int): Single<ArticleEntity>
 

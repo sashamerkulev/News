@@ -10,4 +10,5 @@ interface ArticlesInteractor {
     fun likeArticle(articleId: Int): Single<Article>
     fun dislikeArticle(articleId: Int): Single<Article>
     fun getArticle(articleId: Int): Single<Article>
+    fun searchArticles(searchText: String?, byUserActivities: Boolean): Single<List<Article>>
 }

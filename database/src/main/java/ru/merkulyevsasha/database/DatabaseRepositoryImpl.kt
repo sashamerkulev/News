@@ -38,6 +38,17 @@ class DatabaseRepositoryImpl(context: Context, keyValueStorage: KeyValueStorage)
             .toList()
     }
 
+    override fun searchArticles(searchText: String, byUserActivities: Boolean): Single<List<Article>> {
+        return Single.fromCallable { byUserActivities }
+            .flatMap { ua ->
+                if (ua) database.articleDao.searchUserActivitiesArticles("%${searchText.toLowerCase()}%")
+                else database.articleDao.searchArticles("%${searchText.toLowerCase()}%")
+            }
+            .flattenAsFlowable { it }
+            .map { articleEntityMapper.map(it) }
+            .toList()
+    }
+
     override fun getArticle(articleId: Int): Single<Article> {
         return database.articleDao.getArticle(articleId)
             .map { articleEntityMapper.map(it) }
