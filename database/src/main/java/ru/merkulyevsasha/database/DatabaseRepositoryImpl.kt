@@ -1,6 +1,5 @@
 package ru.merkulyevsasha.database
 
-
 import android.content.Context
 import androidx.room.Room
 import io.reactivex.Single
@@ -22,7 +21,7 @@ class DatabaseRepositoryImpl(context: Context, keyValueStorage: KeyValueStorage)
 
     private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
-    private val articleCommentEntityMapper = ArticleCommentEntityMapper(keyValueStorage.getAccessToken())
+    private val articleCommentEntityMapper by lazy { ArticleCommentEntityMapper("bearer " + keyValueStorage.getAccessToken()) }
     private val articleCommentMapper = ArticleCommentMapper()
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()

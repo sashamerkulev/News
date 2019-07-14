@@ -11,7 +11,4 @@ apply from: "$rootDir/retrofit.gradle"
 
 dependencies {
     compileOnly project(path: ':core')
-
-    implementation "com.facebook.stetho:stetho:$stetho"
-    implementation "com.facebook.stetho:stetho-okhttp3:$stetho"
 }

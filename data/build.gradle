@@ -12,7 +12,9 @@ apply from: "$rootDir/retrofit.gradle"
 dependencies {
     compileOnly project(path: ':core')
     compileOnly project(path: ':network')
-    //compileOnly project(path: ':database')
+//    compileOnly project(path: ':preferences')
+//    compileOnly project(path: ':database')
+
     implementation "com.facebook.stetho:stetho:$stetho"
     implementation "com.facebook.stetho:stetho-okhttp3:$stetho"
 }

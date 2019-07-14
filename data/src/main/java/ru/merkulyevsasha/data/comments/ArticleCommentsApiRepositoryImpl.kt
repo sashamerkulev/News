@@ -2,10 +2,10 @@ package ru.merkulyevsasha.data.comments
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
+import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.network.data.CommentsApi
 import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import java.text.SimpleDateFormat
@@ -16,7 +16,7 @@ class ArticleCommentsApiRepositoryImpl(
     baseUrl: String
 ) : BaseApiRepository(sharedPreferences, baseUrl), ArticleCommentsApiRepository {
 
-    private val articleCommentsMapper = ArticleCommentsMapper("bearer " + sharedPreferences.getAccessToken())
+    private val articleCommentsMapper by lazy { ArticleCommentsMapper("bearer " + sharedPreferences.getAccessToken()) }
 
     private val api: CommentsApi = retrofit.create(CommentsApi::class.java)
 
