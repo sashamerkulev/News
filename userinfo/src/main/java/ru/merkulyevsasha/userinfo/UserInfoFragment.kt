@@ -162,7 +162,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
             try {
                 helper.file().createNewFile()
                 if (helper.file() != null) {
-                    val photoURI = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID + ".fileprovider", helper.file())
+                    val photoURI = FileProvider.getUriForFile(requireActivity(), getString(R.string.APPLICATION_ID) + ".fileprovider", helper.file())
                     //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(helper.file()));
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, CAMERA_TAKE_IMAGE_REQUEST)
