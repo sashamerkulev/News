@@ -12,10 +12,12 @@ import ru.merkulyevsasha.data.database.mappers.ArticleEntityMapper
 import ru.merkulyevsasha.data.database.mappers.ArticleMapper
 import ru.merkulyevsasha.data.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.data.database.mappers.RssSourceMapper
-import ru.merkulyevsasha.database.data.NewsRoomDatabase
 import java.util.*
 
-class DatabaseRepositoryImpl(private val database: NewsRoomDatabase, keyValueStorage: KeyValueStorage) : DatabaseRepository {
+class DatabaseRepositoryImpl(
+    private val newsDatabaseSource: NewsDatabaseSource,
+    keyValueStorage: KeyValueStorage
+) : DatabaseRepository {
 
     private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
@@ -24,13 +26,8 @@ class DatabaseRepositoryImpl(private val database: NewsRoomDatabase, keyValueSto
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()
 
-//    private val database = Room
-//        .databaseBuilder(context, NewsRoomDatabase::class.java, BuildConfig.DB_NAME)
-//        .fallbackToDestructiveMigration()
-//        .build()
-
     override fun getArticles(): Single<List<Article>> {
-        return database.articleDao.getArticles()
+        return newsDatabaseSource.getArticles()
             .flattenAsFlowable { it }
             .map { articleEntityMapper.map(it) }
             .toList()
@@ -39,8 +36,8 @@ class DatabaseRepositoryImpl(private val database: NewsRoomDatabase, keyValueSto
     override fun searchArticles(searchText: String, byUserActivities: Boolean): Single<List<Article>> {
         return Single.fromCallable { byUserActivities }
             .flatMap { ua ->
-                if (ua) database.articleDao.searchUserActivitiesArticles("%${searchText.toLowerCase()}%")
-                else database.articleDao.searchArticles("%${searchText.toLowerCase()}%")
+                if (ua) newsDatabaseSource.searchUserActivitiesArticles("%${searchText.toLowerCase()}%")
+                else newsDatabaseSource.searchArticles("%${searchText.toLowerCase()}%")
             }
             .flattenAsFlowable { it }
             .map { articleEntityMapper.map(it) }
@@ -48,59 +45,59 @@ class DatabaseRepositoryImpl(private val database: NewsRoomDatabase, keyValueSto
     }
 
     override fun getArticle(articleId: Int): Single<Article> {
-        return database.articleDao.getArticle(articleId)
+        return newsDatabaseSource.getArticle(articleId)
             .map { articleEntityMapper.map(it) }
     }
 
     override fun removeOldNotUserActivityArticles(cleanDate: Date) {
-        database.articleDao.removeOldNotUserActivityArticles(cleanDate)
+        newsDatabaseSource.removeOldNotUserActivityArticles(cleanDate)
     }
 
     override fun removeOldUserActivityArticles(cleanDate: Date) {
-        database.articleDao.removeOldUserActivityArticles(cleanDate)
+        newsDatabaseSource.removeOldUserActivityArticles(cleanDate)
     }
 
     override fun getUserActivityArticles(): Single<List<Article>> {
-        return database.articleDao.getUserActivityArticles()
+        return newsDatabaseSource.getUserActivityArticles()
             .flattenAsFlowable { it }
             .map { articleEntityMapper.map(it) }
             .toList()
     }
 
     override fun getArticleComments(articleId: Int): Single<List<ArticleComment>> {
-        return database.articleCommentsDao.getArticleComments(articleId)
+        return newsDatabaseSource.getArticleComments(articleId)
             .flattenAsFlowable { it }
             .map { articleCommentEntityMapper.map(it) }
             .toList()
     }
 
     override fun saveRssSources(sources: List<RssSource>) {
-        database.setupDao.saveRssSources(sources.map { rssSourceMapper.map(it) })
+        newsDatabaseSource.saveRssSources(sources.map { rssSourceMapper.map(it) })
     }
 
     override fun deleteRssSources() {
-        database.setupDao.deleteRssSources()
+        newsDatabaseSource.deleteRssSources()
     }
 
     override fun getRssSources(): List<RssSource> {
-        return database.setupDao.getRssSources()
+        return newsDatabaseSource.getRssSources()
             .map { rssSourceEntityMapper.map(it) }
     }
 
     override fun addOrUpdateArticles(articles: List<Article>) {
-        database.articleDao.insertOrUpdate(articles.map { articleMapper.map(it) })
+        newsDatabaseSource.addOrUpdateArticles(articles.map { articleMapper.map(it) })
     }
 
     override fun updateArticle(article: Article) {
-        database.articleDao.update(articleMapper.map(article))
+        newsDatabaseSource.updateArticle(articleMapper.map(article))
     }
 
     override fun addOrUpdateArticleComments(comments: List<ArticleComment>) {
-        database.articleCommentsDao.insertOrUpdate(comments.map { articleCommentMapper.map(it) })
+        newsDatabaseSource.addOrUpdateArticleComments(comments.map { articleCommentMapper.map(it) })
     }
 
     override fun updateArticleComment(comment: ArticleComment, commentsCount: Int) {
-        database.articleCommentsDao.updateArticleComment(articleCommentMapper.map(comment), commentsCount)
+        newsDatabaseSource.updateArticleComment(articleCommentMapper.map(comment), commentsCount)
     }
 
 }

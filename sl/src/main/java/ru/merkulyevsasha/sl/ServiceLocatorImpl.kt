@@ -19,6 +19,7 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.coreandroid.providers.ResourceProviderImpl
 import ru.merkulyevsasha.data.database.DatabaseRepositoryImpl
+import ru.merkulyevsasha.data.database.NewsDatabaseSourceImpl
 import ru.merkulyevsasha.data.network.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.data.network.comments.ArticleCommentsApiRepositoryImpl
 import ru.merkulyevsasha.data.network.setup.SetupApiRepositoryImpl
@@ -49,6 +50,11 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
     init {
         val prefs = KeyValueStorageImpl(context)
         val resourceProvider = ResourceProviderImpl(context)
+        val newsRoomDatabase = Room
+            .databaseBuilder(context, NewsRoomDatabase::class.java, BuildConfig.DB_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
+        val newsDatabaseSource = NewsDatabaseSourceImpl(newsRoomDatabase)
         maps[KeyValueStorage::class.java] = prefs
         maps[ResourceProvider::class.java] = resourceProvider
         maps[NewsDistributor::class.java] = NewsDistributorImpl(context, resourceProvider)
@@ -56,10 +62,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL)
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL)
-        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(Room
-            .databaseBuilder(context, NewsRoomDatabase::class.java, BuildConfig.DB_NAME)
-            .fallbackToDestructiveMigration()
-            .build(), prefs)
+        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(newsDatabaseSource, prefs)
     }
 
     override fun <T> set(clazz: Class<T>, instance: Any) {
