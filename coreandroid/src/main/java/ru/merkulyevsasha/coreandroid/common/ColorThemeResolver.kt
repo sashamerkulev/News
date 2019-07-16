@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.merkulyevsasha.core.R
 
 class ColorThemeResolver(
@@ -28,4 +29,10 @@ class ColorThemeResolver(
         currentTheme.resolveAttribute(attrColor, typedValue, true)
         return typedValue.data
     }
+
+    fun initSwipeRefreshColorScheme(swipeRefreshLayout: SwipeRefreshLayout) {
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getThemeAttrColor(R.attr.colorAccent))
+        swipeRefreshLayout.setColorSchemeColors(getThemeAttrColor(R.attr.colorControlNormal))
+    }
+
 }

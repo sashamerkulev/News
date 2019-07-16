@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="menu_refresh">Обновить</string>
+    <string name="article_details_loading_error_message">Ошибка загрузки новости - проверьте соединение с интернет.</string>
 </resources>

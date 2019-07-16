@@ -5,7 +5,7 @@ import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
 
-class MainPresenter(private val setupInteractor: SetupInteractor) : ru.merkulyevsasha.coreandroid.base.BasePresenterImpl<MainView>() {
+class MainPresenter(private val setupInteractor: SetupInteractor) : BasePresenterImpl<MainView>() {
     fun onSetup() {
         compositeDisposable.add(
             setupInteractor.registerSetup()

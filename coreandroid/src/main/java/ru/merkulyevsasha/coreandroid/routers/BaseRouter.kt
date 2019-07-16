@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation.routers
+package ru.merkulyevsasha.coreandroid.routers
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

@@ -123,7 +123,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         })
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
-        initSwipeRefreshColorScheme()
+        colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
         AdViewHelper.loadBannerAd(adView)
 
@@ -150,6 +150,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
             if (!searchText.isNullOrEmpty()) {
                 searchItem.expandActionView()
                 searchView.setQuery(searchText, false)
+                searchView.clearFocus()
                 presenter?.onSearch(searchText)
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -277,10 +278,5 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         state.putInt(KEY_POSITION, position)
         state.putBoolean(KEY_EXPANDED, expanded)
         state.putString(KEY_SEARCH_TEXT, searchText)
-    }
-
-    private fun initSwipeRefreshColorScheme() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
-        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
     }
 }

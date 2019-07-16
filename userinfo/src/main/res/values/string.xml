@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fragment_user_title">Профиль</string>
+    <string name="user_info_loading_error_message">Ошибка загрузки информации - проверьте соединение с интернет.</string>
+    <string name="user_info_name_require_error_message">Имя обязательное поле - придумайте что-нибудь.</string>
+    <string name="user_info_name_save_success_message">Сохранено.</string>
+    <string name="userinfo_button_camera_title">Сфотографировать</string>
+    <string name="userinfo_button_gallery_title">Загрузить с галереи</string>
+    <string name="userinfo_select_image_label">Выберите изображение</string>
+    <string name="user_name_hint">Введите имя</string>
+    <string name="save_button_title">Сохранить</string>
+</resources>

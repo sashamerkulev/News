@@ -123,7 +123,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         AdViewHelper.loadBannerAd(adView)
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
-        initSwipeRefreshColorScheme()
+        colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = UserActivitiesPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java),
@@ -148,6 +148,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
             if (!searchText.isNullOrEmpty()) {
                 searchItem.expandActionView()
                 searchView.setQuery(searchText, false)
+                searchView.clearFocus()
                 presenter?.onSearch(searchText)
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

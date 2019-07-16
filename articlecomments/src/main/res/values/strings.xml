@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comment_loading_error_message">Ошибка загрузки комментов - проверьте соединение с интернет.</string>
+    <string name="comment">Комментарий</string>
+</resources>

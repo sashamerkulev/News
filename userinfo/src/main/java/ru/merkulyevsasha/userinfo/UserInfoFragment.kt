@@ -149,7 +149,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.newnews_select_image_label)), GALLERY_TAKE_IMAGE_REQUEST)
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.userinfo_select_image_label)), GALLERY_TAKE_IMAGE_REQUEST)
     }
 
     override fun takeCameraPicture() {

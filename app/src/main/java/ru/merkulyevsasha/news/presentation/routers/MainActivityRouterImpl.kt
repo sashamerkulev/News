@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentManager
 import ru.merkulyevsasha.articlecomments.ArticleCommentsFragment
 import ru.merkulyevsasha.articledetails.ArticleDetailsFragment
 import ru.merkulyevsasha.core.routers.MainActivityRouter
+import ru.merkulyevsasha.coreandroid.routers.BaseRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.main.MainFragment
 

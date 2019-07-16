@@ -84,7 +84,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
             presenter?.onAddCommentClicked(articleId, editTextComment.text.toString())
         }
 
-        initSwipeRefreshColorScheme()
+        colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
             presenter?.onRefresh(articleId)
         }
