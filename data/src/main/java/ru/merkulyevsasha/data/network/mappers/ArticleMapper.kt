@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.network.mappers
+package ru.merkulyevsasha.data.network.mappers
 
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article

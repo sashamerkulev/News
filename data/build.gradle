@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 apply from: "$rootDir/android.gradle"
@@ -8,12 +9,13 @@ apply from: "$rootDir/detekt.gradle"
 apply from: "$rootDir/jacoco.gradle"
 
 apply from: "$rootDir/retrofit.gradle"
+apply from: "$rootDir/room.gradle"
 
 dependencies {
     compileOnly project(path: ':core')
-    compileOnly project(path: ':network')
+    implementation project(path: ':network')
 //    compileOnly project(path: ':preferences')
-//    compileOnly project(path: ':database')
+    implementation project(path: ':database')
 
     implementation "com.facebook.stetho:stetho:$stetho"
     implementation "com.facebook.stetho:stetho-okhttp3:$stetho"

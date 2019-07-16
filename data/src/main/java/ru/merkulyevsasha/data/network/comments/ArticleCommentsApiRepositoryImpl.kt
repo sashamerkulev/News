@@ -1,13 +1,13 @@
-package ru.merkulyevsasha.data.comments
+package ru.merkulyevsasha.data.network.comments
 
 import io.reactivex.Completable
 import io.reactivex.Single
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
-import ru.merkulyevsasha.data.base.BaseApiRepository
+import ru.merkulyevsasha.data.network.base.BaseApiRepository
+import ru.merkulyevsasha.data.network.mappers.ArticleCommentsMapper
 import ru.merkulyevsasha.network.data.CommentsApi
-import ru.merkulyevsasha.network.mappers.ArticleCommentsMapper
 import java.text.SimpleDateFormat
 import java.util.*
 

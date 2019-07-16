@@ -12,7 +12,7 @@ import ru.merkulyevsasha.database.entities.RssSourceEntity
 
 @Database(entities = [ArticleEntity::class, ArticleCommentEntity::class, RssSourceEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class Database : RoomDatabase() {
+abstract class NewsRoomDatabase : RoomDatabase() {
     abstract val articleDao: ArticleDao
     abstract val articleCommentsDao: ArticleCommentsDao
     abstract val setupDao: SetupDao

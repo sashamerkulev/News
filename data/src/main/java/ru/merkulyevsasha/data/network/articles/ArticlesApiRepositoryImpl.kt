@@ -1,12 +1,12 @@
-package ru.merkulyevsasha.data.articles
+package ru.merkulyevsasha.data.network.articles
 
 import io.reactivex.Single
-import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
+import ru.merkulyevsasha.data.network.base.BaseApiRepository
+import ru.merkulyevsasha.data.network.mappers.ArticleMapper
 import ru.merkulyevsasha.network.data.ArticlesApi
-import ru.merkulyevsasha.network.mappers.ArticleMapper
 import java.text.SimpleDateFormat
 import java.util.*
 

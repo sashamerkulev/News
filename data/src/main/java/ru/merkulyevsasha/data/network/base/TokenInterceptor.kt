@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.data.base
+package ru.merkulyevsasha.data.network.base
 
 import okhttp3.Interceptor
 import okhttp3.Response

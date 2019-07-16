@@ -1,15 +1,15 @@
-package ru.merkulyevsasha.data.users
+package ru.merkulyevsasha.data.network.users
 
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import ru.merkulyevsasha.data.base.BaseApiRepository
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
+import ru.merkulyevsasha.data.network.base.BaseApiRepository
+import ru.merkulyevsasha.data.network.mappers.UserInfoMapper
 import ru.merkulyevsasha.network.data.UsersApi
-import ru.merkulyevsasha.network.mappers.UserInfoMapper
 import java.io.File
 
 class UsersApiRepositoryImpl(

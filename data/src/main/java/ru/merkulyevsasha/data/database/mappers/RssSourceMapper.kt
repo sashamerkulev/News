@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.database.mappers
+package ru.merkulyevsasha.data.database.mappers
 
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.RssSource

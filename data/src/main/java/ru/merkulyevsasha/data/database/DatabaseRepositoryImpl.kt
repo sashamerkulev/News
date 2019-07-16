@@ -1,23 +1,21 @@
-package ru.merkulyevsasha.database
+package ru.merkulyevsasha.data.database
 
-import android.content.Context
-import androidx.room.Room
 import io.reactivex.Single
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.DatabaseRepository
-import ru.merkulyevsasha.database.data.Database
-import ru.merkulyevsasha.database.mappers.ArticleCommentEntityMapper
-import ru.merkulyevsasha.database.mappers.ArticleCommentMapper
-import ru.merkulyevsasha.database.mappers.ArticleEntityMapper
-import ru.merkulyevsasha.database.mappers.ArticleMapper
-import ru.merkulyevsasha.database.mappers.RssSourceEntityMapper
-import ru.merkulyevsasha.database.mappers.RssSourceMapper
+import ru.merkulyevsasha.data.database.mappers.ArticleCommentEntityMapper
+import ru.merkulyevsasha.data.database.mappers.ArticleCommentMapper
+import ru.merkulyevsasha.data.database.mappers.ArticleEntityMapper
+import ru.merkulyevsasha.data.database.mappers.ArticleMapper
+import ru.merkulyevsasha.data.database.mappers.RssSourceEntityMapper
+import ru.merkulyevsasha.data.database.mappers.RssSourceMapper
+import ru.merkulyevsasha.database.data.NewsRoomDatabase
 import java.util.*
 
-class DatabaseRepositoryImpl(context: Context, keyValueStorage: KeyValueStorage) : DatabaseRepository {
+class DatabaseRepositoryImpl(private val database: NewsRoomDatabase, keyValueStorage: KeyValueStorage) : DatabaseRepository {
 
     private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
@@ -26,10 +24,10 @@ class DatabaseRepositoryImpl(context: Context, keyValueStorage: KeyValueStorage)
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()
 
-    private val database = Room
-        .databaseBuilder(context, Database::class.java, BuildConfig.DB_NAME)
-        .fallbackToDestructiveMigration()
-        .build()
+//    private val database = Room
+//        .databaseBuilder(context, NewsRoomDatabase::class.java, BuildConfig.DB_NAME)
+//        .fallbackToDestructiveMigration()
+//        .build()
 
     override fun getArticles(): Single<List<Article>> {
         return database.articleDao.getArticles()
