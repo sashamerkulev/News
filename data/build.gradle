@@ -13,9 +13,9 @@ apply from: "$rootDir/room.gradle"
 
 dependencies {
     compileOnly project(path: ':core')
-    implementation project(path: ':network')
+    api project(path: ':network')
 //    compileOnly project(path: ':preferences')
-    implementation project(path: ':database')
+    api project(path: ':database')
 
     implementation "com.facebook.stetho:stetho:$stetho"
     implementation "com.facebook.stetho:stetho-okhttp3:$stetho"
