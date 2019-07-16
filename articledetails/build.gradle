@@ -11,8 +11,8 @@ apply from: "$rootDir/jacoco.gradle"
 apply from: "$rootDir/androidx.gradle"
 
 dependencies {
-    implementation project(path: ':core')
-    implementation project(path: ':coreandroid')
+    compileOnly project(path: ':core')
+    compileOnly project(path: ':coreandroid')
 }
 
 apply from: "$rootDir/firebase.gradle"

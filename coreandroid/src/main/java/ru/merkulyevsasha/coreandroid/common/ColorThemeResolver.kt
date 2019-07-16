@@ -6,7 +6,7 @@ import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import ru.merkulyevsasha.core.R
+import ru.merkulyevsasha.coreandroid.R
 
 class ColorThemeResolver(
     private val typedValue: TypedValue,

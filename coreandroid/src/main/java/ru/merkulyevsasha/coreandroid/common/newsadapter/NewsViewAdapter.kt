@@ -20,9 +20,9 @@ import kotlinx.android.synthetic.main.row_news.view.newsTitle
 import kotlinx.android.synthetic.main.row_news.view.textViewComment
 import kotlinx.android.synthetic.main.row_news.view.textViewDislike
 import kotlinx.android.synthetic.main.row_news.view.textViewLike
-import ru.merkulyevsasha.core.R
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.core.models.Article
+import ru.merkulyevsasha.coreandroid.R
 import java.text.SimpleDateFormat
 import java.util.*
 
