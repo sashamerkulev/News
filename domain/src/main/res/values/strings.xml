@@ -2,5 +2,4 @@
     <string name="chooser_title">Выберите приложение</string>
     <string name="article_info_send">%s публикует новость: \'%s\'</string>
     <string name="comment_info_send">Пользователь \'%s\' оставил комментарий: \'%s\'</string>
-    <string name="application_info_send">\n\nОтправлено из приложения: https://play.google.com/store/apps/details?id=ru.merkulyevsasha.news </string>
 </resources>

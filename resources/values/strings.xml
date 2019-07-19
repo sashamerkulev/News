@@ -2,6 +2,7 @@
     <string name="APP_ID">ca-app-pub-1794194967807366~3386099537</string>
     <string name="APP_UNIT_ID">ca-app-pub-1794194967807366/5197732155</string>
     <string name="APPLICATION_ID">ru.merkulyevsasha.news</string>
+    <string name="application_info_send">\n\nОтправлено из приложения: https://play.google.com/store/apps/details?id=ru.merkulyevsasha.news </string>
 
     <string name="search_validation_message">Строка поиска должна содержать не менее 3 символов.</string>
     <string name="search_nofound_message">Ничего не найдено, попробуйте изменить строку поиска.</string>
