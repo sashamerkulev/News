@@ -127,6 +127,10 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         Toast.makeText(requireContext(), getString(R.string.user_info_name_require_error_message), Toast.LENGTH_LONG).show()
     }
 
+    override fun showSaveError() {
+        Toast.makeText(requireContext(), getString(R.string.user_info_uniq_name_error_message), Toast.LENGTH_LONG).show()
+    }
+
     override fun showProgress() {
     }
 

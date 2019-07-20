@@ -5,7 +5,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "articles", indices = [Index("sourceName"), Index("search"), Index("pubDate")])
+@Entity(tableName = "articles", indices = [Index("sourceName"), Index("search"),
+    Index("pubDate"), Index("lastActivityDate")])
 class ArticleEntity(
     @PrimaryKey
     val articleId: Int = 0,

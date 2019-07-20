@@ -27,11 +27,11 @@ import kotlinx.android.synthetic.main.row_comment_article.view.newsDateSource
 import kotlinx.android.synthetic.main.row_comment_article.view.newsTitle
 import kotlinx.android.synthetic.main.row_comment_article.view.textViewDislike
 import kotlinx.android.synthetic.main.row_comment_article.view.textViewLike
-import ru.merkulyevsasha.coreandroid.common.AvatarShower
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
+import ru.merkulyevsasha.coreandroid.common.AvatarShower
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentLikeCallbackClickHandler

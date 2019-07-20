@@ -3,6 +3,7 @@
     <string name="fragment_user_title">Профиль</string>
     <string name="user_info_loading_error_message">Ошибка загрузки информации - проверьте соединение с интернет.</string>
     <string name="user_info_name_require_error_message">Имя обязательное поле - придумайте что-нибудь.</string>
+    <string name="user_info_uniq_name_error_message">Ошибка сохранения имени, имя должно быть уникальным, попробуйте еще раз.</string>
     <string name="user_info_name_save_success_message">Сохранено.</string>
     <string name="userinfo_button_camera_title">Сфотографировать</string>
     <string name="userinfo_button_gallery_title">Загрузить с галереи</string>

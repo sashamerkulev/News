@@ -12,4 +12,5 @@ interface UserInfoView : BaseView {
     fun showUserInfo(userInfo: UserInfo)
     fun showNameRequiredValidationMessage()
     fun showSuccesSaving()
+    fun showSaveError()
 }

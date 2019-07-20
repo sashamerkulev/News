@@ -9,7 +9,7 @@ import java.util.*
 @Entity(tableName = "comments",
     foreignKeys = [ForeignKey(entity = ArticleEntity::class,
         parentColumns = ["articleId"], childColumns = ["articleId"], onDelete = ForeignKey.CASCADE)],
-    indices = [Index("articleId"), Index("pubDate")])
+    indices = [Index("articleId"), Index("pubDate"), Index("lastActivityDate")])
 class ArticleCommentEntity(
     val articleId: Int,
     @PrimaryKey

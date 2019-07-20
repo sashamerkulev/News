@@ -10,5 +10,4 @@ app/libs/
 app/local.properties
 apprate/libs/
 apprate/src/main/res/drawable/
-app/google-services.json
 release

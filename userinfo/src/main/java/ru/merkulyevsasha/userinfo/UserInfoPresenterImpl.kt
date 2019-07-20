@@ -59,7 +59,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
                 },
                     {
                         Timber.e(it)
-                        view?.showError()
+                        view?.showSaveError()
                     })
 
         )
