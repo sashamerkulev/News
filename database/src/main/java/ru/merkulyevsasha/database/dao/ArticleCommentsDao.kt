@@ -11,7 +11,7 @@ import ru.merkulyevsasha.database.entities.ArticleCommentEntity
 
 @Dao
 interface ArticleCommentsDao {
-    @Query("select * from comments where articleId = :articleId order by pubDate desc")
+    @Query("select * from articleComments where articleId = :articleId order by pubDate desc")
     fun getArticleComments(articleId: Int): Single<List<ArticleCommentEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

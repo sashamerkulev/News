@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "comments",
+@Entity(tableName = "articleComments",
     foreignKeys = [ForeignKey(entity = ArticleEntity::class,
         parentColumns = ["articleId"], childColumns = ["articleId"], onDelete = ForeignKey.CASCADE)],
     indices = [Index("articleId"), Index("pubDate"), Index("lastActivityDate")])
