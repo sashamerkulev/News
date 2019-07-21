@@ -16,12 +16,13 @@ import java.util.*
 
 class DatabaseRepositoryImpl(
     private val newsDatabaseSource: NewsDatabaseSource,
-    keyValueStorage: KeyValueStorage
+    keyValueStorage: KeyValueStorage,
+    baseUrl: String
 ) : DatabaseRepository {
 
     private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
-    private val articleCommentEntityMapper by lazy { ArticleCommentEntityMapper("bearer " + keyValueStorage.getAccessToken()) }
+    private val articleCommentEntityMapper by lazy { ArticleCommentEntityMapper("bearer " + keyValueStorage.getAccessToken(), baseUrl) }
     private val articleCommentMapper = ArticleCommentMapper()
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()

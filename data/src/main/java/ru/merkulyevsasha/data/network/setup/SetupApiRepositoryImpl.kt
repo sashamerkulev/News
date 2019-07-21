@@ -12,8 +12,9 @@ import ru.merkulyevsasha.network.data.SetupApi
 
 class SetupApiRepositoryImpl(
     sharedPreferences: KeyValueStorage,
-    baseUrl: String
-) : BaseApiRepository(sharedPreferences, baseUrl), SetupApiRepository {
+    baseUrl: String,
+    debugMode: Boolean
+) : BaseApiRepository(sharedPreferences, baseUrl, debugMode), SetupApiRepository {
 
     private val api: SetupApi = retrofit.create(SetupApi::class.java)
 

@@ -13,3 +13,8 @@ dependencies {
 //    implementation project(path: ':database')
 //    implementation project(path: ':network')
 }
+
+afterEvaluate {
+    generateDebugBuildConfig.enabled = false
+    generateReleaseBuildConfig.enabled = false
+}

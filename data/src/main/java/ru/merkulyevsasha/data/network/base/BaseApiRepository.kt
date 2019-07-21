@@ -6,18 +6,18 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import ru.merkulyevsasha.data.BuildConfig
 
 open class BaseApiRepository(
     sharedPreferences: KeyValueStorage,
-    baseUrl: String
+    baseUrl: String,
+    debugMode: Boolean
 ) {
 
     internal val retrofit: Retrofit
 
     init {
         val builder = OkHttpClient.Builder()
-        if (BuildConfig.DEBUG_MODE) {
+        if (debugMode) {
 //            val httpLoggingInterceptor = HttpLoggingInterceptor()
 //            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
 //            builder.addInterceptor(httpLoggingInterceptor)

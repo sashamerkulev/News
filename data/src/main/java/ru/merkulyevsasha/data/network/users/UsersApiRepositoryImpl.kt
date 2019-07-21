@@ -14,10 +14,11 @@ import java.io.File
 
 class UsersApiRepositoryImpl(
     sharedPreferences: KeyValueStorage,
-    baseUrl: String
-) : BaseApiRepository(sharedPreferences, baseUrl), UsersApiRepository {
+    baseUrl: String,
+    debugMode: Boolean
+) : BaseApiRepository(sharedPreferences, baseUrl, debugMode), UsersApiRepository {
 
-    private val userInfoMapper: UserInfoMapper by lazy { UserInfoMapper("bearer " + sharedPreferences.getAccessToken()) }
+    private val userInfoMapper: UserInfoMapper by lazy { UserInfoMapper("bearer " + sharedPreferences.getAccessToken(), baseUrl) }
 
     private val api: UsersApi = retrofit.create(UsersApi::class.java)
 

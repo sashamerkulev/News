@@ -2,10 +2,9 @@ package ru.merkulyevsasha.data.network.mappers
 
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.ArticleComment
-import ru.merkulyevsasha.network.BuildConfig
 import ru.merkulyevsasha.network.models.ArticleCommentResponse
 
-class ArticleCommentsMapper(private val authorization: String) : Mapper<ArticleCommentResponse, ArticleComment> {
+class ArticleCommentsMapper(private val authorization: String, private val baseUrl: String) : Mapper<ArticleCommentResponse, ArticleComment> {
     override fun map(item: ArticleCommentResponse): ArticleComment {
         return ArticleComment(
             item.articleId,
@@ -21,7 +20,7 @@ class ArticleCommentsMapper(private val authorization: String) : Mapper<ArticleC
             item.like > 0,
             item.dislike > 0,
             item.owner == 1,
-            BuildConfig.API_URL + "/users/${item.userId}/downloadPhoto",
+            baseUrl + "/users/${item.userId}/downloadPhoto",
             authorization
         )
     }

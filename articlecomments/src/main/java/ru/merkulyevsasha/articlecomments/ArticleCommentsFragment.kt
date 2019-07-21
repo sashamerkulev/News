@@ -69,7 +69,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
         articleId = bundle.getInt(ARTICLE_ID, 0)
         position = bundle.getInt(KEY_POSITION, 0)
 
-        AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
         val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
         val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)

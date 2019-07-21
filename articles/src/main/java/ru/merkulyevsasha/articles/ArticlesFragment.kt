@@ -125,7 +125,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
-        AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
         presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java),

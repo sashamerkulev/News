@@ -12,3 +12,8 @@ apply from: "$rootDir/retrofit.gradle"
 dependencies {
     compileOnly project(path: ':core')
 }
+
+afterEvaluate {
+    generateDebugBuildConfig.enabled = false
+    generateReleaseBuildConfig.enabled = false
+}

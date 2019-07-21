@@ -58,11 +58,11 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
         maps[KeyValueStorage::class.java] = prefs
         maps[ResourceProvider::class.java] = resourceProvider
         maps[NewsDistributor::class.java] = NewsDistributorImpl(context, resourceProvider)
-        maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs, BuildConfig.API_URL)
-        maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL)
-        maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL)
-        maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL)
-        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(newsDatabaseSource, prefs)
+        maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
     }
 
     override fun <T> set(clazz: Class<T>, instance: Any) {

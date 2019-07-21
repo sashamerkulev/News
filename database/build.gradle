@@ -12,4 +12,9 @@ dependencies {
     compileOnly project(path: ':core')
 }
 
+afterEvaluate {
+    generateDebugBuildConfig.enabled = false
+    generateReleaseBuildConfig.enabled = false
+}
+
 apply from: "$rootDir/room.gradle"

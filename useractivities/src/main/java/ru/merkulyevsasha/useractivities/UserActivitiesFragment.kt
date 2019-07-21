@@ -120,7 +120,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
                 appbarLayout.setExpanded(show)
             }
         })
-        AdViewHelper.loadBannerAd(adView)
+        AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)

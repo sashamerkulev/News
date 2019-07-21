@@ -2,10 +2,9 @@ package ru.merkulyevsasha.data.database.mappers
 
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.ArticleComment
-import ru.merkulyevsasha.database.BuildConfig
 import ru.merkulyevsasha.database.entities.ArticleCommentEntity
 
-class ArticleCommentEntityMapper(private val authorization: String) : Mapper<ArticleCommentEntity, ArticleComment> {
+class ArticleCommentEntityMapper(private val authorization: String, private val baseUrl: String) : Mapper<ArticleCommentEntity, ArticleComment> {
     override fun map(item: ArticleCommentEntity): ArticleComment {
         return ArticleComment(
             item.articleId,
@@ -21,7 +20,7 @@ class ArticleCommentEntityMapper(private val authorization: String) : Mapper<Art
             item.isUserLiked,
             item.isUserDisliked,
             item.owner,
-            BuildConfig.API_URL + "/users/${item.userId}/downloadPhoto",
+            baseUrl + "/users/${item.userId}/downloadPhoto",
             authorization
         )
     }

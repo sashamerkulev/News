@@ -12,8 +12,9 @@ import java.util.*
 
 class ArticlesApiRepositoryImpl(
     sharedPreferences: KeyValueStorage,
-    baseUrl: String
-) : BaseApiRepository(sharedPreferences, baseUrl), ArticlesApiRepository {
+    baseUrl: String,
+    debugMode: Boolean
+) : BaseApiRepository(sharedPreferences, baseUrl, debugMode), ArticlesApiRepository {
 
     private val articlesMapper = ArticleMapper()
 
