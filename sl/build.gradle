@@ -8,13 +8,11 @@ apply from: "$rootDir/ktlint.gradle"
 apply from: "$rootDir/detekt.gradle"
 apply from: "$rootDir/jacoco.gradle"
 
-
 dependencies {
     compileOnly project(path: ':core')
     compileOnly project(path: ':coreandroid')
     api project(path: ':preferences')
     api project(path: ':data')
-    api project(path: ':database')
     api project(path: ':domain')
 }
 

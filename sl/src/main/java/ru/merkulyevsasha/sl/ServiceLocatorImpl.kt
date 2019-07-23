@@ -1,7 +1,6 @@
 package ru.merkulyevsasha.sl
 
 import android.content.Context
-import androidx.room.Room
 import ru.merkulyevsasha.core.NewsDistributor
 import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.ServiceLocator
@@ -19,12 +18,11 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.coreandroid.providers.ResourceProviderImpl
 import ru.merkulyevsasha.data.database.DatabaseRepositoryImpl
-import ru.merkulyevsasha.data.database.NewsDatabaseSourceImpl
+import ru.merkulyevsasha.data.database.NewsRoomDatabaseSourceCreator
 import ru.merkulyevsasha.data.network.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.data.network.comments.ArticleCommentsApiRepositoryImpl
 import ru.merkulyevsasha.data.network.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.data.network.users.UsersApiRepositoryImpl
-import ru.merkulyevsasha.database.data.NewsRoomDatabase
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.NewsDistributorImpl
@@ -50,11 +48,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
     init {
         val prefs = KeyValueStorageImpl(context)
         val resourceProvider = ResourceProviderImpl(context)
-        val newsRoomDatabase = Room
-            .databaseBuilder(context, NewsRoomDatabase::class.java, BuildConfig.DB_NAME)
-            .fallbackToDestructiveMigration()
-            .build()
-        val newsDatabaseSource = NewsDatabaseSourceImpl(newsRoomDatabase)
+        val newsDatabaseSource = NewsRoomDatabaseSourceCreator.create(context, BuildConfig.DB_NAME)
         maps[KeyValueStorage::class.java] = prefs
         maps[ResourceProvider::class.java] = resourceProvider
         maps[NewsDistributor::class.java] = NewsDistributorImpl(context, resourceProvider)
