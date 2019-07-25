@@ -12,7 +12,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.merkulyevsasha.network.models.ArticleCommentResponse
 
-interface CommentsApi {
+interface ArticleCommentsApi {
 
     @GET("/articles/{articleId}/comments")
     fun getArticleComments(@Path("articleId") articleId: Int,

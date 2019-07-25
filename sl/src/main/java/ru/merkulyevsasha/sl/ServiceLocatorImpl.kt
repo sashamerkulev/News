@@ -20,7 +20,7 @@ import ru.merkulyevsasha.coreandroid.providers.ResourceProviderImpl
 import ru.merkulyevsasha.data.database.DatabaseRepositoryImpl
 import ru.merkulyevsasha.data.database.NewsRoomDatabaseSourceCreator
 import ru.merkulyevsasha.data.network.articles.ArticlesApiRepositoryImpl
-import ru.merkulyevsasha.data.network.comments.ArticleCommentsApiRepositoryImpl
+import ru.merkulyevsasha.data.network.articlecomments.ArticleCommentsApiRepositoryImpl
 import ru.merkulyevsasha.data.network.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.data.network.users.UsersApiRepositoryImpl
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
