@@ -15,10 +15,9 @@ dependencies {
     compileOnly project(path: ':core')
     implementation project(path: ':network')
     implementation project(path: ':database')
-
-    implementation "com.facebook.stetho:stetho:$stetho"
-    implementation "com.facebook.stetho:stetho-okhttp3:$stetho"
 }
+
+apply from: "$rootDir/stetho.gradle"
 
 afterEvaluate {
     generateDebugBuildConfig.enabled = false
