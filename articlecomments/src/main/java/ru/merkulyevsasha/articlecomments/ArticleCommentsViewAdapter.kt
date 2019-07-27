@@ -6,27 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.row_comment.view.commentImageViewDislike
-import kotlinx.android.synthetic.main.row_comment.view.commentImageViewLike
-import kotlinx.android.synthetic.main.row_comment.view.commentTextViewDislike
-import kotlinx.android.synthetic.main.row_comment.view.commentTextViewLike
-import kotlinx.android.synthetic.main.row_comment.view.commenter
-import kotlinx.android.synthetic.main.row_comment.view.imageViewCommentAvatar
-import kotlinx.android.synthetic.main.row_comment.view.layoutCommentButtonDislike
-import kotlinx.android.synthetic.main.row_comment.view.layoutCommentButtonLike
-import kotlinx.android.synthetic.main.row_comment.view.layoutCommentButtonShare
-import kotlinx.android.synthetic.main.row_comment.view.textViewComment
-import kotlinx.android.synthetic.main.row_comment.view.textViewCommentDate
-import kotlinx.android.synthetic.main.row_comment_article.view.imageViewDislike
-import kotlinx.android.synthetic.main.row_comment_article.view.imageViewLike
-import kotlinx.android.synthetic.main.row_comment_article.view.imageViewThumb
-import kotlinx.android.synthetic.main.row_comment_article.view.layoutButtonDislike
-import kotlinx.android.synthetic.main.row_comment_article.view.layoutButtonLike
-import kotlinx.android.synthetic.main.row_comment_article.view.layoutButtonShare
-import kotlinx.android.synthetic.main.row_comment_article.view.newsDateSource
-import kotlinx.android.synthetic.main.row_comment_article.view.newsTitle
-import kotlinx.android.synthetic.main.row_comment_article.view.textViewDislike
-import kotlinx.android.synthetic.main.row_comment_article.view.textViewLike
+import kotlinx.android.synthetic.main.row_articlecomment.view.commentImageViewDislike
+import kotlinx.android.synthetic.main.row_articlecomment.view.commentImageViewLike
+import kotlinx.android.synthetic.main.row_articlecomment.view.commentTextViewDislike
+import kotlinx.android.synthetic.main.row_articlecomment.view.commentTextViewLike
+import kotlinx.android.synthetic.main.row_articlecomment.view.commenter
+import kotlinx.android.synthetic.main.row_articlecomment.view.imageViewCommentAvatar
+import kotlinx.android.synthetic.main.row_articlecomment.view.layoutCommentButtonDislike
+import kotlinx.android.synthetic.main.row_articlecomment.view.layoutCommentButtonLike
+import kotlinx.android.synthetic.main.row_articlecomment.view.layoutCommentButtonShare
+import kotlinx.android.synthetic.main.row_articlecomment.view.textViewComment
+import kotlinx.android.synthetic.main.row_articlecomment.view.textViewCommentDate
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.imageViewDislike
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.imageViewLike
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.imageViewThumb
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.layoutButtonDislike
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.layoutButtonLike
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.layoutButtonShare
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.newsDateSource
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.newsTitle
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.textViewDislike
+import kotlinx.android.synthetic.main.row_articlecomment_article.view.textViewLike
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
@@ -63,10 +63,10 @@ class CommentsViewAdapter constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == ARTICLE_DETAIL_VIEW_TYPE) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_comment_article, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_articlecomment_article, parent, false)
             return ArticleViewHolder(view)
         }
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_comment, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_articlecomment, parent, false)
         return CommentViewHolder(view)
     }
 
