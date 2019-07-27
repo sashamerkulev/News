@@ -6,14 +6,14 @@ import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.domain.mappers.SourceNameMapper
 import java.util.*
 
 class ArticlesInteractorImpl(
     private val articlesApiRepository: ArticlesApiRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val databaseRepository: DatabaseRepository,
+    private val databaseRepository: NewsDatabaseRepository,
     private val sourceNameMapper: SourceNameMapper
 ) : ArticlesInteractor {
 

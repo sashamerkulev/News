@@ -10,7 +10,7 @@ import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.domain.mappers.SourceNameMapper
 import java.util.*
 
@@ -18,7 +18,7 @@ class ArticleCommentsInteractorImpl(
     private val articlesApiRepository: ArticlesApiRepository,
     private val articleCommentsApiRepository: ArticleCommentsApiRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val databaseRepository: DatabaseRepository,
+    private val databaseRepository: NewsDatabaseRepository,
     private val sourceNameMapper: SourceNameMapper
 ) : ArticleCommentsInteractor {
 

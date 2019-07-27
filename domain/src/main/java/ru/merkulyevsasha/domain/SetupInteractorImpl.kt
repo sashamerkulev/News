@@ -6,14 +6,14 @@ import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
 import java.util.*
 
 class SetupInteractorImpl(
     private val preferences: KeyValueStorage,
     private val setupApiRepository: SetupApiRepository,
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: NewsDatabaseRepository
 ) : SetupInteractor {
 
     override fun registerSetup(): Single<List<RssSource>> {

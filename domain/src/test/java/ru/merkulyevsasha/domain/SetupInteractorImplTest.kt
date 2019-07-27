@@ -9,7 +9,7 @@ import org.mockito.Mockito
 import ru.merkulyevsasha.NewsTestRunner
 import ru.merkulyevsasha.core.models.Token
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
 import java.util.*
 
@@ -17,7 +17,7 @@ import java.util.*
 class SetupInteractorImplTest {
 
     private val preferences = Mockito.mock(KeyValueStorage::class.java)
-    private val databaseRepository = Mockito.mock(DatabaseRepository::class.java)
+    private val databaseRepository = Mockito.mock(NewsDatabaseRepository::class.java)
     private val setupApiRepository = Mockito.mock(SetupApiRepository::class.java)
 
     private val setupInteractor = SetupInteractorImpl(preferences, setupApiRepository, databaseRepository)

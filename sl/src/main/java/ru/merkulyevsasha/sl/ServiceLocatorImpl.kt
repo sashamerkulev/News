@@ -11,7 +11,7 @@ import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.core.repositories.SetupApiRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.core.routers.MainActivityRouter
@@ -56,7 +56,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
-        maps[DatabaseRepository::class.java] = DatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
+        maps[NewsDatabaseRepository::class.java] = DatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
     }
 
     override fun <T> set(clazz: Class<T>, instance: Any) {
@@ -138,8 +138,8 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
         return maps[SetupApiRepository::class.java] as SetupApiRepository
     }
 
-    private fun getDatabaseRepository(): DatabaseRepository {
-        return maps[DatabaseRepository::class.java] as DatabaseRepository
+    private fun getDatabaseRepository(): NewsDatabaseRepository {
+        return maps[NewsDatabaseRepository::class.java] as NewsDatabaseRepository
     }
 
     private fun getPreferences(): KeyValueStorage {

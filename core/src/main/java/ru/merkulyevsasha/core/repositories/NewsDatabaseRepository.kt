@@ -6,7 +6,7 @@ import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.RssSource
 import java.util.*
 
-interface DatabaseRepository {
+interface NewsDatabaseRepository {
     fun removeOldNotUserActivityArticles(cleanDate: Date)
     fun removeOldUserActivityArticles(cleanDate: Date)
     fun getArticle(articleId: Int): Single<Article>

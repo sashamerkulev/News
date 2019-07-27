@@ -2,9 +2,9 @@ package ru.merkulyevsasha.domain.mappers
 
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.repositories.DatabaseRepository
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 
-class SourceNameMapper(private val databaseRepository: DatabaseRepository) : Mapper<Article, Article> {
+class SourceNameMapper(private val databaseRepository: NewsDatabaseRepository) : Mapper<Article, Article> {
 
     private var rssSourceNameMap = mutableMapOf<String, String>()
 
