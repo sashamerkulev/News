@@ -12,19 +12,19 @@ interface ArticleLikeCallbackClickHandler {
     fun onArticleDislikeClicked(item: Article)
 }
 
-interface CommentLikeCallbackClickHandler {
-    fun onCommentLikeClicked(item: ArticleComment)
-    fun onCommentDislikeClicked(item: ArticleComment)
+interface ArticleCommentLikeCallbackClickHandler {
+    fun onArticleCommentLikeClicked(item: ArticleComment)
+    fun onArticleCommentDislikeClicked(item: ArticleComment)
 }
 
-interface CommentArticleCallbackClickHandler {
-    fun onCommentArticleClicked(articleId: Int)
+interface ArticleCommentArticleCallbackClickHandler {
+    fun onArticleCommentArticleClicked(articleId: Int)
 }
 
 interface ArticleShareCallbackClickHandler {
     fun onArticleShareClicked(item: Article)
 }
 
-interface CommentShareCallbackClickHandler {
-    fun onCommentShareClicked(item: ArticleComment)
+interface ArticleCommentShareCallbackClickHandler {
+    fun onArticleCommentShareClicked(item: ArticleComment)
 }

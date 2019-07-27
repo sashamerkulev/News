@@ -10,8 +10,8 @@ import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentLikeCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentShareCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentLikeCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentShareCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import timber.log.Timber
 
@@ -20,7 +20,7 @@ class ArticleCommentsPresenterImpl(
     articlesInteractor: ArticlesInteractor,
     private val newsDistributor: NewsDistributor
 ) : BasePresenterImpl<ArticleCommentsView>(),
-    ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentLikeCallbackClickHandler, CommentShareCallbackClickHandler {
+    ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentLikeCallbackClickHandler, ArticleCommentShareCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
@@ -85,7 +85,7 @@ class ArticleCommentsPresenterImpl(
     override fun onArticleShareClicked(item: Article) {
     }
 
-    override fun onCommentLikeClicked(item: ArticleComment) {
+    override fun onArticleCommentLikeClicked(item: ArticleComment) {
         compositeDisposable.add(
             articleCommentsInteractor.likeArticleComment(item.commentId)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -99,7 +99,7 @@ class ArticleCommentsPresenterImpl(
                 }))
     }
 
-    override fun onCommentDislikeClicked(item: ArticleComment) {
+    override fun onArticleCommentDislikeClicked(item: ArticleComment) {
         compositeDisposable.add(
             articleCommentsInteractor.dislikeArticleComment(item.commentId)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -113,7 +113,7 @@ class ArticleCommentsPresenterImpl(
                 }))
     }
 
-    override fun onCommentShareClicked(item: ArticleComment) {
+    override fun onArticleCommentShareClicked(item: ArticleComment) {
         newsDistributor.distribute(item)
     }
 

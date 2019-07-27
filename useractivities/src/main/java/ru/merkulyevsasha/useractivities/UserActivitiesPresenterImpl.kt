@@ -9,7 +9,7 @@ import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentArticleCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentArticleCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
 import timber.log.Timber
@@ -19,7 +19,7 @@ class UserActivitiesPresenterImpl(
     private val newsDistributor: NewsDistributor,
     private val applicationRouter: MainActivityRouter
 ) : BasePresenterImpl<UserActivitiesView>(),
-    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, CommentArticleCallbackClickHandler {
+    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
@@ -65,7 +65,7 @@ class UserActivitiesPresenterImpl(
         compositeDisposable.add(articleLikeClickHandler.onArticleDislikeClicked(item.articleId))
     }
 
-    override fun onCommentArticleClicked(articleId: Int) {
+    override fun onArticleCommentArticleClicked(articleId: Int) {
         applicationRouter.showArticleComments(articleId)
     }
 

@@ -30,7 +30,7 @@ class NewsViewAdapter constructor(
     private val context: Context,
     private val articleCallbackClickHandler: ArticleClickCallbackHandler?,
     private val likeCallbackClickHandler: ArticleLikeCallbackClickHandler?,
-    private val commentCallbackClickHandler: CommentArticleCallbackClickHandler?,
+    private val commentCallbackClickHandler: ArticleCommentArticleCallbackClickHandler?,
     private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
     private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<Article>
@@ -129,7 +129,7 @@ class NewsViewAdapter constructor(
 
         holder.itemView.layoutButtonComment.setOnClickListener {
             val newItem = items[holder.adapterPosition]
-            commentCallbackClickHandler?.onCommentArticleClicked(newItem.articleId)
+            commentCallbackClickHandler?.onArticleCommentArticleClicked(newItem.articleId)
         }
 
         holder.itemView.layoutButtonDislike.setOnClickListener {

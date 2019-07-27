@@ -34,8 +34,8 @@ import ru.merkulyevsasha.coreandroid.common.AvatarShower
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentLikeCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.CommentShareCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentLikeCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentShareCallbackClickHandler
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -43,8 +43,8 @@ class CommentsViewAdapter constructor(
     private val context: Context,
     private val likeCallbackClickHandler: ArticleLikeCallbackClickHandler?,
     private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
-    private val commentLikeCallbackClickHandler: CommentLikeCallbackClickHandler?,
-    private val commentShareCallbackClickHandler: CommentShareCallbackClickHandler?,
+    private val commentLikeCallbackClickHandler: ArticleCommentLikeCallbackClickHandler?,
+    private val commentShareCallbackClickHandler: ArticleCommentShareCallbackClickHandler?,
     private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<ArticleOrComment>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -92,15 +92,15 @@ class CommentsViewAdapter constructor(
             holder.itemView.commentTextViewDislike, holder.itemView.commentImageViewDislike)
 
         holder.itemView.layoutCommentButtonLike.setOnClickListener {
-            commentLikeCallbackClickHandler?.onCommentLikeClicked(items[holder.adapterPosition] as ArticleComment)
+            commentLikeCallbackClickHandler?.onArticleCommentLikeClicked(items[holder.adapterPosition] as ArticleComment)
         }
 
         holder.itemView.layoutCommentButtonDislike.setOnClickListener {
-            commentLikeCallbackClickHandler?.onCommentDislikeClicked(items[holder.adapterPosition] as ArticleComment)
+            commentLikeCallbackClickHandler?.onArticleCommentDislikeClicked(items[holder.adapterPosition] as ArticleComment)
         }
 
         holder.itemView.layoutCommentButtonShare.setOnClickListener {
-            commentShareCallbackClickHandler?.onCommentShareClicked(items[holder.adapterPosition] as ArticleComment)
+            commentShareCallbackClickHandler?.onArticleCommentShareClicked(items[holder.adapterPosition] as ArticleComment)
         }
 
     }
