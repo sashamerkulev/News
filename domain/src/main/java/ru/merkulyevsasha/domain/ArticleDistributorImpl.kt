@@ -15,16 +15,16 @@ class ArticleDistributorImpl(private val context: Context, private val resourceP
         sb.append(String.format(resourceProvider.getString(R.string.article_info_send), item.sourceName, item.title))
         sb.append(resourceProvider.getString(R.string.application_info_send))
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString())
-        context.startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.chooser_title)))
+        context.startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.article_chooser_title)))
     }
 
     override fun distribute(item: ArticleComment) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         val sb = StringBuilder()
-        sb.append(String.format(resourceProvider.getString(R.string.comment_info_send), item.userName, item.comment))
+        sb.append(String.format(resourceProvider.getString(R.string.articlecomment_info_send), item.userName, item.comment))
         sb.append(resourceProvider.getString(R.string.application_info_send))
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString())
-        context.startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.chooser_title)))
+        context.startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.article_chooser_title)))
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="chooser_title">Выберите приложение</string>
+    <string name="article_chooser_title">Выберите приложение</string>
     <string name="article_info_send">%s публикует новость: \'%s\'</string>
-    <string name="comment_info_send">Пользователь \'%s\' оставил комментарий: \'%s\'</string>
+    <string name="articlecomment_info_send">Пользователь \'%s\' оставил комментарий: \'%s\'</string>
 </resources>
