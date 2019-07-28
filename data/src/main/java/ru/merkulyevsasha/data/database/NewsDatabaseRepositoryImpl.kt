@@ -14,7 +14,7 @@ import ru.merkulyevsasha.data.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.data.database.mappers.RssSourceMapper
 import java.util.*
 
-class DatabaseRepositoryImpl(
+class NewsDatabaseRepositoryImpl(
     private val newsDatabaseSource: NewsDatabaseSource,
     keyValueStorage: KeyValueStorage,
     baseUrl: String

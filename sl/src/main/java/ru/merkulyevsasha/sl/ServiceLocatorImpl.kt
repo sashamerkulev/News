@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.sl
 
 import android.content.Context
-import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
@@ -17,15 +17,15 @@ import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.coreandroid.providers.ResourceProviderImpl
-import ru.merkulyevsasha.data.database.DatabaseRepositoryImpl
+import ru.merkulyevsasha.data.database.NewsDatabaseRepositoryImpl
 import ru.merkulyevsasha.data.database.NewsRoomDatabaseSourceCreator
-import ru.merkulyevsasha.data.network.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.data.network.articlecomments.ArticleCommentsApiRepositoryImpl
+import ru.merkulyevsasha.data.network.articles.ArticlesApiRepositoryImpl
 import ru.merkulyevsasha.data.network.setup.SetupApiRepositoryImpl
 import ru.merkulyevsasha.data.network.users.UsersApiRepositoryImpl
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
+import ru.merkulyevsasha.domain.ArticleDistributorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
-import ru.merkulyevsasha.domain.NewsDistributorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
 import ru.merkulyevsasha.domain.mappers.ArticleSourceNameMapper
@@ -51,12 +51,12 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
         val newsDatabaseSource = NewsRoomDatabaseSourceCreator.create(context, BuildConfig.DB_NAME)
         maps[KeyValueStorage::class.java] = prefs
         maps[ResourceProvider::class.java] = resourceProvider
-        maps[NewsDistributor::class.java] = NewsDistributorImpl(context, resourceProvider)
+        maps[ArticleDistributor::class.java] = ArticleDistributorImpl(context, resourceProvider)
         maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
         maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
         maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
         maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
-        maps[NewsDatabaseRepository::class.java] = DatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
+        maps[NewsDatabaseRepository::class.java] = NewsDatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
     }
 
     override fun <T> set(clazz: Class<T>, instance: Any) {

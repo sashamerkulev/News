@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_articles.adView
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
-import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
@@ -128,7 +128,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(NewsDistributor::class.java),
+        presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(ArticleDistributor::class.java),
             serviceLocator.get(MainActivityRouter::class.java))
         presenter?.bindView(this)
 

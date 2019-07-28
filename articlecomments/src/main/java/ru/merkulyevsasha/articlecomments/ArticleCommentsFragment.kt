@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
 import kotlinx.android.synthetic.main.fragment_articlecomments.recyclerView
 import kotlinx.android.synthetic.main.fragment_articlecomments.swipeRefreshLayout
-import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
@@ -73,7 +73,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
         val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
         val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticleCommentsPresenterImpl(interactor, articleInteractor, serviceLocator.get(NewsDistributor::class.java))
+        presenter = ArticleCommentsPresenterImpl(interactor, articleInteractor, serviceLocator.get(ArticleDistributor::class.java))
         presenter?.bindView(this)
 
         initRecyclerView()

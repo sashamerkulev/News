@@ -1,7 +1,7 @@
 package ru.merkulyevsasha.articlecomments
 
 import io.reactivex.android.schedulers.AndroidSchedulers
-import ru.merkulyevsasha.core.NewsDistributor
+import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
@@ -18,7 +18,7 @@ import timber.log.Timber
 class ArticleCommentsPresenterImpl(
     private val articleCommentsInteractor: ArticleCommentsInteractor,
     articlesInteractor: ArticlesInteractor,
-    private val newsDistributor: NewsDistributor
+    private val newsDistributor: ArticleDistributor
 ) : BasePresenterImpl<ArticleCommentsView>(),
     ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentLikeCallbackClickHandler, ArticleCommentShareCallbackClickHandler {
 
