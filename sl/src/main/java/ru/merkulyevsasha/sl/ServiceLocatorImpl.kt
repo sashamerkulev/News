@@ -28,7 +28,7 @@ import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.NewsDistributorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
-import ru.merkulyevsasha.domain.mappers.SourceNameMapper
+import ru.merkulyevsasha.domain.mappers.ArticleSourceNameMapper
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 
 class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator {
@@ -73,7 +73,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
                 getArticlesApiRepository(),
                 getPreferences(),
                 getDatabaseRepository(),
-                SourceNameMapper(getDatabaseRepository())
+                ArticleSourceNameMapper(getDatabaseRepository())
             )
             UsersInteractor::class.java -> maps[clazz] = UsersInteractorImpl(
                 getUsersApiRepository(),
@@ -84,7 +84,7 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
                 getArticleCommentsApiRepository(),
                 getPreferences(),
                 getDatabaseRepository(),
-                SourceNameMapper(getDatabaseRepository())
+                ArticleSourceNameMapper(getDatabaseRepository())
             )
             SetupInteractor::class.java -> maps[clazz] = SetupInteractorImpl(
                 getPreferences(),

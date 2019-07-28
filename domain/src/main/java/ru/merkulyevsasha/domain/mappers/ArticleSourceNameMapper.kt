@@ -4,7 +4,7 @@ import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 
-class SourceNameMapper(private val databaseRepository: NewsDatabaseRepository) : Mapper<Article, Article> {
+class ArticleSourceNameMapper(private val databaseRepository: NewsDatabaseRepository) : Mapper<Article, Article> {
 
     private var rssSourceNameMap = mutableMapOf<String, String>()
 

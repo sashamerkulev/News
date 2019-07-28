@@ -11,7 +11,7 @@ import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
-import ru.merkulyevsasha.domain.mappers.SourceNameMapper
+import ru.merkulyevsasha.domain.mappers.ArticleSourceNameMapper
 import java.util.*
 
 class ArticleCommentsInteractorImpl(
@@ -19,7 +19,7 @@ class ArticleCommentsInteractorImpl(
     private val articleCommentsApiRepository: ArticleCommentsApiRepository,
     private val keyValueStorage: KeyValueStorage,
     private val databaseRepository: NewsDatabaseRepository,
-    private val sourceNameMapper: SourceNameMapper
+    private val sourceNameMapper: ArticleSourceNameMapper
 ) : ArticleCommentsInteractor {
 
     override fun getArticleComments(articleId: Int): Single<Pair<Article, List<ArticleComment>>> {
