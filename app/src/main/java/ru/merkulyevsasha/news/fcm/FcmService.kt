@@ -1,14 +1,14 @@
 package ru.merkulyevsasha.news.fcm
 
+import android.annotation.SuppressLint
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import ru.merkulyevsasha.sl.ServiceLocatorImpl
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import timber.log.Timber
 
 class FcmService : FirebaseMessagingService() {
-    override fun onMessageReceived(message: RemoteMessage?) {
-        message?.let { remoteMessage ->
+    override fun onMessageReceived(message: RemoteMessage) {
+//        message?.let { remoteMessage ->
 //            val data = remoteMessage.data
 //            if (data.containsKey("commentId")) {
 //                val userName = data["userName"] ?: ""
@@ -35,15 +35,14 @@ class FcmService : FirebaseMessagingService() {
 //                val likeOrDislikePart = if (likeOrDislike) " не" else " "
 //                val notificationMessage = "Пользователю $userName$likeOrDislikePart понравился ваш комментарий"
 //            }
-        }
+//        }
     }
 
-    override fun onNewToken(token: String?) {
+    @SuppressLint("CheckResult")
+    override fun onNewToken(token: String) {
         val serviceLocator = ru.merkulyevsasha.sl.ServiceLocatorImpl.getInstance(applicationContext)
         val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
-        token?.let {
-            setupInteractor.updateFirebaseToken(token)
-                .subscribe({}, { Timber.e(it) })
-        }
+        setupInteractor.updateFirebaseToken(token)
+            .subscribe({}, { Timber.e(it) })
     }
 }

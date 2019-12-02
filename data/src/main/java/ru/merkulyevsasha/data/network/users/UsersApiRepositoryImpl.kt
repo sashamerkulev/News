@@ -1,9 +1,9 @@
 package ru.merkulyevsasha.data.network.users
 
 import io.reactivex.Single
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
@@ -35,7 +35,7 @@ class UsersApiRepositoryImpl(
     override fun uploadUserPhoto(profileFileName: String): Single<UserInfo> {
         return Single.fromCallable {
             val fileImage = File(profileFileName)
-            val requestBody = RequestBody.create(MediaType.parse("image/*"), fileImage)
+            val requestBody = fileImage.asRequestBody("image/*".toMediaTypeOrNull())
             MultipartBody.Part.createFormData("File", fileImage.name, requestBody)
         }
             .flatMap {

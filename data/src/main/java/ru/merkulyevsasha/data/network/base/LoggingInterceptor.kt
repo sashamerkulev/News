@@ -23,7 +23,7 @@ class LoggingInterceptor : Interceptor {
 
     private fun logRequest(request: Request) {
         Log.d(TAG, request.toString())
-        request.body()?.let {
+        request.body?.let {
             Log.d(TAG, it.toString())
         }
     }
