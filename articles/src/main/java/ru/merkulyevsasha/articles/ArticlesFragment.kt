@@ -267,6 +267,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
             presenter,
             presenter,
             presenter,
+            presenter,
             colorThemeResolver,
             ArrayList()
         )

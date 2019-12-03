@@ -11,6 +11,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <View
+            android:id="@+id/layoutSourceName"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/sep1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/newsDateSource"
             android:layout_width="wrap_content"
@@ -18,6 +27,7 @@
             android:layout_marginStart="@dimen/margin_16dp"
             android:layout_marginTop="@dimen/margin_8dp"
             android:layout_marginEnd="@dimen/margin_16dp"
+            android:clickable="false"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,11 +84,11 @@
             android:layout_marginTop="@dimen/margin_8dp"
             android:layout_marginEnd="@dimen/margin_16dp"
             android:layout_marginRight="@dimen/margin_16dp"
+            android:gravity="start"
             android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="start"
             tools:text="description" />
 
         <View

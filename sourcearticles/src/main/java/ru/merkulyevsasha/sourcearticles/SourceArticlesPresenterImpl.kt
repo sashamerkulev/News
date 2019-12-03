@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.useractivities
+package ru.merkulyevsasha.sourcearticles
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.ArticleDistributor
@@ -10,32 +10,23 @@ import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHand
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentArticleCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.SourceArticleClickCallbackHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
-import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
 import timber.log.Timber
 
-class UserActivitiesPresenterImpl(
+class SourceArticlesPresenterImpl(
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter
-) : BasePresenterImpl<UserActivitiesView>(),
-    ArticleClickCallbackHandler, SourceArticleClickCallbackHandler, ArticleLikeCallbackClickHandler,
-    ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
+) : BasePresenterImpl<SourceArticlesView>(),
+    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
         { view?.showError() })
 
-    private val searchArticleHandler = SearchArticleHandler(articlesInteractor, true,
-        { view?.showProgress() },
-        { view?.hideProgress() },
-        { view?.showItems(it) },
-        { view?.showError() })
-
-    fun onFirstLoad() {
+    fun onFirstLoad(sourceName: String) {
         compositeDisposable.add(
-            articlesInteractor.getUserActivityArticles()
+            articlesInteractor.getSourceArticles(sourceName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
@@ -47,12 +38,21 @@ class UserActivitiesPresenterImpl(
                     }))
     }
 
-    fun onRefresh() {
-        onFirstLoad()
+    fun onRefresh(sourceName: String) {
+        onFirstLoad(sourceName)
     }
 
-    fun onSearch(searchText: String?) {
-        compositeDisposable.add(searchArticleHandler.onSearchArticles(searchText))
+    fun onSearch(sourceId: String, searchText: String?) {
+        compositeDisposable.add(articlesInteractor.searchSourceArticles(sourceId, searchText)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { view?.showProgress() }
+            .doAfterTerminate { view?.hideProgress() }
+            .subscribe(
+                { view?.showItems(it) },
+                {
+                    Timber.e(it)
+                    view?.showError()
+                }))
     }
 
     override fun onArticleCliked(item: Article) {
@@ -75,7 +75,4 @@ class UserActivitiesPresenterImpl(
         newsDistributor.distribute(item)
     }
 
-    override fun onSourceArticleCliked(sourceId: String, sourceName: String) {
-        applicationRouter.showSourceArticles(sourceId, sourceName)
-    }
 }

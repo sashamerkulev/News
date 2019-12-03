@@ -14,6 +14,7 @@ class ArticleSourceNameMapper(private val databaseRepository: NewsDatabaseReposi
             rssSourceNameMap.putAll(map)
         }
         return Article(item.articleId,
+            item.sourceName,
             rssSourceNameMap[item.sourceName] ?: item.sourceName,
             item.title,
             item.link,

@@ -40,6 +40,57 @@ class ArticlesInteractorImpl(
             .subscribeOn(Schedulers.io())
     }
 
+    override fun getUserActivityArticles(): Single<List<Article>> {
+        return databaseRepository.getUserActivityArticles()
+            .flattenAsFlowable { it }
+            .map { sourceNameMapper.map(it) }
+            .toList()
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun getSourceArticles(sourceName: String): Single<List<Article>> {
+        return databaseRepository.getSourceArticles(sourceName)
+            .flattenAsFlowable { it }
+            .map { sourceNameMapper.map(it) }
+            .toList()
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun getArticle(articleId: Int): Single<Article> {
+        return articlesApiRepository.getArticle(articleId)
+            .doOnSuccess {
+                databaseRepository.updateArticle(it)
+            }
+            .map { sourceNameMapper.map(it) }
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun searchArticles(searchText: String?, byUserActivities: Boolean): Single<List<Article>> {
+        return Single.fromCallable { searchText ?: "" }
+            .flatMap { st: String ->
+                if (st.isEmpty()) getArticles()
+                else
+                    databaseRepository.searchArticles(st, byUserActivities)
+                        .flattenAsFlowable { it }
+                        .map { sourceNameMapper.map(it) }
+                        .toList()
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun searchSourceArticles(sourceName: String, searchText: String?): Single<List<Article>> {
+        return Single.fromCallable { searchText ?: "" }
+            .flatMap { st: String ->
+                if (st.isEmpty()) getSourceArticles(sourceName)
+                else
+                    databaseRepository.searchSourceArticles(sourceName, st)
+                        .flattenAsFlowable { it }
+                        .map { sourceNameMapper.map(it) }
+                        .toList()
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
     override fun refreshAndGetArticles(): Single<List<Article>> {
         return Single.fromCallable { keyValueStorage.getLastArticleReadDate() ?: Date(0) }
             .flatMap {
@@ -57,27 +108,6 @@ class ArticlesInteractorImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override fun searchArticles(searchText: String?, byUserActivities: Boolean): Single<List<Article>> {
-        return Single.fromCallable { searchText ?: "" }
-            .flatMap { st: String ->
-                if (st.isEmpty()) getArticles()
-                else
-                    databaseRepository.searchArticles(st, byUserActivities)
-                        .flattenAsFlowable { it }
-                        .map { sourceNameMapper.map(it) }
-                        .toList()
-            }
-            .subscribeOn(Schedulers.io())
-    }
-
-    override fun getUserActivityArticles(): Single<List<Article>> {
-        return databaseRepository.getUserActivityArticles()
-            .flattenAsFlowable { it }
-            .map { sourceNameMapper.map(it) }
-            .toList()
-            .subscribeOn(Schedulers.io())
-    }
-
     override fun likeArticle(articleId: Int): Single<Article> {
         return articlesApiRepository.likeArticle(articleId)
             .doOnSuccess {
@@ -89,15 +119,6 @@ class ArticlesInteractorImpl(
 
     override fun dislikeArticle(articleId: Int): Single<Article> {
         return articlesApiRepository.dislikeArticle(articleId)
-            .doOnSuccess {
-                databaseRepository.updateArticle(it)
-            }
-            .map { sourceNameMapper.map(it) }
-            .subscribeOn(Schedulers.io())
-    }
-
-    override fun getArticle(articleId: Int): Single<Article> {
-        return articlesApiRepository.getArticle(articleId)
             .doOnSuccess {
                 databaseRepository.updateArticle(it)
             }

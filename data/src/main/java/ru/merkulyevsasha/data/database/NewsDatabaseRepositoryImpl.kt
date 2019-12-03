@@ -27,39 +27,13 @@ class NewsDatabaseRepositoryImpl(
     private val rssSourceMapper = RssSourceMapper()
     private val rssSourceEntityMapper = RssSourceEntityMapper()
 
-    override fun getArticles(): Single<List<Article>> {
-        return newsDatabaseSource.getArticles()
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
-    }
-
-    override fun searchArticles(searchText: String, byUserActivities: Boolean): Single<List<Article>> {
-        return Single.fromCallable { byUserActivities }
-            .flatMap { ua ->
-                if (ua) newsDatabaseSource.searchUserActivitiesArticles("%${searchText.toLowerCase()}%")
-                else newsDatabaseSource.searchArticles("%${searchText.toLowerCase()}%")
-            }
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
-    }
-
     override fun getArticle(articleId: Int): Single<Article> {
         return newsDatabaseSource.getArticle(articleId)
             .map { articleEntityMapper.map(it) }
     }
 
-    override fun removeOldNotUserActivityArticles(cleanDate: Date) {
-        newsDatabaseSource.removeOldNotUserActivityArticles(cleanDate)
-    }
-
-    override fun removeOldUserActivityArticles(cleanDate: Date) {
-        newsDatabaseSource.removeOldUserActivityArticles(cleanDate)
-    }
-
-    override fun getUserActivityArticles(): Single<List<Article>> {
-        return newsDatabaseSource.getUserActivityArticles()
+    override fun getArticles(): Single<List<Article>> {
+        return newsDatabaseSource.getArticles()
             .flattenAsFlowable { it }
             .map { articleEntityMapper.map(it) }
             .toList()
@@ -72,12 +46,52 @@ class NewsDatabaseRepositoryImpl(
             .toList()
     }
 
-    override fun saveRssSources(sources: List<RssSource>) {
-        newsDatabaseSource.saveRssSources(sources.map { rssSourceMapper.map(it) })
+    override fun getUserActivityArticles(): Single<List<Article>> {
+        return newsDatabaseSource.getUserActivityArticles()
+            .flattenAsFlowable { it }
+            .map { articleEntityMapper.map(it) }
+            .toList()
+    }
+
+    override fun getSourceArticles(sourceName: String): Single<List<Article>> {
+        return newsDatabaseSource.getSourceArticles(sourceName)
+            .flattenAsFlowable { it }
+            .map { articleEntityMapper.map(it) }
+            .toList()
+    }
+
+    override fun searchArticles(searchText: String, byUserActivities: Boolean): Single<List<Article>> {
+        return Single.fromCallable { byUserActivities }
+            .flatMap { ua ->
+                if (ua) newsDatabaseSource.searchUserActivitiesArticles("%${searchText.toLowerCase(Locale.getDefault())}%")
+                else newsDatabaseSource.searchArticles("%${searchText.toLowerCase(Locale.getDefault())}%")
+            }
+            .flattenAsFlowable { it }
+            .map { articleEntityMapper.map(it) }
+            .toList()
+    }
+
+    override fun searchSourceArticles(sourceName: String, searchText: String): Single<List<Article>> {
+        return newsDatabaseSource.searchSourceArticles(sourceName, "%${searchText.toLowerCase(Locale.getDefault())}%")
+            .flattenAsFlowable { it }
+            .map { articleEntityMapper.map(it) }
+            .toList()
+    }
+
+    override fun removeOldNotUserActivityArticles(cleanDate: Date) {
+        newsDatabaseSource.removeOldNotUserActivityArticles(cleanDate)
+    }
+
+    override fun removeOldUserActivityArticles(cleanDate: Date) {
+        newsDatabaseSource.removeOldUserActivityArticles(cleanDate)
     }
 
     override fun deleteRssSources() {
         newsDatabaseSource.deleteRssSources()
+    }
+
+    override fun saveRssSources(sources: List<RssSource>) {
+        newsDatabaseSource.saveRssSources(sources.map { rssSourceMapper.map(it) })
     }
 
     override fun getRssSources(): List<RssSource> {

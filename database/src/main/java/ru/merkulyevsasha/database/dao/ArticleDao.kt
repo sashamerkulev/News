@@ -17,15 +17,20 @@ interface ArticleDao {
     @Query("select * from articles where search like :searchText order by pubDate desc")
     fun searchArticles(searchText: String): Single<List<ArticleEntity>>
 
-    @Query("select * from articles where search like :searchText and (isUserLiked or isUserCommented or isUserDisliked) order by pubDate desc")
-    fun searchUserActivitiesArticles(searchText: String): Single<List<ArticleEntity>>
-
     @Query("select * from articles where articleId = :articleId order by pubDate desc")
     fun getArticle(articleId: Int): Single<ArticleEntity>
 
-    @Query("select * from articles where isUserLiked or isUserCommented or isUserDisliked " +
-        "order by lastActivityDate desc")
+    @Query("select * from articles where isUserLiked or isUserCommented or isUserDisliked order by pubDate desc")
     fun getUserActivityArticles(): Single<List<ArticleEntity>>
+
+    @Query("select * from articles where search like :searchText and (isUserLiked or isUserCommented or isUserDisliked) order by pubDate desc")
+    fun searchUserActivitiesArticles(searchText: String): Single<List<ArticleEntity>>
+
+    @Query("select * from articles where sourceName = :sourceName order by pubDate desc")
+    fun getSourceArticles(sourceName: String): Single<List<ArticleEntity>>
+
+    @Query("select * from articles where search like :searchText and sourceName = :sourceName order by pubDate desc")
+    fun searchSourceArticles(sourceName: String, searchText: String): Single<List<ArticleEntity>>
 
     @Query("delete from articles where pubDate < :cleanDate and lastActivityDate < :cleanDate " +
         "and not (isUserLiked or isUserCommented or isUserDisliked)")

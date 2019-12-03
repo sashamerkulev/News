@@ -9,6 +9,7 @@ class ArticleEntityMapper : Mapper<ArticleEntity, Article> {
         return Article(
             item.articleId,
             item.sourceName,
+            item.sourceName,
             item.title,
             item.link,
             item.description,

@@ -7,6 +7,7 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.routers.BaseRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.main.MainFragment
+import ru.merkulyevsasha.sourcearticles.SourceArticlesFragment
 
 class MainActivityRouterImpl(fragmentManager: FragmentManager) : BaseRouter(R.id.container, fragmentManager), MainActivityRouter {
 
@@ -25,6 +26,12 @@ class MainActivityRouterImpl(fragmentManager: FragmentManager) : BaseRouter(R.id
     override fun showArticleComments(articleId: Int) {
         val tag = ArticleCommentsFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticleCommentsFragment.newInstance(articleId) }
+        replaceFragment(tag, fragment, true)
+    }
+
+    override fun showSourceArticles(sourceId: String, sourceName: String) {
+        val tag = SourceArticlesFragment.TAG
+        val fragment = findOrCreateFragment(tag) { SourceArticlesFragment.newInstance(sourceId, sourceName) }
         replaceFragment(tag, fragment, true)
     }
 

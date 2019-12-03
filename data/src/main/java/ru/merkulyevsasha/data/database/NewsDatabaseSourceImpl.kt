@@ -13,16 +13,32 @@ class NewsDatabaseSourceImpl(private val database: NewsRoomDatabase) : NewsDatab
         return database.articleDao.getArticles()
     }
 
+    override fun searchArticles(searchText: String): Single<List<ArticleEntity>> {
+        return database.articleDao.searchArticles(searchText)
+    }
+
     override fun getArticle(articleId: Int): Single<ArticleEntity> {
         return database.articleDao.getArticle(articleId)
+    }
+
+    override fun getUserActivityArticles(): Single<List<ArticleEntity>> {
+        return database.articleDao.getUserActivityArticles()
     }
 
     override fun searchUserActivitiesArticles(searchText: String): Single<List<ArticleEntity>> {
         return database.articleDao.searchUserActivitiesArticles(searchText)
     }
 
-    override fun searchArticles(searchText: String): Single<List<ArticleEntity>> {
-        return database.articleDao.searchArticles(searchText)
+    override fun getSourceArticles(sourceName: String): Single<List<ArticleEntity>> {
+        return database.articleDao.getSourceArticles(sourceName)
+    }
+
+    override fun searchSourceArticles(sourceName: String, searchText: String): Single<List<ArticleEntity>> {
+        return database.articleDao.searchSourceArticles(sourceName, searchText)
+    }
+
+    override fun getArticleComments(articleId: Int): Single<List<ArticleCommentEntity>> {
+        return database.articleCommentsDao.getArticleComments(articleId)
     }
 
     override fun removeOldNotUserActivityArticles(cleanDate: Date) {
@@ -33,20 +49,12 @@ class NewsDatabaseSourceImpl(private val database: NewsRoomDatabase) : NewsDatab
         database.articleDao.removeOldUserActivityArticles(cleanDate)
     }
 
-    override fun getUserActivityArticles(): Single<List<ArticleEntity>> {
-        return database.articleDao.getUserActivityArticles()
-    }
-
-    override fun getArticleComments(articleId: Int): Single<List<ArticleCommentEntity>> {
-        return database.articleCommentsDao.getArticleComments(articleId)
+    override fun deleteRssSources() {
+        database.setupDao.deleteRssSources()
     }
 
     override fun saveRssSources(sources: List<RssSourceEntity>) {
         database.setupDao.saveRssSources(sources)
-    }
-
-    override fun deleteRssSources() {
-        database.setupDao.deleteRssSources()
     }
 
     override fun getRssSources(): List<RssSourceEntity> {

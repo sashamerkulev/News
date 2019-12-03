@@ -7,9 +7,10 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentArticleCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
-import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentArticleCallbackClickHandler
+import ru.merkulyevsasha.coreandroid.common.newsadapter.SourceArticleClickCallbackHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
 import timber.log.Timber
@@ -19,7 +20,8 @@ class ArticlesPresenterImpl(
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter
 ) : BasePresenterImpl<ArticlesView>(),
-    ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
+    ArticleClickCallbackHandler, SourceArticleClickCallbackHandler, ArticleLikeCallbackClickHandler,
+    ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
         { view?.updateItem(it) },
@@ -81,6 +83,10 @@ class ArticlesPresenterImpl(
 
     override fun onArticleShareClicked(item: Article) {
         newsDistributor.distribute(item)
+    }
+
+    override fun onSourceArticleCliked(sourceId: String, sourceName: String) {
+        applicationRouter.showSourceArticles(sourceId, sourceName)
     }
 
 }

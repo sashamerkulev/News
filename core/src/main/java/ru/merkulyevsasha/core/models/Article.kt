@@ -4,6 +4,7 @@ import java.util.*
 
 class Article(
     val articleId: Int,
+    val sourceId: String,
     val sourceName: String,
     val title: String,
     val link: String,

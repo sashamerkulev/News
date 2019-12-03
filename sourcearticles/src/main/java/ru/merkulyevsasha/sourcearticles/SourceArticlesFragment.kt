@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.useractivities
+package ru.merkulyevsasha.sourcearticles
 
 import android.content.Context
 import android.os.Bundle
@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import kotlinx.android.synthetic.main.fragment_useractivities.adView
-import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
-import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
-import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_sourcename.adView
+import kotlinx.android.synthetic.main.fragment_sourcename.buttonUp
+import kotlinx.android.synthetic.main.fragment_sourcename.recyclerView
+import kotlinx.android.synthetic.main.fragment_sourcename.swipeRefreshLayout
 import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
@@ -35,21 +35,26 @@ import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
 
-class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLocator {
+class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLocator {
 
     companion object {
         private const val MAX_POSITION = 5
         private const val KEY_POSITION = "key_position"
         private const val KEY_EXPANDED = "key_expanded"
         private const val KEY_SEARCH_TEXT = "key_search_text"
+        private const val SOURCE_ID = "SOURCE_ID"
+        private const val SOURCE_NAME = "SOURCE_NAME"
 
         @JvmStatic
-        val TAG: String = UserActivitiesFragment::class.java.simpleName
+        val TAG: String = SourceArticlesFragment::class.java.simpleName
 
         @JvmStatic
-        fun newInstance(): Fragment {
-            val fragment = UserActivitiesFragment()
-            fragment.arguments = Bundle()
+        fun newInstance(sourceId: String, sourceName: String): Fragment {
+            val fragment = SourceArticlesFragment()
+            val args = Bundle()
+            args.putString(SOURCE_ID, sourceId)
+            args.putString(SOURCE_NAME, sourceName)
+            fragment.arguments = args
             return fragment
         }
     }
@@ -59,7 +64,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     private lateinit var appbarLayout: AppBarLayout
 
     private lateinit var serviceLocator: ServiceLocator
-    private var presenter: UserActivitiesPresenterImpl? = null
+    private var presenter: SourceArticlesPresenterImpl? = null
     private var combinator: ToolbarCombinator? = null
 
     private lateinit var adapter: NewsViewAdapter
@@ -74,6 +79,8 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     private lateinit var searchItem: MenuItem
     private lateinit var searchView: SearchView
     private var searchText: String? = null
+    private var sourceId: String? = null
+    private var sourceName: String? = null
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
@@ -92,7 +99,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_useractivities, container, false)
+        inflater.inflate(R.layout.fragment_sourcename, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,6 +109,8 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
             position = this.getInt(KEY_POSITION, 0)
             expanded = this.getBoolean(KEY_EXPANDED, true)
             searchText = this.getString(KEY_SEARCH_TEXT, searchText)
+            sourceId = this.getString(SOURCE_ID, sourceId)
+            sourceName = this.getString(SOURCE_NAME, sourceName)
         }
 
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
@@ -110,7 +119,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
         appbarLayout = view.findViewById(R.id.appbarLayout)
 
-        toolbar.setTitle(R.string.fragment_actions_title)
+        toolbar.setTitle(sourceName)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false
         combinator?.bindToolbar(toolbar)
@@ -122,11 +131,11 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         })
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
+        swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh(sourceId!!) }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
         val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = UserActivitiesPresenterImpl(interactor, serviceLocator.get(ArticleDistributor::class.java),
+        presenter = SourceArticlesPresenterImpl(interactor, serviceLocator.get(ArticleDistributor::class.java),
             serviceLocator.get(MainActivityRouter::class.java))
         presenter?.bindView(this)
 
@@ -134,7 +143,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         initBottomUp()
 
         if (searchText.isNullOrEmpty()) {
-            presenter?.onFirstLoad()
+            presenter?.onFirstLoad(sourceId!!)
         }
     }
 
@@ -149,19 +158,19 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
                 searchItem.expandActionView()
                 searchView.setQuery(searchText, false)
                 searchView.clearFocus()
-                presenter?.onSearch(searchText)
+                presenter?.onSearch(sourceId!!, searchText)
             }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     searchText = query
-                    presenter?.onSearch(query)
+                    presenter?.onSearch(sourceId!!, query)
                     return true
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (newText.isNullOrEmpty()) {
                         searchText = ""
-                        presenter?.onSearch(newText)
+                        presenter?.onSearch(sourceId!!, newText)
                     }
                     return true
                 }
@@ -171,7 +180,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_refresh) {
-            presenter?.onRefresh()
+            presenter?.onRefresh(sourceId!!)
             return true
         } else if (item?.itemId == R.id.action_search) {
             return true
@@ -238,7 +247,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         adapter = NewsViewAdapter(
             requireContext(),
             presenter,
-            presenter,
+            null,
             presenter,
             presenter,
             presenter,
@@ -277,5 +286,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         state.putInt(KEY_POSITION, position)
         state.putBoolean(KEY_EXPANDED, expanded)
         state.putString(KEY_SEARCH_TEXT, searchText)
+        state.putString(SOURCE_NAME, sourceName)
+        state.putString(SOURCE_ID, sourceId)
     }
 }

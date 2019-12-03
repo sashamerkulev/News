@@ -7,6 +7,10 @@ interface ArticleClickCallbackHandler {
     fun onArticleCliked(item: Article)
 }
 
+interface SourceArticleClickCallbackHandler {
+    fun onSourceArticleCliked(sourceId: String, sourceName: String)
+}
+
 interface ArticleLikeCallbackClickHandler {
     fun onArticleLikeClicked(item: Article)
     fun onArticleDislikeClicked(item: Article)

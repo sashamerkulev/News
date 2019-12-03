@@ -14,21 +14,23 @@ import kotlinx.android.synthetic.main.row_news.view.layoutButtonComment
 import kotlinx.android.synthetic.main.row_news.view.layoutButtonDislike
 import kotlinx.android.synthetic.main.row_news.view.layoutButtonLike
 import kotlinx.android.synthetic.main.row_news.view.layoutButtonShare
+import kotlinx.android.synthetic.main.row_news.view.layoutSourceName
 import kotlinx.android.synthetic.main.row_news.view.newsDateSource
 import kotlinx.android.synthetic.main.row_news.view.newsDescription
 import kotlinx.android.synthetic.main.row_news.view.newsTitle
 import kotlinx.android.synthetic.main.row_news.view.textViewComment
 import kotlinx.android.synthetic.main.row_news.view.textViewDislike
 import kotlinx.android.synthetic.main.row_news.view.textViewLike
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.R
+import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import java.text.SimpleDateFormat
 import java.util.*
 
 class NewsViewAdapter constructor(
     private val context: Context,
     private val articleCallbackClickHandler: ArticleClickCallbackHandler?,
+    private val sourceArticleClickCallbackHandler: SourceArticleClickCallbackHandler?,
     private val likeCallbackClickHandler: ArticleLikeCallbackClickHandler?,
     private val commentCallbackClickHandler: ArticleCommentArticleCallbackClickHandler?,
     private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
@@ -120,6 +122,11 @@ class NewsViewAdapter constructor(
         holder.itemView.setOnClickListener {
             val newItem = items[holder.adapterPosition]
             articleCallbackClickHandler?.onArticleCliked(newItem)
+        }
+
+        holder.itemView.layoutSourceName.setOnClickListener {
+            val newItem = items[holder.adapterPosition]
+            sourceArticleClickCallbackHandler?.onSourceArticleCliked(newItem.sourceId, newItem.sourceName)
         }
 
         holder.itemView.layoutButtonLike.setOnClickListener {
