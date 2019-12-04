@@ -4,10 +4,9 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "sources", indices = [Index("name")])
+@Entity(tableName = "sources", indices = [Index("sourceName")])
 data class RssSourceEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val name: String,
-    val title: String
+    @PrimaryKey
+    val sourceId: String,
+    val sourceName: String
 )

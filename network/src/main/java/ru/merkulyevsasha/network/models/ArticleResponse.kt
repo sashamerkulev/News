@@ -5,7 +5,7 @@ import java.util.*
 
 data class ArticleResponse(
     @field:SerializedName("ArticleId") val articleId: Int,
-    @field:SerializedName("SourceName") val sourceName: String,
+    @field:SerializedName("SourceName") val sourceId: String,
     @field:SerializedName("Title") val title: String,
     @field:SerializedName("Link") val link: String,
     @field:SerializedName("Description") val description: String?,

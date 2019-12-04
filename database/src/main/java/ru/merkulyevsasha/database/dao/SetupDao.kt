@@ -13,6 +13,6 @@ interface SetupDao {
     @Query("delete from sources")
     fun deleteRssSources()
 
-    @Query("select id, name, title from sources")
+    @Query("select sourceId, sourceName from sources")
     fun getRssSources(): List<RssSourceEntity>
 }

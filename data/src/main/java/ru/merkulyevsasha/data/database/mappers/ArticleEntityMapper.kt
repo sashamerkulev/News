@@ -8,8 +8,8 @@ class ArticleEntityMapper : Mapper<ArticleEntity, Article> {
     override fun map(item: ArticleEntity): Article {
         return Article(
             item.articleId,
-            item.sourceName,
-            item.sourceName,
+            item.sourceId,
+            item.sourceId,
             item.title,
             item.link,
             item.description,

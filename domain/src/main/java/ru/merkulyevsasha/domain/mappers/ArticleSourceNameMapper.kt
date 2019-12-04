@@ -10,7 +10,7 @@ class ArticleSourceNameMapper(private val databaseRepository: NewsDatabaseReposi
 
     override fun map(item: Article): Article {
         if (rssSourceNameMap.isEmpty()) {
-            val map = databaseRepository.getRssSources().associateBy({ it.name }, { it.title })
+            val map = databaseRepository.getRssSources().associateBy({ it.sourceId }, { it.sourceName })
             rssSourceNameMap.putAll(map)
         }
         return Article(item.articleId,

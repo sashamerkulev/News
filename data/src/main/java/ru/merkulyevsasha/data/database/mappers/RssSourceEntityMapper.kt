@@ -6,6 +6,6 @@ import ru.merkulyevsasha.database.entities.RssSourceEntity
 
 class RssSourceEntityMapper : Mapper<RssSourceEntity, RssSource> {
     override fun map(item: RssSourceEntity): RssSource {
-        return RssSource(item.name, item.title)
+        return RssSource(item.sourceId, item.sourceName)
     }
 }

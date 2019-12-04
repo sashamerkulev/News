@@ -9,8 +9,8 @@ class ArticleMapper : Mapper<ArticleResponse, Article> {
     override fun map(item: ArticleResponse): Article {
         return Article(
             item.articleId,
-            item.sourceName,
-            item.sourceName,
+            item.sourceId,
+            item.sourceId,
             item.title,
             item.link,
             item.description,
