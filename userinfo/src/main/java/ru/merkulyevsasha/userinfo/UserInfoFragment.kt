@@ -17,13 +17,18 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
+import kotlinx.android.synthetic.main.fragment_userinfo.layoutSwitchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.saveButton
+import kotlinx.android.synthetic.main.fragment_userinfo.switchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.UsersInteractor
+import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.models.UserInfo
+import ru.merkulyevsasha.core.models.UserProfile
+import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
 import ru.merkulyevsasha.coreandroid.common.AvatarShower
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
@@ -95,6 +100,16 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         layoutButtonGallery.setOnClickListener { presenter?.onLoadGalleryClick() }
 
         saveButton.setOnClickListener { presenter?.onSaveButtonClicked(userName.text.toString()) }
+
+        layoutSwitchTheme.setOnClickListener {
+            val activity = requireActivity()
+            if (activity is OnThemeChangedCallback) {
+                switchTheme.isChecked = !switchTheme.isChecked
+                val newTheme = if (switchTheme.isChecked) ThemeEnum.ClassicNight else ThemeEnum.Classic
+                activity.onThemeChanged(newTheme)
+                presenter?.onThemeChanged(newTheme)
+            }
+        }
     }
 
     override fun onPause() {
@@ -142,6 +157,11 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
             avatarShower.showWithoutCache(requireContext(), R.drawable.ic_avatar_empty, userInfo.avatarUrl, userInfo.authorization, imageViewAvatar)
         }
         userName.setText(userInfo.name)
+    }
+
+    override fun showUserProfile(userProfile: UserProfile) {
+        showUserInfo(userProfile.userInfo)
+        switchTheme.isChecked = userProfile.theme == ThemeEnum.ClassicNight
     }
 
     override fun showSuccesSaving() {

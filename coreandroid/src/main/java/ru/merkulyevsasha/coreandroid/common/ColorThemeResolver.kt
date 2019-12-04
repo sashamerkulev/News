@@ -14,15 +14,9 @@ class ColorThemeResolver(
 ) {
 
     fun setArticleActivityColor(expression: Boolean, textView: TextView, imageView: ImageView) {
-        if (expression) {
-            val color = getThemeAttrColor(R.attr.colorPrimaryDark)
-            textView.setTextColor(color)
-            imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-        } else {
-            val color = getThemeAttrColor(R.attr.colorPrimary)
-            textView.setTextColor(color)
-            imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
-        }
+        val color = if (expression) getThemeAttrColor(R.attr.activeColor) else getThemeAttrColor(R.attr.inactiveColor)
+        textView.setTextColor(color)
+        imageView.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
     }
 
     fun getThemeAttrColor(attrColor: Int): Int {

@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.core.preferences
 
+import ru.merkulyevsasha.core.models.ThemeEnum
 import java.util.*
 
 interface KeyValueStorage {
@@ -22,4 +23,6 @@ interface KeyValueStorage {
     fun updateApplicationRunNumber()
     fun getLastApplicationRunDate(): Long
     fun updateLastApplicationRunDate()
+    fun getUserProfileTheme(): ThemeEnum
+    fun setUserProfileTheme(theme: ThemeEnum)
 }

@@ -2,6 +2,7 @@ package ru.merkulyevsasha.userinfo
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.UsersInteractor
+import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
 
@@ -13,7 +14,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe({
-                    view?.showUserInfo(it)
+                    view?.showUserProfile(it)
                 },
                     {
                         Timber.e(it)
@@ -56,6 +57,20 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view?.showSuccesSaving()
+                },
+                    {
+                        Timber.e(it)
+                        view?.showSaveError()
+                    })
+
+        )
+    }
+
+    fun onThemeChanged(newTheme: ThemeEnum) {
+        compositeDisposable.add(
+            usersInteractor.updateTheme(newTheme)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
                 },
                     {
                         Timber.e(it)

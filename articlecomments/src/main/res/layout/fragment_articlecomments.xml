@@ -24,8 +24,8 @@
         app:layout_constraintBottom_toTopOf="@+id/sep2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/adView"
-        >
+        app:layout_constraintTop_toBottomOf="@id/adView">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -46,6 +46,7 @@
 
     <EditText
         android:id="@+id/editTextComment"
+        style="@style/CaptionTextView"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@null"
@@ -71,8 +72,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:tint="?attr/separatorColor"
         android:clickable="false"
+        android:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/layoutAddCommentButton"
         app:layout_constraintEnd_toEndOf="@+id/layoutAddCommentButton"
         app:layout_constraintStart_toStartOf="@+id/layoutAddCommentButton"

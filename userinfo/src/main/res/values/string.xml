@@ -8,6 +8,7 @@
     <string name="userinfo_button_camera_title">Сфотографировать</string>
     <string name="userinfo_button_gallery_title">Загрузить с галереи</string>
     <string name="userinfo_select_image_label">Выберите изображение</string>
+    <string name="userinfo_switch_theme_label">Темная тема</string>
     <string name="user_name_hint">Введите имя</string>
     <string name="save_button_title">Сохранить</string>
 </resources>

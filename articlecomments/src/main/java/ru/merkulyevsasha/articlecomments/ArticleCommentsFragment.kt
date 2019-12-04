@@ -141,11 +141,6 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
         adapter.updateCommentItem(item)
     }
 
-    private fun initSwipeRefreshColorScheme() {
-        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(colorThemeResolver.getThemeAttrColor(R.attr.colorAccent))
-        swipeRefreshLayout.setColorSchemeColors(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
-    }
-
     private fun saveFragmentState(state: Bundle) {
         position = layoutManager.findFirstVisibleItemPosition()
         state.putInt(KEY_POSITION, position)

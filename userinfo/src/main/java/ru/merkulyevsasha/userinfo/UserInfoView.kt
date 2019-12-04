@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.userinfo
 
 import ru.merkulyevsasha.core.models.UserInfo
+import ru.merkulyevsasha.core.models.UserProfile
 import ru.merkulyevsasha.coreandroid.base.BaseView
 
 interface UserInfoView : BaseView {
@@ -10,6 +11,7 @@ interface UserInfoView : BaseView {
     fun takeGalleryPicture()
     fun takeCameraPicture()
     fun showUserInfo(userInfo: UserInfo)
+    fun showUserProfile(userProfile: UserProfile)
     fun showNameRequiredValidationMessage()
     fun showSuccesSaving()
     fun showSaveError()

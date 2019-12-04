@@ -1,9 +1,12 @@
 package ru.merkulyevsasha.domain
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import ru.merkulyevsasha.core.domain.UsersInteractor
+import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.models.UserInfo
+import ru.merkulyevsasha.core.models.UserProfile
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 
@@ -11,8 +14,11 @@ class UsersInteractorImpl(
     private val usersApiRepository: UsersApiRepository,
     private val keyValueStorage: KeyValueStorage
 ) : UsersInteractor {
-    override fun getUserInfo(): Single<UserInfo> {
+    override fun getUserInfo(): Single<UserProfile> {
         return usersApiRepository.getUserInfo()
+            .map { userInfo ->
+                UserProfile(userInfo, keyValueStorage.getUserProfileTheme())
+            }
             .subscribeOn(Schedulers.io())
     }
 
@@ -25,6 +31,11 @@ class UsersInteractorImpl(
     override fun uploadUserPhoto(profileFileName: String): Single<UserInfo> {
         return usersApiRepository.uploadUserPhoto(profileFileName)
             .doOnSuccess { keyValueStorage.saveProfileFileName(profileFileName) }
+            .subscribeOn(Schedulers.io())
+    }
+
+    override fun updateTheme(newTheme: ThemeEnum): Completable {
+        return Completable.fromCallable { keyValueStorage.setUserProfileTheme(newTheme) }
             .subscribeOn(Schedulers.io())
     }
 }
