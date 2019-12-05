@@ -6,6 +6,6 @@ import ru.merkulyevsasha.network.models.RssSourceResponse
 
 class RssSourceMapper : Mapper<RssSourceResponse, RssSource> {
     override fun map(item: RssSourceResponse): RssSource {
-        return RssSource(item.sourceId, item.sourceName)
+        return RssSource(item.sourceId, item.sourceName, true)
     }
 }

@@ -11,10 +11,10 @@ import java.util.*
 
 @Dao
 interface ArticleDao {
-    @Query("select * from articles order by pubDate desc")
+    @Query("select a.* from articles a join sources s on s.sourceId = a.sourceId where s.checked order by a.pubDate desc ")
     fun getArticles(): Single<List<ArticleEntity>>
 
-    @Query("select * from articles where search like :searchText order by pubDate desc")
+    @Query("select a.* from articles a join sources s on s.sourceId = a.sourceId where s.checked and  a.search like :searchText order by a.pubDate desc")
     fun searchArticles(searchText: String): Single<List<ArticleEntity>>
 
     @Query("select * from articles where articleId = :articleId order by pubDate desc")

@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.core.models
 
-class RssSource(
+data class RssSource(
     val sourceId: String,
-    val sourceName: String
+    val sourceName: String,
+    val checked: Boolean
 )
