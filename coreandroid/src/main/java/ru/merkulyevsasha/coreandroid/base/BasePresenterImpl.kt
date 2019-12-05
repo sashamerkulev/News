@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.coreandroid.base
 
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.CopyOnWriteArrayList
 
 abstract class BasePresenterImpl<T : BaseView> {
 
@@ -27,7 +28,7 @@ abstract class BasePresenterImpl<T : BaseView> {
     }
 
     inner class CommandViewHolder {
-        private val commands = mutableListOf<ViewCommand>()
+        private val commands = CopyOnWriteArrayList<ViewCommand>()
 
         fun execute() {
             commands.forEach {

@@ -31,7 +31,7 @@ class SourceArticlesPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe(
-                    { view?.showItems(it) },
+                    { addCommand { view?.showItems(it) } },
                     {
                         Timber.e(it)
                         view?.showError()
@@ -48,7 +48,7 @@ class SourceArticlesPresenterImpl(
             .doOnSubscribe { addCommand { view?.showProgress() } }
             .doAfterTerminate { addCommand { view?.hideProgress() } }
             .subscribe(
-                { view?.showItems(it) },
+                { addCommand { view?.showItems(it) } },
                 {
                     Timber.e(it)
                     view?.showError()

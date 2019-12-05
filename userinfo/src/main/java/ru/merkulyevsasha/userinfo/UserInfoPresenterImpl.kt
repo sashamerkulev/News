@@ -14,7 +14,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe({
-                    view?.showUserProfile(it)
+                    addCommand { view?.showUserProfile(it) }
                 },
                     {
                         Timber.e(it)
@@ -37,7 +37,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
             usersInteractor.uploadUserPhoto(profileFileName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    view?.showUserInfo(it)
+                    addCommand { view?.showUserInfo(it) }
                 },
                     {
                         Timber.e(it)
@@ -56,7 +56,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
             usersInteractor.updateUser(userName, "")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    view?.showSuccesSaving()
+                    addCommand { view?.showSuccesSaving() }
                 },
                     {
                         Timber.e(it)

@@ -40,7 +40,7 @@ class ArticlesPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe(
-                    { view?.showItems(it) },
+                    { addCommand { view?.showItems(it) } },
                     {
                         Timber.e(it)
                         view?.showError()

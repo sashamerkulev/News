@@ -25,7 +25,7 @@ class ArticleDetailsPresenterImpl(
                 .doOnSubscribe { view?.showProgress() }
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe(
-                    { view?.showItem(it) },
+                    { addCommand { view?.showItem(it) } },
                     {
                         Timber.e(it)
                         view?.showError()
@@ -52,7 +52,7 @@ class ArticleDetailsPresenterImpl(
                 .doAfterTerminate { view?.hideProgress() }
                 .subscribe(
                     {
-                        newsDistributor.distribute(it)
+                        addCommand { newsDistributor.distribute(it) }
                     },
                     {
                         Timber.e(it)

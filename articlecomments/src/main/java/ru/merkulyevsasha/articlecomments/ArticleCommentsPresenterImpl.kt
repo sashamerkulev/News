@@ -33,8 +33,10 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
-                    val result = listOf<ArticleOrComment>(it.first) + it.second
-                    view?.showComments(result)
+                    addCommand {
+                        val result = listOf<ArticleOrComment>(it.first) + it.second
+                        view?.showComments(result)
+                    }
                 }, {
                     Timber.e(it)
                     view?.showError()
@@ -48,8 +50,10 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
-                    val aaa = listOf<ArticleOrComment>(it.first) + it.second
-                    view?.showComments(aaa)
+                    addCommand {
+                        val aaa = listOf<ArticleOrComment>(it.first) + it.second
+                        view?.showComments(aaa)
+                    }
                 }, {
                     Timber.e(it)
                     view?.showError()
@@ -67,7 +71,7 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
-                    view?.updateCommentItem(it)
+                    addCommand { view?.updateCommentItem(it) }
                 }, {
                     Timber.e(it)
                     view?.showError()
@@ -92,7 +96,7 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
-                    view?.updateCommentItem(it)
+                    addCommand { view?.updateCommentItem(it) }
                 }, {
                     Timber.e(it)
                     view?.showError()
@@ -106,7 +110,7 @@ class ArticleCommentsPresenterImpl(
                 .doOnSubscribe { addCommand { view?.showProgress() } }
                 .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
-                    view?.updateCommentItem(it)
+                    addCommand { view?.updateCommentItem(it) }
                 }, {
                     Timber.e(it)
                     view?.showError()
