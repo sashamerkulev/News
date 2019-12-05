@@ -104,8 +104,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         layoutSwitchTheme.setOnClickListener {
             val activity = requireActivity()
             if (activity is OnThemeChangedCallback) {
-                switchTheme.isChecked = !switchTheme.isChecked
-                val newTheme = if (switchTheme.isChecked) ThemeEnum.ClassicNight else ThemeEnum.Classic
+                val isChecked = !switchTheme.isChecked
+                val newTheme = if (isChecked) ThemeEnum.ClassicNight else ThemeEnum.Classic
                 activity.onThemeChanged(newTheme)
                 presenter?.onThemeChanged(newTheme)
             }

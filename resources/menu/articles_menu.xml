@@ -7,6 +7,7 @@
         android:icon="@drawable/ic_search_white_24px"
         android:title="@android:string/search_go"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:iconTint="@color/actionBarTextColor"
         app:showAsAction="always|collapseActionView" />
 
     <item
@@ -14,5 +15,6 @@
         android:checkable="false"
         android:icon="@drawable/ic_refresh_white_24px"
         android:title="@string/menu_refresh"
+        app:iconTint="@color/actionBarTextColor"
         app:showAsAction="ifRoom" />
 </menu>
