@@ -11,7 +11,9 @@ class MainPresenter(private val setupInteractor: SetupInteractor) : BasePresente
             setupInteractor.registerSetup()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { view?.showMainScreen() },
+                    {
+                        addCommand { view?.showMainScreen() }
+                    },
                     {
                         Timber.e(it)
                         view?.showFatalError()

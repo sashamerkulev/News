@@ -28,8 +28,8 @@ class SourceArticlesPresenterImpl(
         compositeDisposable.add(
             articlesInteractor.getSourceArticles(sourceName)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe(
                     { view?.showItems(it) },
                     {
@@ -45,8 +45,8 @@ class SourceArticlesPresenterImpl(
     fun onSearch(sourceId: String, searchText: String?) {
         compositeDisposable.add(articlesInteractor.searchSourceArticles(sourceId, searchText)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showProgress() }
-            .doAfterTerminate { hideProgress() }
+            .doOnSubscribe { addCommand { view?.showProgress() } }
+            .doAfterTerminate { addCommand { view?.hideProgress() } }
             .subscribe(
                 { view?.showItems(it) },
                 {

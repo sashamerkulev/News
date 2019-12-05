@@ -28,8 +28,8 @@ class UserActivitiesPresenterImpl(
         { view?.showError() })
 
     private val searchArticleHandler = SearchArticleHandler(articlesInteractor, true,
-        { showProgress() },
-        { hideProgress() },
+        { addCommand { view?.showProgress() } },
+        { addCommand { view?.hideProgress() } },
         { view?.showItems(it) },
         { view?.showError() })
 
@@ -37,8 +37,8 @@ class UserActivitiesPresenterImpl(
         compositeDisposable.add(
             articlesInteractor.getUserActivityArticles()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe(
                     { view?.showItems(it) },
                     {

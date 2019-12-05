@@ -69,6 +69,16 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onPause() {
+        presenter.unbindView()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.bindView(this)
+    }
+
     override fun onDestroy() {
         presenter.unbindView()
         presenter.onDestroy()

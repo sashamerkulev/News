@@ -30,8 +30,8 @@ class ArticleCommentsPresenterImpl(
         compositeDisposable.add(
             articleCommentsInteractor.getArticleComments(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
                     val result = listOf<ArticleOrComment>(it.first) + it.second
                     view?.showComments(result)
@@ -45,8 +45,8 @@ class ArticleCommentsPresenterImpl(
         compositeDisposable.add(
             articleCommentsInteractor.refreshAndGetArticleComments(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
                     val aaa = listOf<ArticleOrComment>(it.first) + it.second
                     view?.showComments(aaa)
@@ -64,8 +64,8 @@ class ArticleCommentsPresenterImpl(
         compositeDisposable.add(
             articleCommentsInteractor.addArticleComment(articleId, comment)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
                     view?.updateCommentItem(it)
                 }, {
@@ -89,8 +89,8 @@ class ArticleCommentsPresenterImpl(
         compositeDisposable.add(
             articleCommentsInteractor.likeArticleComment(item.commentId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
                     view?.updateCommentItem(it)
                 }, {
@@ -103,8 +103,8 @@ class ArticleCommentsPresenterImpl(
         compositeDisposable.add(
             articleCommentsInteractor.dislikeArticleComment(item.commentId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showProgress() }
-                .doAfterTerminate { hideProgress() }
+                .doOnSubscribe { addCommand { view?.showProgress() } }
+                .doAfterTerminate { addCommand { view?.hideProgress() } }
                 .subscribe({
                     view?.updateCommentItem(it)
                 }, {

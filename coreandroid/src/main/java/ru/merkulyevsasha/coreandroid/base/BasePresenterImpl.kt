@@ -22,12 +22,8 @@ abstract class BasePresenterImpl<T : BaseView> {
         compositeDisposable.dispose()
     }
 
-    fun showProgress() {
-        commandViewHolder.showProgress()
-    }
-
-    fun hideProgress() {
-        commandViewHolder.hideProgress()
+    fun addCommand(f: () -> Unit) {
+        commandViewHolder.addCommand(f)
     }
 
     inner class CommandViewHolder {
@@ -40,37 +36,18 @@ abstract class BasePresenterImpl<T : BaseView> {
             }
         }
 
-        fun showProgress() {
+        fun addCommand(f: () -> Unit) {
             if (view == null) {
                 commands.add(object : ViewCommand {
                     override fun execute() {
-                        if (view is BaseProgressView) {
-                            (view as BaseProgressView?)?.showProgress()
-                        }
+                        f()
                     }
                 })
             } else {
-                if (view is BaseProgressView) {
-                    (view as BaseProgressView?)?.showProgress()
-                }
+                f()
             }
         }
 
-        fun hideProgress() {
-            if (view == null) {
-                commands.add(object : ViewCommand {
-                    override fun execute() {
-                        if (view is BaseProgressView) {
-                            (view as BaseProgressView?)?.hideProgress()
-                        }
-                    }
-                })
-            } else {
-                if (view is BaseProgressView) {
-                    (view as BaseProgressView?)?.hideProgress()
-                }
-            }
-        }
     }
 }
 
