@@ -18,7 +18,7 @@
         <item name="activeColor">@color/colorActive</item>
 
         <item name="colorButtonNormal">@color/colorPrimaryDark</item>
-        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/colorInactive</item>
 
     </style>
 

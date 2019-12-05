@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -18,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutSwitchTheme
-import kotlinx.android.synthetic.main.fragment_userinfo.saveButton
 import kotlinx.android.synthetic.main.fragment_userinfo.switchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
@@ -31,6 +31,7 @@ import ru.merkulyevsasha.core.models.UserProfile
 import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
 import ru.merkulyevsasha.coreandroid.common.AvatarShower
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.KbUtils
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import java.io.IOException
 
@@ -99,7 +100,13 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         layoutButtonCamera.setOnClickListener { presenter?.onLoadCameraClicked() }
         layoutButtonGallery.setOnClickListener { presenter?.onLoadGalleryClick() }
 
-        saveButton.setOnClickListener { presenter?.onSaveButtonClicked(userName.text.toString()) }
+        userName.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                KbUtils.hideKeyboard(requireActivity())
+                presenter?.onSaveButtonClicked(userName.text.toString())
+            }
+            true
+        }
 
         layoutSwitchTheme.setOnClickListener {
             val activity = requireActivity()
