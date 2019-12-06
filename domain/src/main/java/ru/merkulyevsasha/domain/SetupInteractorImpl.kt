@@ -32,7 +32,12 @@ class SetupInteractorImpl(
             .flatMap {
                 setupApiRepository.getRssSources()
                     .doOnSuccess { sources ->
+                        val oldSources = databaseRepository.getRssSources()
                         databaseRepository.deleteRssSources()
+                        oldSources.forEach { oldSource ->
+                            val newSource = sources.single { it.sourceId == oldSource.sourceId }
+                            newSource.checked = oldSource.checked
+                        }
                         databaseRepository.saveRssSources(sources)
                     }
                     .onErrorResumeNext {
