@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
+import kotlinx.android.synthetic.main.fragment_userinfo.layoutSources
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutSwitchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.switchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
@@ -169,6 +171,19 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     override fun showUserProfile(userProfile: UserProfile) {
         showUserInfo(userProfile.userInfo)
         switchTheme.isChecked = userProfile.theme == ThemeEnum.ClassicNight
+
+
+        layoutSources.removeAllViews()
+        userProfile.sources.forEach { source ->
+            val view = CheckBox(requireContext())
+            view.text = source.sourceName
+            view.isChecked = source.checked
+            view.setTextColor(colorThemeResolver.getThemeAttrColor(R.attr.activeColor))
+            view.setOnClickListener {
+                presenter?.onSourceChecked(view.isChecked, source.sourceId)
+            }
+            layoutSources.addView(view)
+        }
     }
 
     override fun showSuccesSaving() {

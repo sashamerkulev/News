@@ -79,4 +79,18 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
 
         )
     }
+
+    fun onSourceChecked(checked: Boolean, sourceId: String) {
+        compositeDisposable.add(
+            usersInteractor.updateRssSource(checked, sourceId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                },
+                    {
+                        Timber.e(it)
+                        view?.showSaveError()
+                    })
+
+        )
+    }
 }

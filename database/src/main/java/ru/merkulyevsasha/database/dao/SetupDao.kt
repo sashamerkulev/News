@@ -10,6 +10,9 @@ interface SetupDao {
     @Insert
     fun saveRssSources(items: List<RssSourceEntity>)
 
+    @Query("update sources set checked = :checked where sourceId = :sourceId")
+    fun updateRssSource(checked: Boolean, sourceId: String)
+
     @Query("delete from sources")
     fun deleteRssSources()
 

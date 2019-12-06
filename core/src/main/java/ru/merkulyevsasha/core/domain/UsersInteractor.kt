@@ -11,4 +11,5 @@ interface UsersInteractor {
     fun updateUser(name: String, phone: String): Single<UserInfo>
     fun uploadUserPhoto(profileFileName: String): Single<UserInfo>
     fun updateTheme(newTheme: ThemeEnum): Completable
+    fun updateRssSource(checked: Boolean, sourceId: String): Completable
 }

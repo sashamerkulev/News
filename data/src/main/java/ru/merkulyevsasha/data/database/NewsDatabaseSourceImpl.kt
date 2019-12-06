@@ -77,4 +77,8 @@ class NewsDatabaseSourceImpl(private val database: NewsRoomDatabase) : NewsDatab
         database.articleCommentsDao.updateArticleComment(comment, commentsCount)
     }
 
+    override fun updateRssSource(checked: Boolean, sourceId: String) {
+        database.setupDao.updateRssSource(checked, sourceId)
+    }
+
 }

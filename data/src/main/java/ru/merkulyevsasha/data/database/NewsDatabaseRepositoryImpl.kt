@@ -115,4 +115,8 @@ class NewsDatabaseRepositoryImpl(
         newsDatabaseSource.updateArticleComment(articleCommentMapper.map(comment), commentsCount)
     }
 
+    override fun updateRssSource(checked: Boolean, sourceId: String) {
+        newsDatabaseSource.updateRssSource(checked, sourceId)
+    }
+
 }

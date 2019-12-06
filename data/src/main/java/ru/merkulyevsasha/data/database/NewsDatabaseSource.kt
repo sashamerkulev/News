@@ -32,4 +32,5 @@ interface NewsDatabaseSource {
     fun updateArticle(article: ArticleEntity)
     fun addOrUpdateArticleComments(comments: List<ArticleCommentEntity>)
     fun updateArticleComment(comment: ArticleCommentEntity, commentsCount: Int)
+    fun updateRssSource(checked: Boolean, sourceId: String)
 }

@@ -28,4 +28,5 @@ interface NewsDatabaseRepository {
 
     fun addOrUpdateArticleComments(comments: List<ArticleComment>)
     fun updateArticleComment(comment: ArticleComment, commentsCount: Int)
+    fun updateRssSource(checked: Boolean, sourceId: String)
 }
