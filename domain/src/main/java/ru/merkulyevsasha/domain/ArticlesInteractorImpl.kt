@@ -7,19 +7,27 @@ import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
-import ru.merkulyevsasha.domain.mappers.ArticleSourceNameMapper
 import java.util.*
 
 class ArticlesInteractorImpl(
     private val articlesApiRepository: ArticlesApiRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val databaseRepository: NewsDatabaseRepository,
-    private val sourceNameMapper: ArticleSourceNameMapper
+    private val databaseRepository: NewsDatabaseRepository
 ) : ArticlesInteractor {
 
     companion object {
         private const val NOT_USER_ACTIVITIES_HOURS = 24 * 7 // week
         private const val USER_ACTIVITIES_HOURS = 24 * 30 // month
+    }
+
+    private val _rssSourceNameMap = mutableMapOf<String, String>()
+    private val rssSourceNameMap : Map<String, String>
+    get() {
+        if (_rssSourceNameMap.isEmpty()) {
+            val map = databaseRepository.getRssSources().associateBy({ it.sourceId }, { it.sourceName })
+            _rssSourceNameMap.putAll(map)
+        }
+        return _rssSourceNameMap
     }
 
     override fun getArticles(): Single<List<Article>> {
@@ -34,7 +42,7 @@ class ArticlesInteractorImpl(
                 databaseRepository.getArticles()
                     .flatMap { items ->
                         if (items.isEmpty()) refreshAndGetArticles()
-                        else Single.just(items.map { sourceNameMapper.map(it) })
+                        else Single.just(items)
                     }
             }
             .subscribeOn(Schedulers.io())
@@ -42,26 +50,19 @@ class ArticlesInteractorImpl(
 
     override fun getUserActivityArticles(): Single<List<Article>> {
         return databaseRepository.getUserActivityArticles()
-            .flattenAsFlowable { it }
-            .map { sourceNameMapper.map(it) }
-            .toList()
             .subscribeOn(Schedulers.io())
     }
 
     override fun getSourceArticles(sourceName: String): Single<List<Article>> {
         return databaseRepository.getSourceArticles(sourceName)
-            .flattenAsFlowable { it }
-            .map { sourceNameMapper.map(it) }
-            .toList()
             .subscribeOn(Schedulers.io())
     }
 
     override fun getArticle(articleId: Int): Single<Article> {
-        return articlesApiRepository.getArticle(articleId)
+        return articlesApiRepository.getArticle(articleId, rssSourceNameMap)
             .doOnSuccess {
                 databaseRepository.updateArticle(it)
             }
-            .map { sourceNameMapper.map(it) }
             .subscribeOn(Schedulers.io())
     }
 
@@ -71,9 +72,6 @@ class ArticlesInteractorImpl(
                 if (st.isEmpty()) getArticles()
                 else
                     databaseRepository.searchArticles(st, byUserActivities)
-                        .flattenAsFlowable { it }
-                        .map { sourceNameMapper.map(it) }
-                        .toList()
             }
             .subscribeOn(Schedulers.io())
     }
@@ -84,9 +82,6 @@ class ArticlesInteractorImpl(
                 if (st.isEmpty()) getSourceArticles(sourceName)
                 else
                     databaseRepository.searchSourceArticles(sourceName, st)
-                        .flattenAsFlowable { it }
-                        .map { sourceNameMapper.map(it) }
-                        .toList()
             }
             .subscribeOn(Schedulers.io())
     }
@@ -94,7 +89,7 @@ class ArticlesInteractorImpl(
     override fun refreshAndGetArticles(): Single<List<Article>> {
         return Single.fromCallable { keyValueStorage.getLastArticleReadDate() ?: Date(0) }
             .flatMap {
-                articlesApiRepository.getArticles(it)
+                articlesApiRepository.getArticles(it, rssSourceNameMap)
                     .doOnSuccess { items ->
                         if (items.isNotEmpty()) {
                             databaseRepository.addOrUpdateArticles(items)
@@ -102,27 +97,22 @@ class ArticlesInteractorImpl(
                         }
                     }
             }
-            .flattenAsFlowable { it }
-            .map { sourceNameMapper.map(it) }
-            .toList()
             .subscribeOn(Schedulers.io())
     }
 
     override fun likeArticle(articleId: Int): Single<Article> {
-        return articlesApiRepository.likeArticle(articleId)
+        return articlesApiRepository.likeArticle(articleId, rssSourceNameMap)
             .doOnSuccess {
                 databaseRepository.updateArticle(it)
             }
-            .map { sourceNameMapper.map(it) }
             .subscribeOn(Schedulers.io())
     }
 
     override fun dislikeArticle(articleId: Int): Single<Article> {
-        return articlesApiRepository.dislikeArticle(articleId)
+        return articlesApiRepository.dislikeArticle(articleId, rssSourceNameMap)
             .doOnSuccess {
                 databaseRepository.updateArticle(it)
             }
-            .map { sourceNameMapper.map(it) }
             .subscribeOn(Schedulers.io())
     }
 }

@@ -23,25 +23,25 @@ class ArticlesApiRepositoryImpl(
     private val format = "yyyy-MM-dd'T'HH:mm:ss"
     private val simpleDateFormat = SimpleDateFormat(format, Locale.getDefault())
 
-    override fun getArticles(lastArticleReadDate: Date): Single<List<Article>> {
+    override fun getArticles(lastArticleReadDate: Date, rssSourceNameMap : Map<String, String>): Single<List<Article>> {
         return api.getArticles(simpleDateFormat.format(lastArticleReadDate))
             .flattenAsFlowable { it }
-            .map { articlesMapper.map(it) }
+            .map { articlesMapper.map(it, rssSourceNameMap) }
             .toList()
     }
 
-    override fun likeArticle(articleId: Int): Single<Article> {
+    override fun likeArticle(articleId: Int, rssSourceNameMap : Map<String, String>): Single<Article> {
         return api.likeArticle(articleId)
-            .map { articlesMapper.map(it) }
+            .map { articlesMapper.map(it, rssSourceNameMap) }
     }
 
-    override fun dislikeArticle(articleId: Int): Single<Article> {
+    override fun dislikeArticle(articleId: Int, rssSourceNameMap : Map<String, String>): Single<Article> {
         return api.dislikeArticle(articleId)
-            .map { articlesMapper.map(it) }
+            .map { articlesMapper.map(it, rssSourceNameMap) }
     }
 
-    override fun getArticle(articleId: Int): Single<Article> {
+    override fun getArticle(articleId: Int, rssSourceNameMap : Map<String, String>): Single<Article> {
         return api.getArticle(articleId)
-            .map { articlesMapper.map(it) }
+            .map { articlesMapper.map(it, rssSourceNameMap) }
     }
 }

@@ -1,22 +1,23 @@
 package ru.merkulyevsasha.data.database
 
 import io.reactivex.Single
+import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.database.entities.ArticleCommentEntity
 import ru.merkulyevsasha.database.entities.ArticleEntity
 import ru.merkulyevsasha.database.entities.RssSourceEntity
 import java.util.*
 
 interface NewsDatabaseSource {
-    fun getArticles(): Single<List<ArticleEntity>>
-    fun searchArticles(searchText: String): Single<List<ArticleEntity>>
+    fun getArticles(): Single<List<Article>>
+    fun searchArticles(searchText: String): Single<List<Article>>
 
-    fun getArticle(articleId: Int): Single<ArticleEntity>
+    fun getArticle(articleId: Int): Single<Article>
 
-    fun getUserActivityArticles(): Single<List<ArticleEntity>>
-    fun searchUserActivitiesArticles(searchText: String): Single<List<ArticleEntity>>
+    fun getUserActivityArticles(): Single<List<Article>>
+    fun searchUserActivitiesArticles(searchText: String): Single<List<Article>>
 
-    fun getSourceArticles(sourceName: String): Single<List<ArticleEntity>>
-    fun searchSourceArticles(sourceName: String, searchText: String): Single<List<ArticleEntity>>
+    fun getSourceArticles(sourceName: String): Single<List<Article>>
+    fun searchSourceArticles(sourceName: String, searchText: String): Single<List<Article>>
 
     fun getArticleComments(articleId: Int): Single<List<ArticleCommentEntity>>
 

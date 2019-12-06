@@ -1,16 +1,15 @@
 package ru.merkulyevsasha.data.network.mappers
 
-import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.network.models.ArticleResponse
 import java.util.*
 
-class ArticleMapper : Mapper<ArticleResponse, Article> {
-    override fun map(item: ArticleResponse): Article {
+class ArticleMapper {
+    fun map(item: ArticleResponse, rssSourceNameMap: Map<String, String>): Article {
         return Article(
             item.articleId,
             item.sourceId,
-            item.sourceId,
+            rssSourceNameMap[item.sourceId] ?: item.sourceId,
             item.title,
             item.link,
             item.description,

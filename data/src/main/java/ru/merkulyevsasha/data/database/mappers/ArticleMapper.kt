@@ -3,12 +3,13 @@ package ru.merkulyevsasha.data.database.mappers
 import ru.merkulyevsasha.core.mappers.Mapper
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.database.entities.ArticleEntity
+import java.util.*
 
 class ArticleMapper : Mapper<Article, ArticleEntity> {
     override fun map(item: Article): ArticleEntity {
         return ArticleEntity(
             item.articleId,
-            item.sourceName,
+            item.sourceId,
             item.title,
             item.link,
             item.description ?: "",
@@ -22,7 +23,7 @@ class ArticleMapper : Mapper<Article, ArticleEntity> {
             item.isUserLiked,
             item.isUserDisliked,
             item.isUserCommented,
-            item.title.toLowerCase() + (item.description ?: "").toLowerCase()
+            item.title.toLowerCase(Locale.getDefault()) + (item.description ?: "").toLowerCase(Locale.getDefault())
         )
     }
 }

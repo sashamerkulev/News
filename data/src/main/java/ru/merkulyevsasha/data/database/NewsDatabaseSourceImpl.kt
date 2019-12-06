@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.data.database
 
 import io.reactivex.Single
+import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.database.data.NewsRoomDatabase
 import ru.merkulyevsasha.database.entities.ArticleCommentEntity
 import ru.merkulyevsasha.database.entities.ArticleEntity
@@ -9,31 +10,31 @@ import java.util.*
 
 class NewsDatabaseSourceImpl(private val database: NewsRoomDatabase) : NewsDatabaseSource {
 
-    override fun getArticles(): Single<List<ArticleEntity>> {
+    override fun getArticles(): Single<List<Article>> {
         return database.articleDao.getArticles()
     }
 
-    override fun searchArticles(searchText: String): Single<List<ArticleEntity>> {
+    override fun searchArticles(searchText: String): Single<List<Article>> {
         return database.articleDao.searchArticles(searchText)
     }
 
-    override fun getArticle(articleId: Int): Single<ArticleEntity> {
+    override fun getArticle(articleId: Int): Single<Article> {
         return database.articleDao.getArticle(articleId)
     }
 
-    override fun getUserActivityArticles(): Single<List<ArticleEntity>> {
+    override fun getUserActivityArticles(): Single<List<Article>> {
         return database.articleDao.getUserActivityArticles()
     }
 
-    override fun searchUserActivitiesArticles(searchText: String): Single<List<ArticleEntity>> {
+    override fun searchUserActivitiesArticles(searchText: String): Single<List<Article>> {
         return database.articleDao.searchUserActivitiesArticles(searchText)
     }
 
-    override fun getSourceArticles(sourceName: String): Single<List<ArticleEntity>> {
+    override fun getSourceArticles(sourceName: String): Single<List<Article>> {
         return database.articleDao.getSourceArticles(sourceName)
     }
 
-    override fun searchSourceArticles(sourceName: String, searchText: String): Single<List<ArticleEntity>> {
+    override fun searchSourceArticles(sourceName: String, searchText: String): Single<List<Article>> {
         return database.articleDao.searchSourceArticles(sourceName, searchText)
     }
 

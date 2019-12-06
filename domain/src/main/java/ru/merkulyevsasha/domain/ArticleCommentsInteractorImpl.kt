@@ -11,16 +11,24 @@ import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
 import ru.merkulyevsasha.core.repositories.ArticlesApiRepository
 import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
-import ru.merkulyevsasha.domain.mappers.ArticleSourceNameMapper
 import java.util.*
 
 class ArticleCommentsInteractorImpl(
     private val articlesApiRepository: ArticlesApiRepository,
     private val articleCommentsApiRepository: ArticleCommentsApiRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val databaseRepository: NewsDatabaseRepository,
-    private val sourceNameMapper: ArticleSourceNameMapper
+    private val databaseRepository: NewsDatabaseRepository
 ) : ArticleCommentsInteractor {
+
+    private val _rssSourceNameMap = mutableMapOf<String, String>()
+    private val rssSourceNameMap : Map<String, String>
+        get() {
+            if (_rssSourceNameMap.isEmpty()) {
+                val map = databaseRepository.getRssSources().associateBy({ it.sourceId }, { it.sourceName })
+                _rssSourceNameMap.putAll(map)
+            }
+            return _rssSourceNameMap
+        }
 
     override fun getArticleComments(articleId: Int): Single<Pair<Article, List<ArticleComment>>> {
         return Single.zip(
@@ -38,12 +46,9 @@ class ArticleCommentsInteractorImpl(
         return Single.fromCallable { keyValueStorage.getLastArticleCommentReadDate() ?: Date(0) }
             .flatMap {
                 Single.zip(
-                    articlesApiRepository.getArticle(articleId)
+                    articlesApiRepository.getArticle(articleId, rssSourceNameMap)
                         .doOnSuccess { item ->
                             databaseRepository.updateArticle(item)
-                        }
-                        .map { item ->
-                            sourceNameMapper.map(item)
                         },
                     articleCommentsApiRepository.getArticleComments(articleId, it)
                         .doOnSuccess { items ->

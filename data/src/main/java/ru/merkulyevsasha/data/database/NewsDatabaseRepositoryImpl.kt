@@ -8,7 +8,6 @@ import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.data.database.mappers.ArticleCommentEntityMapper
 import ru.merkulyevsasha.data.database.mappers.ArticleCommentMapper
-import ru.merkulyevsasha.data.database.mappers.ArticleEntityMapper
 import ru.merkulyevsasha.data.database.mappers.ArticleMapper
 import ru.merkulyevsasha.data.database.mappers.RssSourceEntityMapper
 import ru.merkulyevsasha.data.database.mappers.RssSourceMapper
@@ -20,7 +19,6 @@ class NewsDatabaseRepositoryImpl(
     baseUrl: String
 ) : NewsDatabaseRepository {
 
-    private val articleEntityMapper = ArticleEntityMapper()
     private val articleMapper = ArticleMapper()
     private val articleCommentEntityMapper by lazy { ArticleCommentEntityMapper("bearer " + keyValueStorage.getAccessToken(), baseUrl) }
     private val articleCommentMapper = ArticleCommentMapper()
@@ -29,14 +27,10 @@ class NewsDatabaseRepositoryImpl(
 
     override fun getArticle(articleId: Int): Single<Article> {
         return newsDatabaseSource.getArticle(articleId)
-            .map { articleEntityMapper.map(it) }
     }
 
     override fun getArticles(): Single<List<Article>> {
         return newsDatabaseSource.getArticles()
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
     }
 
     override fun getArticleComments(articleId: Int): Single<List<ArticleComment>> {
@@ -48,16 +42,10 @@ class NewsDatabaseRepositoryImpl(
 
     override fun getUserActivityArticles(): Single<List<Article>> {
         return newsDatabaseSource.getUserActivityArticles()
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
     }
 
     override fun getSourceArticles(sourceName: String): Single<List<Article>> {
         return newsDatabaseSource.getSourceArticles(sourceName)
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
     }
 
     override fun searchArticles(searchText: String, byUserActivities: Boolean): Single<List<Article>> {
@@ -66,16 +54,10 @@ class NewsDatabaseRepositoryImpl(
                 if (ua) newsDatabaseSource.searchUserActivitiesArticles("%${searchText.toLowerCase(Locale.getDefault())}%")
                 else newsDatabaseSource.searchArticles("%${searchText.toLowerCase(Locale.getDefault())}%")
             }
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
     }
 
     override fun searchSourceArticles(sourceName: String, searchText: String): Single<List<Article>> {
         return newsDatabaseSource.searchSourceArticles(sourceName, "%${searchText.toLowerCase(Locale.getDefault())}%")
-            .flattenAsFlowable { it }
-            .map { articleEntityMapper.map(it) }
-            .toList()
     }
 
     override fun removeOldNotUserActivityArticles(cleanDate: Date) {
