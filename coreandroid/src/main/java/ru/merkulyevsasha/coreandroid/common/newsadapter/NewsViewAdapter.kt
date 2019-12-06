@@ -89,23 +89,30 @@ class NewsViewAdapter constructor(
     }
 
     fun updateItems(items: List<Article>) {
-        var index = 0
+        if (items.isEmpty()) return
+        var count = 0
+        val addedItems = ArrayList<Article>(items.size)
+        val mapArticles = this.items.map { it.articleId }
         for (item in items) {
-            val oldItemIndex = this.items.indexOfFirst { it.articleId == item.articleId }
-            if (oldItemIndex >= 0) {
-                this.items.set(oldItemIndex, item)
+            if (mapArticles.contains(item.articleId)) {
+                val oldItemIndex = this.items.indexOfFirst { it.articleId == item.articleId }
+                this.items[oldItemIndex] = item
+                this.notifyItemChanged(oldItemIndex)
             } else {
-                this.items.add(index, item)
-                index++
+                addedItems.add(item)
+                count++
             }
         }
-        this.notifyDataSetChanged()
+        if (count > 0) {
+            this.items.addAll(0, addedItems)
+            this.notifyItemRangeChanged(0, count)
+        }
     }
 
     fun updateItem(item: Article) {
         val index = items.indexOfFirst { it.articleId == item.articleId }
         items[index] = item
-        this.notifyDataSetChanged()
+        this.notifyItemChanged(index)
     }
 
     private fun initDescription(title: String, description: String?, holder: ItemViewHolder) {
