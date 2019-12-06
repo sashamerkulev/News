@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation.main
+package ru.merkulyevsasha.main
 
 import ru.merkulyevsasha.coreandroid.base.BaseView
 

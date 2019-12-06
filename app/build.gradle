@@ -26,6 +26,7 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':coreandroid')
     implementation project(path: ':sl')
+    implementation project(path: ':main')
     implementation project(path: ':articlecomments')
     implementation project(path: ':articledetails')
     implementation project(path: ':articles')

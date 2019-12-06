@@ -17,6 +17,8 @@ import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
+import ru.merkulyevsasha.main.MainPresenterImpl
+import ru.merkulyevsasha.main.MainView
 import ru.merkulyevsasha.news.R
 
 class MainActivity : AppCompatActivity(),

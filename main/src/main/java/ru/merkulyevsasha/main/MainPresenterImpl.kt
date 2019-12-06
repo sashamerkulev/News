@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.news.presentation.main
+package ru.merkulyevsasha.main
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.SetupInteractor
