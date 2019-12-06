@@ -14,6 +14,13 @@ dependencies {
     implementation project(path: ':preferences')
     implementation project(path: ':data')
     implementation project(path: ':domain')
+    implementation project(path: ':main')
+    implementation project(path: ':articlecomments')
+    implementation project(path: ':articledetails')
+    implementation project(path: ':articles')
+    implementation project(path: ':useractivities')
+    implementation project(path: ':userinfo')
+    implementation project(path: ':sourcearticles')
 }
 
 apply from: "$rootDir/room.gradle"

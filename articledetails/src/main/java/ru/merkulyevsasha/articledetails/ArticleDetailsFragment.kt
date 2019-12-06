@@ -22,12 +22,9 @@ import kotlinx.android.synthetic.main.merge_articles_buttons.layoutButtonShare
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewComment
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewDislike
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewLike
-import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 
 class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLocator {
@@ -79,9 +76,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
 
         val bundle = savedInstanceState ?: arguments ?: return
         articleId = bundle.getInt(ARTICLE_ID, 0)
-        val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticleDetailsPresenterImpl(interactor,
-            serviceLocator.get(ArticleDistributor::class.java), serviceLocator.get(MainActivityRouter::class.java))
+        presenter = serviceLocator.get(ArticleDetailsPresenterImpl::class.java)
         presenter?.bindView(this)
         presenter?.onFirstLoad(articleId)
     }
@@ -102,9 +97,9 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     }
 
     override fun onDestroy() {
+        serviceLocator.release(ArticleDetailsPresenterImpl::class.java)
         presenter?.onDestroy()
         presenter = null
-        serviceLocator.release(ArticlesInteractor::class.java)
         super.onDestroy()
     }
 

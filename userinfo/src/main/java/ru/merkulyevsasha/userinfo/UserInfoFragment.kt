@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.models.UserProfile
@@ -92,8 +91,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.bindToolbar(toolbar)
 
-        val interactor = serviceLocator.get(UsersInteractor::class.java)
-        presenter = UserInfoPresenterImpl(interactor)
+        presenter = serviceLocator.get(UserInfoPresenterImpl::class.java)
         presenter?.bindView(this)
         presenter?.onFirstLoad()
 
@@ -134,11 +132,13 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         saveFragmentState(outState)
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         combinator?.unbindToolbar()
         saveFragmentState(arguments ?: Bundle())
+        serviceLocator.release(UserInfoPresenterImpl::class.java)
         presenter?.onDestroy()
-        super.onDestroyView()
+        presenter = null
+        super.onDestroy()
     }
 
     override fun showError() {

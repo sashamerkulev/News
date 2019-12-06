@@ -1,6 +1,9 @@
 package ru.merkulyevsasha.sl
 
 import android.content.Context
+import ru.merkulyevsasha.articlecomments.ArticleCommentsPresenterImpl
+import ru.merkulyevsasha.articledetails.ArticleDetailsPresenterImpl
+import ru.merkulyevsasha.articles.ArticlesPresenterImpl
 import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.ServiceLocator
@@ -29,7 +32,11 @@ import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
 import ru.merkulyevsasha.domain.mappers.ArticleSourceNameMapper
+import ru.merkulyevsasha.main.MainPresenterImpl
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
+import ru.merkulyevsasha.sourcearticles.SourceArticlesPresenterImpl
+import ru.merkulyevsasha.useractivities.UserActivitiesPresenterImpl
+import ru.merkulyevsasha.userinfo.UserInfoPresenterImpl
 
 class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator {
 
@@ -91,6 +98,28 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
                 getSetupApiRepository(),
                 getDatabaseRepository()
             )
+            MainPresenterImpl::class.java -> maps[clazz] = MainPresenterImpl(get(SetupInteractor::class.java))
+            ArticleCommentsPresenterImpl::class.java -> maps[clazz] = ArticleCommentsPresenterImpl(
+                get(ArticleCommentsInteractor::class.java),
+                get(ArticlesInteractor::class.java),
+                get(ArticleDistributor::class.java))
+            ArticleDetailsPresenterImpl::class.java -> maps[clazz] = ArticleDetailsPresenterImpl(
+                get(ArticlesInteractor::class.java),
+                get(ArticleDistributor::class.java),
+                get(MainActivityRouter::class.java))
+            ArticlesPresenterImpl::class.java -> maps[clazz] = ArticlesPresenterImpl(
+                get(ArticlesInteractor::class.java),
+                get(ArticleDistributor::class.java),
+                get(MainActivityRouter::class.java))
+            SourceArticlesPresenterImpl::class.java -> maps[clazz] = SourceArticlesPresenterImpl(
+                get(ArticlesInteractor::class.java),
+                get(ArticleDistributor::class.java),
+                get(MainActivityRouter::class.java))
+            UserActivitiesPresenterImpl::class.java -> maps[clazz] = UserActivitiesPresenterImpl(
+                get(ArticlesInteractor::class.java),
+                get(ArticleDistributor::class.java),
+                get(MainActivityRouter::class.java))
+            UserInfoPresenterImpl::class.java -> maps[clazz] = UserInfoPresenterImpl(get(UsersInteractor::class.java))
         }
         return maps[clazz] as T
     }

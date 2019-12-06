@@ -22,13 +22,9 @@ import kotlinx.android.synthetic.main.fragment_useractivities.adView
 import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
 import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
 import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
-import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
-import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
@@ -125,9 +121,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
-        val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = UserActivitiesPresenterImpl(interactor, serviceLocator.get(ArticleDistributor::class.java),
-            serviceLocator.get(MainActivityRouter::class.java))
+        presenter = serviceLocator.get(UserActivitiesPresenterImpl::class.java)
         presenter?.bindView(this)
 
         initRecyclerView()
@@ -196,14 +190,14 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         saveFragmentState(outState)
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
+        serviceLocator.release(UserActivitiesPresenterImpl::class.java)
         presenter?.onDestroy()
         presenter = null
-        serviceLocator.release(ArticleCommentsInteractor::class.java)
         saveFragmentState(arguments ?: Bundle())
-        super.onDestroyView()
+        super.onDestroy()
     }
 
     override fun showError() {

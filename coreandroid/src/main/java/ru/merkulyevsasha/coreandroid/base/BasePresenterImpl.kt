@@ -20,6 +20,7 @@ abstract class BasePresenterImpl<T : BaseView> {
     }
 
     fun onDestroy() {
+        commandViewHolder.clearCommands()
         compositeDisposable.dispose()
     }
 
@@ -29,6 +30,10 @@ abstract class BasePresenterImpl<T : BaseView> {
 
     inner class CommandViewHolder {
         private val commands = CopyOnWriteArrayList<ViewCommand>()
+
+        fun clearCommands() {
+            commands.clear()
+        }
 
         fun execute() {
             commands.forEach {

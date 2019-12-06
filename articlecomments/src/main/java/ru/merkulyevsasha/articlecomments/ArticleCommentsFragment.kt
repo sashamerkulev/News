@@ -13,11 +13,8 @@ import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
 import kotlinx.android.synthetic.main.fragment_articlecomments.recyclerView
 import kotlinx.android.synthetic.main.fragment_articlecomments.swipeRefreshLayout
-import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
-import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
@@ -71,9 +68,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        val interactor = serviceLocator.get(ArticleCommentsInteractor::class.java)
-        val articleInteractor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticleCommentsPresenterImpl(interactor, articleInteractor, serviceLocator.get(ArticleDistributor::class.java))
+        presenter = serviceLocator.get(ArticleCommentsPresenterImpl::class.java)
         presenter?.bindView(this)
 
         initRecyclerView()
@@ -104,9 +99,9 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
     override fun onDestroy() {
         adView?.destroy()
+        serviceLocator.release(ArticleCommentsPresenterImpl::class.java)
         presenter?.onDestroy()
         presenter = null
-        serviceLocator.release(ArticleCommentsInteractor::class.java)
         super.onDestroy()
     }
 

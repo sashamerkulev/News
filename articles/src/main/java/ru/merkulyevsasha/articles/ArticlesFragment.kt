@@ -22,12 +22,9 @@ import kotlinx.android.synthetic.main.fragment_articles.adView
 import kotlinx.android.synthetic.main.fragment_articles.buttonUp
 import kotlinx.android.synthetic.main.fragment_articles.recyclerView
 import kotlinx.android.synthetic.main.fragment_articles.swipeRefreshLayout
-import ru.merkulyevsasha.core.ArticleDistributor
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
@@ -127,9 +124,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        val interactor = serviceLocator.get(ArticlesInteractor::class.java)
-        presenter = ArticlesPresenterImpl(interactor, serviceLocator.get(ArticleDistributor::class.java),
-            serviceLocator.get(MainActivityRouter::class.java))
+        presenter = serviceLocator.get(ArticlesPresenterImpl::class.java)
         presenter?.bindView(this)
 
         initRecyclerView()
@@ -198,14 +193,14 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         saveFragmentState(outState)
     }
 
-    override fun onDestroyView() {
+    override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
+        serviceLocator.release(ArticlesPresenterImpl::class.java)
         presenter?.onDestroy()
         presenter = null
-        serviceLocator.release(ArticlesInteractor::class.java)
         saveFragmentState(arguments ?: Bundle())
-        super.onDestroyView()
+        super.onDestroy()
     }
 
     override fun showError() {

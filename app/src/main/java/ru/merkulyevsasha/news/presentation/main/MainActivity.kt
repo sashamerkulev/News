@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
@@ -47,8 +46,7 @@ class MainActivity : AppCompatActivity(),
 
         setContentView(R.layout.activity_main)
 
-        val interactor = serviceLocator.get(SetupInteractor::class.java)
-        presenter = MainPresenterImpl(interactor)
+        presenter = serviceLocator.get(MainPresenterImpl::class.java)
 
         //AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
 
