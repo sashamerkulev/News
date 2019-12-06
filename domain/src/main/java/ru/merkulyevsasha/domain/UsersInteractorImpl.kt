@@ -8,16 +8,18 @@ import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.models.UserProfile
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
+import ru.merkulyevsasha.core.repositories.NewsDatabaseRepository
 import ru.merkulyevsasha.core.repositories.UsersApiRepository
 
 class UsersInteractorImpl(
     private val usersApiRepository: UsersApiRepository,
-    private val keyValueStorage: KeyValueStorage
+    private val keyValueStorage: KeyValueStorage,
+    private val databaseRepository: NewsDatabaseRepository
 ) : UsersInteractor {
     override fun getUserInfo(): Single<UserProfile> {
         return usersApiRepository.getUserInfo()
             .map { userInfo ->
-                UserProfile(userInfo, keyValueStorage.getUserProfileTheme())
+                UserProfile(userInfo, keyValueStorage.getUserProfileTheme(), databaseRepository.getRssSources())
             }
             .subscribeOn(Schedulers.io())
     }
