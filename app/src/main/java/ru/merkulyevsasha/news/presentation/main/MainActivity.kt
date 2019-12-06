@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var serviceLocator: ServiceLocator
     private lateinit var mainActivityRouter: MainActivityRouter
-    private lateinit var presenter: MainPresenter
+    private lateinit var presenter: MainPresenterImpl
 
     override fun setServiceLocator(serviceLocator: ServiceLocator) {
         this.serviceLocator = serviceLocator
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
 
         val interactor = serviceLocator.get(SetupInteractor::class.java)
-        presenter = MainPresenter(interactor)
+        presenter = MainPresenterImpl(interactor)
 
         //AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
 
