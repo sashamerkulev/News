@@ -20,6 +20,7 @@ import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.KbUtils.Companion.hideKeyboard
 import java.util.*
 
 class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceLocator {
@@ -132,7 +133,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
     override fun updateCommentItem(item: ArticleComment) {
         editTextComment.setText("")
-        ru.merkulyevsasha.coreandroid.common.KbUtils.hideKeyboard(requireActivity())
+        hideKeyboard(requireActivity())
         adapter.updateCommentItem(item)
     }
 
