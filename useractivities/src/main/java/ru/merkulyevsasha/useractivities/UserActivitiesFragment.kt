@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import kotlinx.android.synthetic.main.fragment_useractivities.adView
-import kotlinx.android.synthetic.main.fragment_useractivities.buttonUp
-import kotlinx.android.synthetic.main.fragment_useractivities.recyclerView
-import kotlinx.android.synthetic.main.fragment_useractivities.swipeRefreshLayout
+import kotlinx.android.synthetic.main.merge_articles_layout.adView
+import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
+import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
+import kotlinx.android.synthetic.main.merge_articles_layout.swipeRefreshLayout
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
