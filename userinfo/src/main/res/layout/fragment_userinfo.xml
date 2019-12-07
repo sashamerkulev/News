@@ -190,6 +190,7 @@
                         android:layout_height="wrap_content"
                         android:checked="false"
                         android:clickable="false"
+                        app:thumbTint="@color/colorInactive"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
