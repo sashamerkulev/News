@@ -59,9 +59,12 @@ class ArticlesInteractorImpl(
     }
 
     override fun getArticle(articleId: Int): Single<Article> {
-        return articlesApiRepository.getArticle(articleId, rssSourceNamesMap)
-            .doOnSuccess {
-                databaseRepository.updateArticle(it)
+        return Single.fromCallable { rssSourceNamesMap }
+            .flatMap { rssSourceNames ->
+                articlesApiRepository.getArticle(articleId, rssSourceNames)
+                    .doOnSuccess {
+                        databaseRepository.updateArticle(it)
+                    }
             }
             .subscribeOn(Schedulers.io())
     }
@@ -89,19 +92,22 @@ class ArticlesInteractorImpl(
     override fun refreshAndGetArticles(): Single<List<Article>> {
         return Single.fromCallable { keyValueStorage.getLastArticleReadDate() ?: Date(0) }
             .flatMap {
-                articlesApiRepository.getArticles(it, rssSourceNamesMap)
-                    .doOnSuccess { items ->
-                        if (items.isNotEmpty()) {
-                            databaseRepository.addOrUpdateArticles(items)
-                            keyValueStorage.setLastArticleReadDate(Date())
-                        }
+                Single.fromCallable { rssSourceNamesMap }
+                    .flatMap { rssSourceNames ->
+                        articlesApiRepository.getArticles(it, rssSourceNames)
+                            .doOnSuccess { items ->
+                                if (items.isNotEmpty()) {
+                                    databaseRepository.addOrUpdateArticles(items)
+                                    keyValueStorage.setLastArticleReadDate(Date())
+                                }
+                            }
                     }
+                    .map { articles ->
+                        val checkedSources = databaseRepository.getRssSources().filter { it.checked }
+                        articles.filter { a -> checkedSources.any { it.sourceId == a.sourceId } }
+                    }
+                    .subscribeOn(Schedulers.io())
             }
-            .map { articles->
-                val checkedSources = databaseRepository.getRssSources().filter { it.checked }
-                articles.filter { a -> checkedSources.any { it.sourceId == a.sourceId } }
-            }
-            .subscribeOn(Schedulers.io())
     }
 
     override fun likeArticle(articleId: Int): Single<Article> {
