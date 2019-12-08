@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fragment_sourcelist_title">Источники новостей</string>
+    <string name="source_list_loading_error_message">Ошибка загрузки</string>
+</resources>

@@ -41,8 +41,4 @@ class UsersInteractorImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override fun updateRssSource(checked: Boolean, sourceId: String): Completable {
-        return Completable.fromCallable { databaseRepository.updateRssSource(checked, sourceId) }
-            .subscribeOn(Schedulers.io())
-    }
 }

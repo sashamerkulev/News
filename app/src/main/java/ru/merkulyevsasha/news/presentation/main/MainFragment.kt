@@ -12,6 +12,7 @@ import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.news.R
+import ru.merkulyevsasha.sourcelist.SourceListFragment
 import ru.merkulyevsasha.useractivities.UserActivitiesFragment
 import ru.merkulyevsasha.userinfo.UserInfoFragment
 
@@ -39,6 +40,11 @@ class MainFragment : Fragment(), RequireServiceLocator {
                 R.id.navigation_articles -> {
                     currentFrag = ArticlesFragment.TAG
                     mainFragmentRouter.showArticles()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_source_articles -> {
+                    currentFrag = SourceListFragment.TAG
+                    mainFragmentRouter.showSourceList()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_actions -> {
@@ -69,6 +75,7 @@ class MainFragment : Fragment(), RequireServiceLocator {
         if (savedInstanceState == null) {
             when(currentFrag) {
                 ArticlesFragment.TAG -> mainFragmentRouter.showArticles()
+                SourceListFragment.TAG -> mainFragmentRouter.showSourceList()
                 UserActivitiesFragment.TAG -> mainFragmentRouter.showUserActivities()
                 UserInfoFragment.TAG -> mainFragmentRouter.showUserInfo()
             }

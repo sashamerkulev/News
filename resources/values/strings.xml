@@ -17,6 +17,7 @@
     <string name="download_channel_name">Новости</string>
     <string name="download_channel_description">Канал уведомлений новостей</string>
     <string name="bottom_button_articles_title">Новости</string>
+    <string name="bottom_button_source__articles_title">Источники</string>
     <string name="bottom_button_actions_title">Активности</string>
     <string name="bottom_button_user_title">Профиль</string>
     <string name="fragment_actions_title">Отмеченные новости</string>

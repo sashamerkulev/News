@@ -33,6 +33,7 @@ dependencies {
     implementation project(path: ':useractivities')
     implementation project(path: ':userinfo')
     implementation project(path: ':sourcearticles')
+    implementation project(path: ':sourcelist')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'

@@ -1,12 +1,16 @@
 package ru.merkulyevsasha.userinfo
 
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.core.domain.SourceInteractor
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
 
-class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : BasePresenterImpl<UserInfoView>() {
+class UserInfoPresenterImpl(
+    private val usersInteractor: UsersInteractor,
+    private val sourceInteractor: SourceInteractor
+) : BasePresenterImpl<UserInfoView>() {
     fun onFirstLoad() {
         compositeDisposable.add(
             usersInteractor.getUserInfo()
@@ -82,7 +86,7 @@ class UserInfoPresenterImpl(private val usersInteractor: UsersInteractor) : Base
 
     fun onSourceChecked(checked: Boolean, sourceId: String) {
         compositeDisposable.add(
-            usersInteractor.updateRssSource(checked, sourceId)
+            sourceInteractor.updateRssSource(checked, sourceId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                 },

@@ -10,6 +10,7 @@ import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.domain.SetupInteractor
+import ru.merkulyevsasha.core.domain.SourceInteractor
 import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.repositories.ArticleCommentsApiRepository
@@ -30,10 +31,12 @@ import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticleDistributorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
 import ru.merkulyevsasha.domain.SetupInteractorImpl
+import ru.merkulyevsasha.domain.SourceInteractorImpl
 import ru.merkulyevsasha.domain.UsersInteractorImpl
 import ru.merkulyevsasha.main.MainPresenterImpl
 import ru.merkulyevsasha.preferences.KeyValueStorageImpl
 import ru.merkulyevsasha.sourcearticles.SourceArticlesPresenterImpl
+import ru.merkulyevsasha.sourcelist.SourceListPresenterImpl
 import ru.merkulyevsasha.useractivities.UserActivitiesPresenterImpl
 import ru.merkulyevsasha.userinfo.UserInfoPresenterImpl
 
@@ -96,6 +99,9 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
                 getSetupApiRepository(),
                 getDatabaseRepository()
             )
+            SourceInteractor::class.java -> maps[clazz] = SourceInteractorImpl(
+                getDatabaseRepository()
+            )
             MainPresenterImpl::class.java -> maps[clazz] = MainPresenterImpl(get(SetupInteractor::class.java))
             ArticleCommentsPresenterImpl::class.java -> maps[clazz] = ArticleCommentsPresenterImpl(
                 get(ArticleCommentsInteractor::class.java),
@@ -117,7 +123,8 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
                 get(ArticlesInteractor::class.java),
                 get(ArticleDistributor::class.java),
                 get(MainActivityRouter::class.java))
-            UserInfoPresenterImpl::class.java -> maps[clazz] = UserInfoPresenterImpl(get(UsersInteractor::class.java))
+            UserInfoPresenterImpl::class.java -> maps[clazz] = UserInfoPresenterImpl(get(UsersInteractor::class.java), get(SourceInteractor::class.java))
+            SourceListPresenterImpl::class.java -> maps[clazz] = SourceListPresenterImpl(get(SourceInteractor::class.java), get(MainActivityRouter::class.java))
         }
         return maps[clazz] as T
     }

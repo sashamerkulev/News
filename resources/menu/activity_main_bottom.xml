@@ -7,6 +7,11 @@
         android:title="@string/bottom_button_articles_title" />
 
     <item
+        android:id="@+id/navigation_source_articles"
+        android:icon="@drawable/ic_list_black_24px"
+        android:title="@string/bottom_button_source__articles_title" />
+
+    <item
         android:id="@+id/navigation_actions"
         android:icon="@drawable/ic_bookmark_border_black_24px"
         android:title="@string/bottom_button_actions_title" />

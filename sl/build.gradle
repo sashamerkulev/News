@@ -21,6 +21,7 @@ dependencies {
     implementation project(path: ':useractivities')
     implementation project(path: ':userinfo')
     implementation project(path: ':sourcearticles')
+    implementation project(path: ':sourcelist')
 }
 
 apply from: "$rootDir/room.gradle"
