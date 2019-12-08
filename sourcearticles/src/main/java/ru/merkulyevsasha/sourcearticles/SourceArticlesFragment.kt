@@ -199,13 +199,17 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
         saveFragmentState(outState)
     }
 
+    override fun onDestroyView() {
+        saveFragmentState(arguments ?: Bundle())
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
         serviceLocator.release(SourceArticlesPresenterImpl::class.java)
         presenter?.onDestroy()
         presenter = null
-        saveFragmentState(arguments ?: Bundle())
         super.onDestroy()
     }
 

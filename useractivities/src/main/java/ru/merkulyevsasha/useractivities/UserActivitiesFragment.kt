@@ -190,13 +190,17 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         saveFragmentState(outState)
     }
 
+    override fun onDestroyView() {
+        saveFragmentState(arguments ?: Bundle())
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
         serviceLocator.release(UserActivitiesPresenterImpl::class.java)
         presenter?.onDestroy()
         presenter = null
-        saveFragmentState(arguments ?: Bundle())
         super.onDestroy()
     }
 
