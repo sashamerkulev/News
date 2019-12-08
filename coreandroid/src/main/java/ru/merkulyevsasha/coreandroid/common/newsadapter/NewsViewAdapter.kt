@@ -36,7 +36,7 @@ class NewsViewAdapter constructor(
     private val shareCallbackClickHandler: ArticleShareCallbackClickHandler?,
     private val colorThemeResolver: ColorThemeResolver,
     private val items: MutableList<Article>
-) : RecyclerView.Adapter<ItemViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
@@ -45,37 +45,8 @@ class NewsViewAdapter constructor(
         return ItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-
-        val item = items[position]
-
-        val source = item.sourceName
-        val title = item.title.trim()
-        val description = item.description
-        val url = item.pictureUrl
-
-        val pubDate = item.pubDate
-        holder.itemView.newsDateSource.text = String.format("%s %s", format.format(pubDate), source)
-
-        initDescription(title, description, holder)
-
-        holder.itemView.imageViewThumb.setImageResource(0)
-        if (url.isNullOrEmpty()) {
-            holder.itemView.imageViewThumb.visibility = View.GONE
-        } else {
-            holder.itemView.imageViewThumb.visibility = View.VISIBLE
-            Glide.with(context).load(url).into(holder.itemView.imageViewThumb)
-        }
-
-        holder.itemView.textViewLike.text = item.usersLikeCount.toString()
-        holder.itemView.textViewDislike.text = item.usersDislikeCount.toString()
-        holder.itemView.textViewComment.text = item.usersCommentCount.toString()
-
-        colorThemeResolver.setArticleActivityColor(item.isUserLiked, holder.itemView.textViewLike, holder.itemView.imageViewLike)
-        colorThemeResolver.setArticleActivityColor(item.isUserDisliked, holder.itemView.textViewDislike, holder.itemView.imageViewDislike)
-        colorThemeResolver.setArticleActivityColor(item.isUserCommented, holder.itemView.textViewComment, holder.itemView.imageViewComment)
-
-        initClickListeners(holder)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ItemViewHolder).bind(position)
     }
 
     override fun getItemCount(): Int {
@@ -115,45 +86,81 @@ class NewsViewAdapter constructor(
         this.notifyItemChanged(index)
     }
 
-    private fun initDescription(title: String, description: String?, holder: ItemViewHolder) {
-        if (title == description || description.isNullOrEmpty()) {
-            holder.itemView.newsDescription.visibility = View.GONE
-        } else {
-            holder.itemView.newsDescription.visibility = View.VISIBLE
-            holder.itemView.newsDescription.text = description.trim { it <= ' ' }
+    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(position: Int) {
+
+            val item = items[position]
+
+            val source = item.sourceName
+            val title = item.title.trim()
+            val description = item.description
+            val url = item.pictureUrl
+
+            val pubDate = item.pubDate
+            itemView.newsDateSource.text = String.format("%s %s", format.format(pubDate), source)
+
+            initDescription(title, description)
+
+            itemView.imageViewThumb.setImageResource(0)
+            if (url.isNullOrEmpty()) {
+                itemView.imageViewThumb.visibility = View.GONE
+            } else {
+                itemView.imageViewThumb.visibility = View.VISIBLE
+                Glide.with(context).load(url).into(itemView.imageViewThumb)
+            }
+
+            itemView.textViewLike.text = item.usersLikeCount.toString()
+            itemView.textViewDislike.text = item.usersDislikeCount.toString()
+            itemView.textViewComment.text = item.usersCommentCount.toString()
+
+            colorThemeResolver.setArticleActivityColor(item.isUserLiked, itemView.textViewLike, itemView.imageViewLike)
+            colorThemeResolver.setArticleActivityColor(item.isUserDisliked, itemView.textViewDislike, itemView.imageViewDislike)
+            colorThemeResolver.setArticleActivityColor(item.isUserCommented, itemView.textViewComment, itemView.imageViewComment)
+
+            initClickListeners()
         }
-        holder.itemView.newsTitle.text = title
+
+        private fun initDescription(title: String, description: String?) {
+            if (title == description || description.isNullOrEmpty()) {
+                itemView.newsDescription.visibility = View.GONE
+            } else {
+                itemView.newsDescription.visibility = View.VISIBLE
+                itemView.newsDescription.text = description.trim { it <= ' ' }
+            }
+            itemView.newsTitle.text = title
+        }
+
+        private fun initClickListeners() {
+            itemView.setOnClickListener {
+                val newItem = items[adapterPosition]
+                articleCallbackClickHandler?.onArticleCliked(newItem)
+            }
+
+            itemView.layoutSourceName.setOnClickListener {
+                val newItem = items[adapterPosition]
+                sourceArticleClickCallbackHandler?.onSourceArticleCliked(newItem.sourceId, newItem.sourceName)
+            }
+
+            itemView.layoutButtonLike.setOnClickListener {
+                val newItem = items[adapterPosition]
+                likeCallbackClickHandler?.onArticleLikeClicked(newItem)
+            }
+
+            itemView.layoutButtonComment.setOnClickListener {
+                val newItem = items[adapterPosition]
+                commentCallbackClickHandler?.onArticleCommentArticleClicked(newItem.articleId)
+            }
+
+            itemView.layoutButtonDislike.setOnClickListener {
+                val newItem = items[adapterPosition]
+                likeCallbackClickHandler?.onArticleDislikeClicked(newItem)
+            }
+
+            itemView.layoutButtonShare.setOnClickListener {
+                val newItem = items[adapterPosition]
+                shareCallbackClickHandler?.onArticleShareClicked(newItem)
+            }
+        }
     }
 
-    private fun initClickListeners(holder: ItemViewHolder) {
-        holder.itemView.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            articleCallbackClickHandler?.onArticleCliked(newItem)
-        }
-
-        holder.itemView.layoutSourceName.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            sourceArticleClickCallbackHandler?.onSourceArticleCliked(newItem.sourceId, newItem.sourceName)
-        }
-
-        holder.itemView.layoutButtonLike.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            likeCallbackClickHandler?.onArticleLikeClicked(newItem)
-        }
-
-        holder.itemView.layoutButtonComment.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            commentCallbackClickHandler?.onArticleCommentArticleClicked(newItem.articleId)
-        }
-
-        holder.itemView.layoutButtonDislike.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            likeCallbackClickHandler?.onArticleDislikeClicked(newItem)
-        }
-
-        holder.itemView.layoutButtonShare.setOnClickListener {
-            val newItem = items[holder.adapterPosition]
-            shareCallbackClickHandler?.onArticleShareClicked(newItem)
-        }
-    }
 }
