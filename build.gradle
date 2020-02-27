@@ -12,7 +12,6 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath 'com.android.tools.build:gradle:3.6.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -37,78 +36,35 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task allStaticAnalysis(
-        dependsOn: [
-                'app:lintDebug',
-                'app:ktlint',
-                'articlecomments:ktlint',
-                'articledetails:ktlint',
-                'articles:ktlint',
-                'core:ktlint',
-                'coreandroid:ktlint',
-                'data:ktlint',
-                'database:ktlint',
-                'domain:ktlint',
-                'network:ktlint',
-                'preferences:ktlint',
-                'sl:ktlint',
-                'useractivities:ktlint',
-                'userinfo:ktlint',
-                'app:detekt',
-                'articlecomments:detekt',
-                'articledetails:detekt',
-                'articles:detekt',
-                'core:detekt',
-                'coreandroid:detekt',
-                'data:detekt',
-                'database:detekt',
-                'domain:detekt',
-                'network:detekt',
-                'preferences:detekt',
-                'sl:detekt',
-                'useractivities:detekt',
-                'userinfo:detekt'
-        ]) {
+def statTasks = []
+def testTasks = []
+def coverTasks = []
+subprojects { proj ->
+//    println proj.name
+    def linDebug = proj.name + ":lintDebug"
+    statTasks = statTasks + linDebug
+    def ktLint = proj.name + ':ktlint'
+    statTasks = statTasks + ktLint
+    def detekt = proj.name + ':detekt'
+    statTasks = statTasks + detekt
+    def unitTest = proj.name + ":testDebugUnitTest"
+    testTasks = testTasks + unitTest
+    def coverVer = proj.name + ":testDebugUnitTestCoverageVerification"
+    coverTasks = coverTasks + coverVer
+}
+
+//println statTasks
+//println testTasks
+//println coverTasks
+
+task allStaticAnalysis(dependsOn: statTasks) {
     group = 'verification'
 }
 
-task allDebugUnitTest(
-        dependsOn: [
-                'app:testDebugUnitTest',
-                'articlecomments:testDebugUnitTest',
-                'articledetails:testDebugUnitTest',
-                'core:testDebugUnitTest',
-                'coreandroid:testDebugUnitTest',
-                'data:testDebugUnitTest',
-                'database:testDebugUnitTest',
-                'domain:testDebugUnitTest',
-                'network:testDebugUnitTest',
-                'preferences:testDebugUnitTest',
-                'sl:testDebugUnitTest',
-                'useractivities:testDebugUnitTest',
-                'userinfo:testDebugUnitTest'
-
-        ]) {
+task allDebugUnitTest(dependsOn: testTasks) {
     group = 'verification'
 }
 
-task allCoverageVerification(
-        dependsOn: [
-                'app:testDebugUnitTestCoverageVerification',
-                'articlecomments:testDebugUnitTestCoverageVerification',
-                'articledetails:testDebugUnitTestCoverageVerification',
-                'articles:testDebugUnitTestCoverageVerification',
-                'core:testDebugUnitTestCoverageVerification',
-                'coreandroid:testDebugUnitTestCoverageVerification',
-                'data:testDebugUnitTestCoverageVerification',
-                'database:testDebugUnitTestCoverageVerification',
-                'domain:testDebugUnitTestCoverageVerification',
-                'network:testDebugUnitTestCoverageVerification',
-                'preferences:testDebugUnitTestCoverageVerification',
-                'sl:testDebugUnitTestCoverageVerification',
-                'useractivities:testDebugUnitTestCoverageVerification',
-                'userinfo:testDebugUnitTestCoverageVerification',
-
-        ]) {
+task allCoverageVerification(dependsOn: coverTasks) {
     group = 'verification'
 }
