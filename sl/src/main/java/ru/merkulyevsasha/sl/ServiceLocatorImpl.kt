@@ -21,12 +21,12 @@ import ru.merkulyevsasha.core.repositories.UsersApiRepository
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.core.routers.MainFragmentRouter
 import ru.merkulyevsasha.coreandroid.providers.ResourceProviderImpl
-import ru.merkulyevsasha.data.database.NewsDatabaseRepositoryImpl
-import ru.merkulyevsasha.data.database.NewsRoomDatabaseSourceCreator
-import ru.merkulyevsasha.data.network.articlecomments.ArticleCommentsApiRepositoryImpl
-import ru.merkulyevsasha.data.network.articles.ArticlesApiRepositoryImpl
-import ru.merkulyevsasha.data.network.setup.SetupApiRepositoryImpl
-import ru.merkulyevsasha.data.network.users.UsersApiRepositoryImpl
+import ru.merkulyevsasha.dbrepository.database.NewsDatabaseRepositoryImpl
+import ru.merkulyevsasha.dbrepository.database.NewsRoomDatabaseSourceCreator
+import ru.merkulyevsasha.netrepository.network.articlecomments.ArticleCommentsApiRepositoryImpl
+import ru.merkulyevsasha.netrepository.network.articles.ArticlesApiRepositoryImpl
+import ru.merkulyevsasha.netrepository.network.setup.SetupApiRepositoryImpl
+import ru.merkulyevsasha.netrepository.network.users.UsersApiRepositoryImpl
 import ru.merkulyevsasha.domain.ArticleCommentsInteractorImpl
 import ru.merkulyevsasha.domain.ArticleDistributorImpl
 import ru.merkulyevsasha.domain.ArticlesInteractorImpl
@@ -57,15 +57,15 @@ class ServiceLocatorImpl private constructor(context: Context) : ServiceLocator 
     init {
         val prefs = KeyValueStorageImpl(context)
         val resourceProvider = ResourceProviderImpl(context)
-        val newsDatabaseSource = NewsRoomDatabaseSourceCreator.create(context, BuildConfig.DB_NAME)
+        val newsDatabaseSource = ru.merkulyevsasha.dbrepository.database.NewsRoomDatabaseSourceCreator.create(context, BuildConfig.DB_NAME)
         maps[KeyValueStorage::class.java] = prefs
         maps[ResourceProvider::class.java] = resourceProvider
         maps[ArticleDistributor::class.java] = ArticleDistributorImpl(context, resourceProvider)
-        maps[SetupApiRepository::class.java] = SetupApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
-        maps[ArticlesApiRepository::class.java] = ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
-        maps[ArticleCommentsApiRepository::class.java] = ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
-        maps[UsersApiRepository::class.java] = UsersApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
-        maps[NewsDatabaseRepository::class.java] = NewsDatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
+        maps[SetupApiRepository::class.java] = ru.merkulyevsasha.netrepository.network.setup.SetupApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[ArticlesApiRepository::class.java] = ru.merkulyevsasha.netrepository.network.articles.ArticlesApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[ArticleCommentsApiRepository::class.java] = ru.merkulyevsasha.netrepository.network.articlecomments.ArticleCommentsApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[UsersApiRepository::class.java] = ru.merkulyevsasha.netrepository.network.users.UsersApiRepositoryImpl(prefs, BuildConfig.API_URL, BuildConfig.DEBUG_MODE)
+        maps[NewsDatabaseRepository::class.java] = ru.merkulyevsasha.dbrepository.database.NewsDatabaseRepositoryImpl(newsDatabaseSource, prefs, BuildConfig.API_URL)
     }
 
     override fun <T> set(clazz: Class<T>, instance: Any) {

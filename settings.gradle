@@ -1,2 +1,4 @@
-include ':app', ':network', ':core', ':preferences', ':database', ':data', ':domain', ':main', ':sourcelist',
+include ':app', ':network', ':core', ':preferences', ':database', ':domain', ':main', ':sourcelist',
         ':articlecomments', ':articledetails', ':articles', ':useractivities', ':userinfo', ':coreandroid', ':sl', ':sourcearticles'
+include ':netrepository'
+include ':dbrepository'
