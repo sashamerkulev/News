@@ -15,7 +15,7 @@ class ArticleDetailsPresenterImpl(
 ) : BasePresenterImpl<ArticleDetailsView>() {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { view?.updateItem(it) },
+        { addCommand { view?.updateItem(it) } },
         { view?.showError() })
 
     fun onFirstLoad(articleId: Int) {

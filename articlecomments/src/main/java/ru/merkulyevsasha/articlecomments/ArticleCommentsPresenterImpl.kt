@@ -23,7 +23,7 @@ class ArticleCommentsPresenterImpl(
     ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentLikeCallbackClickHandler, ArticleCommentShareCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { view?.updateItem(it) },
+        { addCommand { view?.updateItem(it) } },
         { view?.showError() })
 
     fun onFirstLoad(articleId: Int) {

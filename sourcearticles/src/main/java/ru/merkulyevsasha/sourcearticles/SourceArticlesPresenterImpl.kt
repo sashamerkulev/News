@@ -21,7 +21,7 @@ class SourceArticlesPresenterImpl(
     ArticleClickCallbackHandler, ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { view?.updateItem(it) },
+        { addCommand { view?.updateItem(it) } },
         { view?.showError() })
 
     fun onFirstLoad(sourceName: String) {

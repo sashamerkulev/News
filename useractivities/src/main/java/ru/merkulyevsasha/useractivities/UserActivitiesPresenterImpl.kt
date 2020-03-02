@@ -24,13 +24,13 @@ class UserActivitiesPresenterImpl(
     ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { view?.updateItem(it) },
+        { addCommand { view?.updateItem(it) } },
         { view?.showError() })
 
     private val searchArticleHandler = SearchArticleHandler(articlesInteractor, true,
         { addCommand { view?.showProgress() } },
         { addCommand { view?.hideProgress() } },
-        { view?.showItems(it) },
+        { addCommand { view?.showItems(it) } },
         { view?.showError() })
 
     fun onFirstLoad() {
