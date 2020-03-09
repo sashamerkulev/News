@@ -19,7 +19,7 @@ abstract class BasePresenterImpl<T : BaseView> {
         this.view = null
     }
 
-    fun onDestroy() {
+    open fun onDestroy() {
         commandViewHolder.clearCommands()
         compositeDisposable.dispose()
     }
