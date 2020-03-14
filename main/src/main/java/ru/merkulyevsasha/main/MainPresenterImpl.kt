@@ -1,6 +1,8 @@
 package ru.merkulyevsasha.main
 
+import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
@@ -15,8 +17,9 @@ class MainPresenterImpl(private val setupInteractor: SetupInteractor) : BasePres
                         addCommand { view?.showMainScreen() }
                     },
                     {
-                        Timber.e(it)
-                        view?.showFatalError()
+                        Logger.log(it.toString())
+                        Logger.logStacktrace(it.stackTrace.toList())
+                        view?.showFatalError(it.toString())
                     }))
     }
 

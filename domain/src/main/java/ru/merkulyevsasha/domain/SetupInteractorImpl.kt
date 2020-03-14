@@ -1,8 +1,10 @@
 package ru.merkulyevsasha.domain
 
+import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.domain.SetupInteractor
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
@@ -19,10 +21,13 @@ class SetupInteractorImpl(
     override fun registerSetup(): Single<List<RssSource>> {
         return Single.fromCallable { preferences.getSetupId() }
             .flatMap { savedSetupId ->
+                Logger.log("savedSetupId -> $savedSetupId")
                 if (savedSetupId.isEmpty()) {
                     val setupId = UUID.randomUUID().toString()
+                    Logger.log("setupId -> $setupId")
                     setupApiRepository.registerSetup(setupId)
                         .doOnSuccess { token ->
+                            Logger.log("token -> $token")
                             preferences.setAccessToken(token.token)
                             preferences.setSetupId(setupId)
                         }

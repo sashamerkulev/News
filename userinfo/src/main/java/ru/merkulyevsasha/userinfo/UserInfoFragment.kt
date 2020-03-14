@@ -40,7 +40,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     companion object {
         @JvmStatic
-        val TAG: String = UserInfoFragment::class.java.simpleName
+        val TAG: String = "UserInfoFragment"
 
         private const val KEY_FILE_NAME = "key_file_name"
 

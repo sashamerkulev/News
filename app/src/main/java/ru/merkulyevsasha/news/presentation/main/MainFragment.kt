@@ -20,7 +20,7 @@ class MainFragment : Fragment(), RequireServiceLocator {
 
     companion object {
         @JvmStatic
-        val TAG: String = MainFragment::class.java.simpleName
+        val TAG: String = "MainFragment"
         private val KEY_FRAG = "KEY_FRAG"
 
         @JvmStatic

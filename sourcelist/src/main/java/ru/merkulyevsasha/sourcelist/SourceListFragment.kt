@@ -33,7 +33,7 @@ class SourceListFragment : Fragment(), SourceListView, RequireServiceLocator {
         private const val KEY_EXPANDED = "key_expanded"
 
         @JvmStatic
-        val TAG: String = SourceListFragment::class.java.simpleName
+        val TAG: String = "SourceListFragment"
 
         @JvmStatic
         fun newInstance(): Fragment {

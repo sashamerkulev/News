@@ -2,6 +2,7 @@ package ru.merkulyevsasha.articles
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.ArticleDistributor
+import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
@@ -66,6 +67,7 @@ class ArticlesPresenterImpl(
     }
 
     override fun onArticleCliked(item: Article) {
+        Logger.log("onArticleCliked item -> ${item.articleId}")
         applicationRouter.showArticleDetails(item.articleId)
     }
 

@@ -3,6 +3,7 @@ package ru.merkulyevsasha.news.presentation.routers
 import androidx.fragment.app.FragmentManager
 import ru.merkulyevsasha.articlecomments.ArticleCommentsFragment
 import ru.merkulyevsasha.articledetails.ArticleDetailsFragment
+import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.routers.BaseRouter
 import ru.merkulyevsasha.news.R
@@ -18,8 +19,10 @@ class MainActivityRouterImpl(fragmentManager: FragmentManager) : BaseRouter(R.id
     }
 
     override fun showArticleDetails(articleId: Int) {
+        Logger.log("showArticleDetails articleId -> $articleId")
         val tag = ArticleDetailsFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticleDetailsFragment.newInstance(articleId) }
+        Logger.log("showArticleDetails fragment -> $fragment")
         replaceFragment(tag, fragment, true)
     }
 

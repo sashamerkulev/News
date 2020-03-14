@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.merge_articles_buttons.layoutButtonShare
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewComment
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewDislike
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewLike
+import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.RequireServiceLocator
 import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
@@ -31,10 +32,11 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     companion object {
         private const val ARTICLE_ID = "ARTICLE_ID"
         @JvmStatic
-        val TAG: String = ArticleDetailsFragment::class.java.simpleName
+        val TAG: String = "ArticleDetailsFragment"
 
         @JvmStatic
         fun newInstance(articleId: Int): Fragment {
+            Logger.log("ArticleDetailsFragment newInstance -> $articleId")
             val fragment = ArticleDetailsFragment()
             val args = Bundle()
             args.putInt(ARTICLE_ID, articleId)

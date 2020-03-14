@@ -29,7 +29,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
         private const val KEY_POSITION = "key_position"
         private const val ARTICLE_ID = "ARTICLE_ID"
         @JvmStatic
-        val TAG: String = ArticleCommentsFragment::class.java.simpleName
+        val TAG: String = "ArticleCommentsFragment"
 
         @JvmStatic
         fun newInstance(articleId: Int): Fragment {

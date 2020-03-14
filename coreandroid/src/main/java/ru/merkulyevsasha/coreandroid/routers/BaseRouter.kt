@@ -2,6 +2,7 @@ package ru.merkulyevsasha.coreandroid.routers
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import ru.merkulyevsasha.core.Logger
 
 open class BaseRouter(private val containerId: Int, private val fragmentManager: FragmentManager) {
 
@@ -16,6 +17,7 @@ open class BaseRouter(private val containerId: Int, private val fragmentManager:
             fragmentTransaction.addToBackStack(tag)
         }
         fragmentTransaction.commitAllowingStateLoss()
+        Logger.log("BaseRouter tag -> $fragment Fragment-> $fragment")
     }
 
 }

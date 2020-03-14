@@ -15,9 +15,13 @@ android {
         multiDexEnabled true
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             shrinkResources false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
         }
     }
 }

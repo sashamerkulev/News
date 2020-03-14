@@ -102,8 +102,9 @@ class MainActivity : AppCompatActivity(),
         onThemeChanged(theme)
     }
 
-    override fun showFatalError() {
-        Toast.makeText(this, getString(R.string.first_loading_error_message), Toast.LENGTH_LONG).show()
+    override fun showFatalError(err: String) {
+        Toast.makeText(this, err, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, getString(R.string.first_loading_error_message), Toast.LENGTH_LONG).show()
         finish()
     }
 

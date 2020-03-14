@@ -4,5 +4,5 @@ import ru.merkulyevsasha.coreandroid.base.BaseView
 
 interface MainView : BaseView {
     fun showMainScreen()
-    fun showFatalError()
+    fun showFatalError(err: String)
 }

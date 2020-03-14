@@ -42,7 +42,7 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
         private const val SOURCE_NAME = "SOURCE_NAME"
 
         @JvmStatic
-        val TAG: String = SourceArticlesFragment::class.java.simpleName
+        val TAG: String = "SourceArticlesFragment"
 
         @JvmStatic
         fun newInstance(sourceId: String, sourceName: String): Fragment {

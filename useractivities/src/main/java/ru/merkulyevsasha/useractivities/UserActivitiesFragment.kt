@@ -40,7 +40,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         private const val KEY_SEARCH_TEXT = "key_search_text"
 
         @JvmStatic
-        val TAG: String = UserActivitiesFragment::class.java.simpleName
+        val TAG: String = "UserActivitiesFragment"
 
         @JvmStatic
         fun newInstance(): Fragment {

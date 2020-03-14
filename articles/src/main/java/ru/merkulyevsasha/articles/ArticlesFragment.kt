@@ -42,7 +42,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         private const val KEY_SEARCH_TEXT = "key_search_text"
 
         @JvmStatic
-        val TAG: String = ArticlesFragment::class.java.simpleName
+        val TAG: String = "ArticlesFragment"
 
         @JvmStatic
         fun newInstance(): Fragment {

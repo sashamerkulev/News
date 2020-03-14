@@ -118,9 +118,12 @@
 # Gson specific classes
 -keep class sun.misc.Unsafe { *; }
 #-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.TypeAdapter
+-keep class com.google.gson.TypeAdapterFactory
+-keep class com.google.gson.JsonDeserializer
 
 # Application classes that will be serialized/deserialized over Gson
-# -keep class com.google.gson.examples.android.model.** { *; }
+-keep class ru.merkulyevsasha.network.models.** { *; }
 
 ### Fabric
 # In order to provide the most meaningful crash reports
