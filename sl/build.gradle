@@ -25,4 +25,3 @@ dependencies {
     implementation project(path: ':sourcelist')
 }
 
-apply from: "$rootDir/room.gradle"

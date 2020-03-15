@@ -32,18 +32,6 @@ android {
         ignoreTestSources = true
         abortOnError false
     }
-    sourceSets {
-        main {
-            //manifest.srcFile 'AndroidManifest.xml'
-            //java.srcDirs = ['src']
-            resources.srcDirs = ['/src/main/res',"$rootDir/resources"]
-            //aidl.srcDirs = ['src']
-            //renderscript.srcDirs = ['src']
-            res.srcDirs = ['/src/main/res', "$rootDir/resources"]
-            //assets.srcDirs = ['assets']
-        }
-
-    }
 }
 
 def appcompat = "1.0.2"
@@ -53,7 +41,7 @@ def rxjava2Android = '2.1.0'
 def junit = '4.12'
 def testRunner = '1.2.0'
 def assertJ = '3.8.0'
-def mockito = '3.2.0'
+def mockito = '3.3.3'
 def espresso = '3.2.0'
 def timber = '4.7.1'
 
