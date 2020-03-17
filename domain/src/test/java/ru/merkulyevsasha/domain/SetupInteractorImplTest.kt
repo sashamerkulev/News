@@ -4,7 +4,9 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Matchers.anyString
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyList
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import ru.merkulyevsasha.NewsTestRunner
 import ru.merkulyevsasha.core.models.Token
@@ -46,8 +48,9 @@ class SetupInteractorImplTest {
         Mockito.verify(preferences).setSetupId(anyString())
         Mockito.verify(setupApiRepository).registerSetup(anyString())
         Mockito.verify(setupApiRepository).getRssSources()
+        Mockito.verify(databaseRepository).getRssSources()
         Mockito.verify(databaseRepository).deleteRssSources()
-        Mockito.verify(databaseRepository).saveRssSources(emptyList())
+        Mockito.verify(databaseRepository).saveRssSources(anyList())
     }
 
     @Test
@@ -68,7 +71,8 @@ class SetupInteractorImplTest {
         Mockito.verify(preferences).getSetupId()
         Mockito.verify(preferences).getAccessToken()
         Mockito.verify(setupApiRepository).getRssSources()
+        Mockito.verify(databaseRepository).getRssSources()
         Mockito.verify(databaseRepository).deleteRssSources()
-        Mockito.verify(databaseRepository).saveRssSources(emptyList())
+        Mockito.verify(databaseRepository).saveRssSources(anyList())
     }
 }

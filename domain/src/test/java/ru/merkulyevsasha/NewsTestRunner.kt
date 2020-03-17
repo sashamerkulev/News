@@ -8,8 +8,6 @@ class NewsTestRunner(klass: Class<*>) : BlockJUnit4ClassRunner(klass) {
 
     init {
         RxJavaPlugins.setInitIoSchedulerHandler { schedulerCallable -> testScheduler }
-        RxJavaPlugins.initIoScheduler { testScheduler }
-        RxJavaPlugins.onIoScheduler(testScheduler)
     }
 
     companion object {
