@@ -18,20 +18,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
 import kotlinx.android.synthetic.main.merge_articles_layout.swipeRefreshLayout
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
+import javax.inject.Inject
 
-class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLocator {
+@AndroidEntryPoint
+class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     companion object {
         private const val MAX_POSITION = 5
@@ -54,8 +55,8 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appbarLayout: AppBarLayout
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: UserActivitiesPresenterImpl? = null
+    @Inject
+    lateinit var presenter: UserActivitiesPresenterImpl
     private var combinator: ToolbarCombinator? = null
 
     private lateinit var adapter: NewsViewAdapter
@@ -71,16 +72,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     private lateinit var searchView: SearchView
     private var searchText: String? = null
 
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
@@ -121,7 +118,6 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
-        presenter = serviceLocator.get(UserActivitiesPresenterImpl::class.java)
         presenter?.bindView(this)
 
         initRecyclerView()
@@ -132,7 +128,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.articles_menu, menu)
         menu?.let {
             searchItem = it.findItem(R.id.action_search)
@@ -163,7 +159,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item?.itemId == R.id.action_refresh) {
             presenter?.onRefresh()
             return true
@@ -198,9 +194,7 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView, RequireServiceLoc
     override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
-        serviceLocator.release(UserActivitiesPresenterImpl::class.java)
         presenter?.onDestroy()
-        presenter = null
         super.onDestroy()
     }
 

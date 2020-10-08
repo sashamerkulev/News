@@ -1,12 +1,7 @@
-def firebaseCore = "17.0.0"
-def firebaseCrash = "16.2.1"
-def firebaseAds = "18.0.0"
-def firebaseMessaging = "20.1.2"
-
 dependencies {
-    implementation "com.google.firebase:firebase-core:$firebaseCore"
-    implementation "com.google.firebase:firebase-crash:$firebaseCrash"
-    implementation "com.google.firebase:firebase-ads:$firebaseAds"
-    implementation "com.google.firebase:firebase-messaging:$firebaseMessaging"
+    implementation "com.google.firebase:firebase-core:17.5.0"
+    implementation "com.google.firebase:firebase-crash:16.2.1"
+    implementation "com.google.firebase:firebase-ads:19.4.0"
+    implementation "com.google.firebase:firebase-messaging:20.3.0"
 }
 

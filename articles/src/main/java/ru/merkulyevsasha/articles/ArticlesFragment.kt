@@ -18,12 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
 import kotlinx.android.synthetic.main.merge_articles_layout.swipeRefreshLayout
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
@@ -31,8 +30,10 @@ import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ShowActionBarListener
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
+import javax.inject.Inject
 
-class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
+@AndroidEntryPoint
+class ArticlesFragment : Fragment(), ArticlesView {
 
     companion object {
 
@@ -56,8 +57,8 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appbarLayout: AppBarLayout
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: ArticlesPresenterImpl? = null
+    @Inject
+    lateinit var presenter: ArticlesPresenterImpl
     private var combinator: ToolbarCombinator? = null
 
     private lateinit var adapter: NewsViewAdapter
@@ -73,16 +74,12 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
     private lateinit var searchView: SearchView
     private var searchText: String? = null
 
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
@@ -124,7 +121,6 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
 
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        presenter = serviceLocator.get(ArticlesPresenterImpl::class.java)
         presenter?.bindView(this)
 
         initRecyclerView()
@@ -135,9 +131,9 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.articles_menu, menu)
-        menu?.let {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.articles_menu, menu)
+        menu.let {
             searchItem = it.findItem(R.id.action_search)
             searchView = searchItem.actionView as SearchView
             val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
@@ -166,7 +162,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item?.itemId == R.id.action_refresh) {
             presenter?.onRefresh()
             return true
@@ -201,9 +197,7 @@ class ArticlesFragment : Fragment(), ArticlesView, RequireServiceLocator {
     override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
-        serviceLocator.release(ArticlesPresenterImpl::class.java)
         presenter?.onDestroy()
-        presenter = null
         super.onDestroy()
     }
 

@@ -14,8 +14,9 @@ import ru.merkulyevsasha.coreandroid.common.newsadapter.SourceArticleClickCallba
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
 import timber.log.Timber
+import javax.inject.Inject
 
-class UserActivitiesPresenterImpl(
+class UserActivitiesPresenterImpl @Inject constructor(
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter

@@ -7,8 +7,9 @@ import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import timber.log.Timber
+import javax.inject.Inject
 
-class ArticleDetailsPresenterImpl(
+class ArticleDetailsPresenterImpl @Inject constructor(
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter

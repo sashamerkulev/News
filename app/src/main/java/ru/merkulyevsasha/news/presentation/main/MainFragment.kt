@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.bottomNav
 import ru.merkulyevsasha.articles.ArticlesFragment
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
-import ru.merkulyevsasha.core.routers.MainFragmentRouter
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.sourcelist.SourceListFragment
 import ru.merkulyevsasha.useractivities.UserActivitiesFragment
 import ru.merkulyevsasha.userinfo.UserInfoFragment
+import javax.inject.Inject
 
-class MainFragment : Fragment(), RequireServiceLocator {
+@AndroidEntryPoint
+class MainFragment : Fragment() {
 
     companion object {
         @JvmStatic
@@ -31,7 +32,8 @@ class MainFragment : Fragment(), RequireServiceLocator {
         }
     }
 
-    private lateinit var mainFragmentRouter: MainFragmentRouter
+    @Inject
+    lateinit var router: MainActivityRouter
     private var currentFrag = ArticlesFragment.TAG
 
     private val navigationItemSelectedListener =
@@ -39,31 +41,27 @@ class MainFragment : Fragment(), RequireServiceLocator {
             when (item.itemId) {
                 R.id.navigation_articles -> {
                     currentFrag = ArticlesFragment.TAG
-                    mainFragmentRouter.showArticles()
+                    router.showArticles()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_source_articles -> {
                     currentFrag = SourceListFragment.TAG
-                    mainFragmentRouter.showSourceList()
+                    router.showSourceList()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_actions -> {
                     currentFrag = UserActivitiesFragment.TAG
-                    mainFragmentRouter.showUserActivities()
+                    router.showUserActivities()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_user -> {
                     currentFrag = UserInfoFragment.TAG
-                    mainFragmentRouter.showUserInfo()
+                    router.showUserInfo()
                     return@OnNavigationItemSelectedListener true
                 }
             }
             false
         }
-
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        mainFragmentRouter = serviceLocator.get(MainFragmentRouter::class.java)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_main, container, false)
@@ -73,11 +71,11 @@ class MainFragment : Fragment(), RequireServiceLocator {
         bottomNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener)
 
         if (savedInstanceState == null) {
-            when(currentFrag) {
-                ArticlesFragment.TAG -> mainFragmentRouter.showArticles()
-                SourceListFragment.TAG -> mainFragmentRouter.showSourceList()
-                UserActivitiesFragment.TAG -> mainFragmentRouter.showUserActivities()
-                UserInfoFragment.TAG -> mainFragmentRouter.showUserInfo()
+            when (currentFrag) {
+                ArticlesFragment.TAG -> router.showArticles()
+                SourceListFragment.TAG -> router.showSourceList()
+                UserActivitiesFragment.TAG -> router.showUserActivities()
+                UserInfoFragment.TAG -> router.showUserInfo()
             }
         } else {
             currentFrag = savedInstanceState.getString(KEY_FRAG) ?: ArticlesFragment.TAG

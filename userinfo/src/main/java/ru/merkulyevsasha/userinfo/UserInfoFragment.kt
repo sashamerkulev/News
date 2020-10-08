@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_userinfo.imageViewAvatar
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonCamera
 import kotlinx.android.synthetic.main.fragment_userinfo.layoutButtonGallery
@@ -24,19 +25,20 @@ import kotlinx.android.synthetic.main.fragment_userinfo.layoutSwitchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.switchTheme
 import kotlinx.android.synthetic.main.fragment_userinfo.toolbar
 import kotlinx.android.synthetic.main.fragment_userinfo.userName
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.models.UserInfo
 import ru.merkulyevsasha.core.models.UserProfile
 import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
 import ru.merkulyevsasha.coreandroid.common.AvatarShower
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.ImageFileHelper
 import ru.merkulyevsasha.coreandroid.common.KbUtils
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import java.io.IOException
+import javax.inject.Inject
 
-class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
+@AndroidEntryPoint
+class UserInfoFragment : Fragment(), UserInfoView {
 
     companion object {
         @JvmStatic
@@ -55,8 +57,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         }
     }
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: UserInfoPresenterImpl? = null
+    @Inject
+    lateinit var presenter: UserInfoPresenterImpl
     private var combinator: ToolbarCombinator? = null
 
     private lateinit var colorThemeResolver: ColorThemeResolver
@@ -64,15 +66,11 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
 
     private var profileFileName: String = ""
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
         }
-    }
-
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -93,7 +91,6 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         combinator?.bindToolbar(toolbar)
 
-        presenter = serviceLocator.get(UserInfoPresenterImpl::class.java)
         presenter?.bindView(this)
         presenter?.onFirstLoad()
 
@@ -137,9 +134,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     override fun onDestroy() {
         combinator?.unbindToolbar()
         saveFragmentState(arguments ?: Bundle())
-        serviceLocator.release(UserInfoPresenterImpl::class.java)
         presenter?.onDestroy()
-        presenter = null
         super.onDestroy()
     }
 
@@ -203,8 +198,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
             // Create the File where the photo should go
-            profileFileName = ru.merkulyevsasha.coreandroid.common.ImageFileHelper.getTempFileName()
-            val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
+            profileFileName = ImageFileHelper.getTempFileName()
+            val helper = ImageFileHelper(requireContext(), profileFileName)
             try {
                 helper.file().createNewFile()
                 if (helper.file() != null) {
@@ -223,7 +218,7 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == CAMERA_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
-            val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
+            val helper = ImageFileHelper(requireContext(), profileFileName)
             helper.compress()
             profileFileName = helper.file().absolutePath
             Glide.with(this).load(helper.file()).into(imageViewAvatar)
@@ -232,8 +227,8 @@ class UserInfoFragment : Fragment(), UserInfoView, RequireServiceLocator {
         if (requestCode == GALLERY_TAKE_IMAGE_REQUEST && resultCode == RESULT_OK) {
             intent?.let {
                 it.data?.let { uri ->
-                    profileFileName = ru.merkulyevsasha.coreandroid.common.ImageFileHelper.getTempFileName()
-                    val helper = ru.merkulyevsasha.coreandroid.common.ImageFileHelper(requireContext(), profileFileName)
+                    profileFileName = ImageFileHelper.getTempFileName()
+                    val helper = ImageFileHelper(requireContext(), profileFileName)
                     helper.createImageFile(requireActivity().contentResolver.openInputStream(uri))
                     helper.compress()
                     profileFileName = helper.file().absolutePath

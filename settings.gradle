@@ -1,4 +1,4 @@
 include ':app', ':network', ':core', ':preferences', ':database', ':domain', ':main', ':sourcelist',
-        ':articlecomments', ':articledetails', ':articles', ':useractivities', ':userinfo', ':coreandroid', ':sl', ':sourcearticles'
+        ':articlecomments', ':articledetails', ':articles', ':useractivities', ':userinfo', ':coreandroid', ':sourcearticles'
 include ':netrepository'
 include ':dbrepository'

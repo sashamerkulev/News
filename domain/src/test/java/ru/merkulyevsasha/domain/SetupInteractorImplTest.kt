@@ -4,7 +4,6 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
@@ -22,7 +21,7 @@ class SetupInteractorImplTest {
     private val databaseRepository = Mockito.mock(NewsDatabaseRepository::class.java)
     private val setupApiRepository = Mockito.mock(SetupApiRepository::class.java)
 
-    private val setupInteractor = SetupInteractorImpl(preferences, setupApiRepository, databaseRepository)
+    private val setupInteractor = ru.merkulyevsasha.main.domain.SetupInteractorImpl(preferences, setupApiRepository, databaseRepository)
 
     @After
     fun tearDown() {

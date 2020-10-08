@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_articlecomments.adView
 import kotlinx.android.synthetic.main.fragment_articlecomments.editTextComment
 import kotlinx.android.synthetic.main.fragment_articlecomments.layoutAddCommentButton
 import kotlinx.android.synthetic.main.fragment_articlecomments.recyclerView
 import kotlinx.android.synthetic.main.fragment_articlecomments.swipeRefreshLayout
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
@@ -22,8 +21,10 @@ import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.KbUtils.Companion.hideKeyboard
 import java.util.*
+import javax.inject.Inject
 
-class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceLocator {
+@AndroidEntryPoint
+class ArticleCommentsFragment : Fragment(), ArticleCommentsView {
 
     companion object {
         private const val KEY_POSITION = "key_position"
@@ -41,8 +42,8 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
         }
     }
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: ArticleCommentsPresenterImpl? = null
+    @Inject
+    lateinit var presenter: ArticleCommentsPresenterImpl
     private lateinit var colorThemeResolver: ColorThemeResolver
 
     private lateinit var adapter: CommentsViewAdapter
@@ -50,10 +51,6 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
     private var articleId = 0
     private var position = 0
-
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_articlecomments, container, false)
@@ -69,7 +66,6 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        presenter = serviceLocator.get(ArticleCommentsPresenterImpl::class.java)
         presenter?.bindView(this)
 
         initRecyclerView()
@@ -100,9 +96,7 @@ class ArticleCommentsFragment : Fragment(), ArticleCommentsView, RequireServiceL
 
     override fun onDestroy() {
         adView?.destroy()
-        serviceLocator.release(ArticleCommentsPresenterImpl::class.java)
         presenter?.onDestroy()
-        presenter = null
         super.onDestroy()
     }
 

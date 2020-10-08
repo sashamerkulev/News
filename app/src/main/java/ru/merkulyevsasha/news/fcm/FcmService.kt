@@ -3,9 +3,9 @@ package ru.merkulyevsasha.news.fcm
 import android.annotation.SuppressLint
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import ru.merkulyevsasha.core.domain.SetupInteractor
-import timber.log.Timber
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FcmService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
 //        message?.let { remoteMessage ->
@@ -40,9 +40,9 @@ class FcmService : FirebaseMessagingService() {
 
     @SuppressLint("CheckResult")
     override fun onNewToken(token: String) {
-        val serviceLocator = ru.merkulyevsasha.sl.ServiceLocatorImpl.getInstance(applicationContext)
-        val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
-        setupInteractor.updateFirebaseToken(token)
-            .subscribe({}, { Timber.e(it) })
+//        val serviceLocator = ru.merkulyevsasha.sl.ServiceLocatorImpl.getInstance(applicationContext)
+//        val setupInteractor = serviceLocator.get(SetupInteractor::class.java)
+//        setupInteractor.updateFirebaseToken(token)
+//            .subscribe({}, { Timber.e(it) })
     }
 }

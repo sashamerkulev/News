@@ -14,8 +14,9 @@ import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClick
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import timber.log.Timber
+import javax.inject.Inject
 
-class ArticleCommentsPresenterImpl(
+class ArticleCommentsPresenterImpl @Inject constructor(
     private val articleCommentsInteractor: ArticleCommentsInteractor,
     articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor

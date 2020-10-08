@@ -9,19 +9,19 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
+import dagger.hilt.android.AndroidEntryPoint
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
-import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.main.MainPresenterImpl
 import ru.merkulyevsasha.main.MainView
 import ru.merkulyevsasha.news.R
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
-    MainView, ToolbarCombinator, RequireServiceLocator, OnThemeChangedCallback {
+    MainView, ToolbarCombinator, OnThemeChangedCallback {
 
     companion object {
         @JvmStatic
@@ -31,14 +31,10 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private lateinit var serviceLocator: ServiceLocator
-    private lateinit var mainActivityRouter: MainActivityRouter
-    private lateinit var presenter: MainPresenterImpl
-
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-        mainActivityRouter = serviceLocator.get(MainActivityRouter::class.java)
-    }
+    @Inject
+    lateinit var presenter: MainPresenterImpl
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -46,26 +42,24 @@ class MainActivity : AppCompatActivity(),
 
         setContentView(R.layout.activity_main)
 
-        presenter = serviceLocator.get(MainPresenterImpl::class.java)
-
         //AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
 
         if (savedInstanceState == null) {
             presenter.bindView(this)
             presenter.onSetup()
 
-            FirebaseInstanceId.getInstance().instanceId
-                .addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
-                    }
-                    // Get new Instance ID token
-                    val token = task.result?.token
-                    // Log and toast
-                    token?.let {
-                        presenter.onUpdateFirebaseId(it)
-                    }
-                })
+//            FirebaseInstanceId.getInstance().instanceId
+//                .addOnCompleteListener(OnCompleteListener { task ->
+//                    if (!task.isSuccessful) {
+//                        return@OnCompleteListener
+//                    }
+//                    // Get new Instance ID token
+//                    val token = task.result?.token
+//                    // Log and toast
+//                    token?.let {
+//                        presenter.onUpdateFirebaseId(it)
+//                    }
+//                })
         }
     }
 
@@ -82,7 +76,6 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         presenter.unbindView()
         presenter.onDestroy()
-        serviceLocator.releaseAll()
         super.onDestroy()
     }
 
@@ -94,11 +87,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun showMainScreen() {
-        serviceLocator.get(MainActivityRouter::class.java).showMain()
-        // TODO
-        val pref = serviceLocator.get(KeyValueStorage::class.java)
-        val theme = pref.getUserProfileTheme()
+    override fun changeTheme(theme: ThemeEnum) {
         onThemeChanged(theme)
     }
 

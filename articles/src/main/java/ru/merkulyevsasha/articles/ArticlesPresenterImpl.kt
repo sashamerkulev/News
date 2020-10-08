@@ -2,7 +2,7 @@ package ru.merkulyevsasha.articles
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.ArticleDistributor
-import ru.merkulyevsasha.core.Logger
+import ru.merkulyevsasha.core.LoggerImpl
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
@@ -15,8 +15,9 @@ import ru.merkulyevsasha.coreandroid.common.newsadapter.SourceArticleClickCallba
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
 import timber.log.Timber
+import javax.inject.Inject
 
-class ArticlesPresenterImpl(
+class ArticlesPresenterImpl @Inject constructor(
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter
@@ -67,7 +68,6 @@ class ArticlesPresenterImpl(
     }
 
     override fun onArticleCliked(item: Article) {
-        Logger.log("onArticleCliked item -> ${item.articleId}")
         applicationRouter.showArticleDetails(item.articleId)
     }
 

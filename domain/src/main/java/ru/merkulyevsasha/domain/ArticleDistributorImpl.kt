@@ -7,7 +7,10 @@ import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 
-class ArticleDistributorImpl(private val context: Context, private val resourceProvider: ResourceProvider) : ArticleDistributor {
+class ArticleDistributorImpl(
+    private val context: Context,
+    private val resourceProvider: ResourceProvider
+) : ArticleDistributor {
     override fun distribute(item: Article) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"

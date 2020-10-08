@@ -18,20 +18,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
 import kotlinx.android.synthetic.main.merge_articles_layout.swipeRefreshLayout
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
 import ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
+import javax.inject.Inject
 
-class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLocator {
+@AndroidEntryPoint
+class SourceArticlesFragment : Fragment(), SourceArticlesView {
 
     companion object {
         private const val MAX_POSITION = 5
@@ -59,8 +60,8 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appbarLayout: AppBarLayout
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: SourceArticlesPresenterImpl? = null
+    @Inject
+    lateinit var presenter: SourceArticlesPresenterImpl
     private var combinator: ToolbarCombinator? = null
 
     private lateinit var adapter: NewsViewAdapter
@@ -78,16 +79,12 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
     private var sourceId: String? = null
     private var sourceName: String? = null
 
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
@@ -127,11 +124,10 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
         })
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh(sourceId!!) }
+        swipeRefreshLayout.setOnRefreshListener { presenter.onRefresh(sourceId!!) }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
 
-        presenter = serviceLocator.get(SourceArticlesPresenterImpl::class.java)
-        presenter?.bindView(this)
+        presenter.bindView(this)
 
         initRecyclerView()
         initBottomUp()
@@ -141,42 +137,40 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.articles_menu, menu)
-        menu?.let {
-            searchItem = it.findItem(R.id.action_search)
-            searchView = searchItem.actionView as SearchView
-            val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
-            searchEditText.setTextColor(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
-            if (!searchText.isNullOrEmpty()) {
-                searchItem.expandActionView()
-                searchView.setQuery(searchText, false)
-                searchView.clearFocus()
-                presenter?.onSearch(sourceId!!, searchText)
-            }
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    searchText = query
-                    presenter?.onSearch(sourceId!!, query)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText.isNullOrEmpty()) {
-                        searchText = ""
-                        presenter?.onSearch(sourceId!!, newText)
-                    }
-                    return true
-                }
-            })
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.articles_menu, menu)
+        searchItem = menu.findItem(R.id.action_search)
+        searchView = searchItem.actionView as SearchView
+        val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+        searchEditText.setTextColor(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
+        if (!searchText.isNullOrEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(searchText, false)
+            searchView.clearFocus()
+            presenter?.onSearch(sourceId!!, searchText)
         }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchText = query
+                presenter?.onSearch(sourceId!!, query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    searchText = ""
+                    presenter?.onSearch(sourceId!!, newText)
+                }
+                return true
+            }
+        })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.action_refresh) {
-            presenter?.onRefresh(sourceId!!)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_refresh) {
+            presenter.onRefresh(sourceId!!)
             return true
-        } else if (item?.itemId == R.id.action_search) {
+        } else if (item.itemId == R.id.action_search) {
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -184,14 +178,14 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
 
     override fun onPause() {
         adView?.pause()
-        presenter?.unbindView()
+        presenter.unbindView()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         adView?.resume()
-        presenter?.bindView(this)
+        presenter.bindView(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -207,9 +201,7 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
     override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
-        serviceLocator.release(SourceArticlesPresenterImpl::class.java)
-        presenter?.onDestroy()
-        presenter = null
+        presenter.onDestroy()
         super.onDestroy()
     }
 
@@ -218,7 +210,7 @@ class SourceArticlesFragment : Fragment(), SourceArticlesView, RequireServiceLoc
     }
 
     override fun showProgress() {
-        swipeRefreshLayout?.isRefreshing = true
+        swipeRefreshLayout.isRefreshing = true
     }
 
     override fun hideProgress() {

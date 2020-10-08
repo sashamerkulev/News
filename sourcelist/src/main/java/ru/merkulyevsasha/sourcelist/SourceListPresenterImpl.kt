@@ -5,8 +5,9 @@ import ru.merkulyevsasha.core.domain.SourceInteractor
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
+import javax.inject.Inject
 
-class SourceListPresenterImpl(
+class SourceListPresenterImpl @Inject constructor(
     private val sourceInteractor: SourceInteractor,
     private val mainActivityRouter: MainActivityRouter
 ) : BasePresenterImpl<SourceListView>() {

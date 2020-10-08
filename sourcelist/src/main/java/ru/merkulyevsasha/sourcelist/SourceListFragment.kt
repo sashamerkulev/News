@@ -13,20 +13,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_sourcelist.adView
 import kotlinx.android.synthetic.main.fragment_sourcelist.recyclerView
 import kotlinx.android.synthetic.main.fragment_sourcelist.swipeRefreshLayout
 import kotlinx.android.synthetic.main.row_sourcelist.view.sourceName
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
 import ru.merkulyevsasha.coreandroid.common.ShowActionBarListener
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
+import javax.inject.Inject
 
-class SourceListFragment : Fragment(), SourceListView, RequireServiceLocator {
+@AndroidEntryPoint
+class SourceListFragment : Fragment(), SourceListView {
 
     companion object {
         private const val KEY_POSITION = "key_position"
@@ -49,8 +50,8 @@ class SourceListFragment : Fragment(), SourceListView, RequireServiceLocator {
     private lateinit var appbarLayout: AppBarLayout
     private lateinit var appbarScrollExpander: AppbarScrollExpander
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: SourceListPresenterImpl? = null
+    @Inject
+    lateinit var presenter: SourceListPresenterImpl
     private lateinit var colorThemeResolver: ColorThemeResolver
     private var combinator: ToolbarCombinator? = null
 
@@ -60,16 +61,12 @@ class SourceListFragment : Fragment(), SourceListView, RequireServiceLocator {
     private var expanded = true
     private var position = 0
 
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ToolbarCombinator) {
             combinator = context
@@ -103,8 +100,7 @@ class SourceListFragment : Fragment(), SourceListView, RequireServiceLocator {
 
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
 
-        presenter = serviceLocator.get(SourceListPresenterImpl::class.java)
-        presenter?.bindView(this)
+        presenter.bindView(this)
 
         initRecyclerView()
 
@@ -136,9 +132,7 @@ class SourceListFragment : Fragment(), SourceListView, RequireServiceLocator {
     override fun onDestroy() {
         adView?.destroy()
         combinator?.unbindToolbar()
-        serviceLocator.release(SourceListPresenterImpl::class.java)
         presenter?.onDestroy()
-        presenter = null
         super.onDestroy()
     }
 

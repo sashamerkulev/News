@@ -19,7 +19,7 @@ class SetupInstrumentedTest {
     private val preferences = KeyValueStorageImpl(appContext)
     private val databaseRepository = DatabaseRepositoryImpl(appContext)
     private val setupApiRepository = ru.merkulyevsasha.data.setup.SetupApiRepositoryImpl(preferences)
-    private val setupInteractor = SetupInteractorImpl(preferences, setupApiRepository, databaseRepository)
+    private val setupInteractor = ru.merkulyevsasha.main.domain.SetupInteractorImpl(preferences, setupApiRepository, databaseRepository)
 
     @Before
     fun setUp() {

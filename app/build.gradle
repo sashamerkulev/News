@@ -8,6 +8,7 @@ apply from: "$rootDir/android.gradle"
 apply from: "$rootDir/ktlint.gradle"
 apply from: "$rootDir/detekt.gradle"
 apply from: "$rootDir/jacoco.gradle"
+apply from: "$rootDir/retrofit.gradle"
 
 //noinspection GroovyMissingReturnStatement
 android {
@@ -29,8 +30,12 @@ android {
 
 dependencies {
     implementation project(path: ':core')
+    implementation project(path: ':dbrepository')
+    implementation project(path: ':netrepository')
+    implementation project(path: ':domain')
+    implementation project(path: ':domain')
+    implementation project(path: ':preferences')
     implementation project(path: ':coreandroid')
-    implementation project(path: ':sl')
     implementation project(path: ':main')
     implementation project(path: ':articlecomments')
     implementation project(path: ':articledetails')

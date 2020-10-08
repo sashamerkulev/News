@@ -1,41 +1,87 @@
 package ru.merkulyevsasha.news.presentation.routers
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import ru.merkulyevsasha.articlecomments.ArticleCommentsFragment
 import ru.merkulyevsasha.articledetails.ArticleDetailsFragment
+import ru.merkulyevsasha.articles.ArticlesFragment
 import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.coreandroid.routers.BaseRouter
 import ru.merkulyevsasha.news.R
 import ru.merkulyevsasha.news.presentation.main.MainFragment
 import ru.merkulyevsasha.sourcearticles.SourceArticlesFragment
+import ru.merkulyevsasha.sourcelist.SourceListFragment
+import ru.merkulyevsasha.useractivities.UserActivitiesFragment
+import ru.merkulyevsasha.userinfo.UserInfoFragment
 
-class MainActivityRouterImpl(fragmentManager: FragmentManager) : BaseRouter(R.id.container, fragmentManager), MainActivityRouter {
+class MainActivityRouterImpl(
+    private val fragmentManager: FragmentManager,
+    private val l: Logger
+) : MainActivityRouter {
+    companion object {
+        private const val TAG = "MainActivityRouter"
+    }
 
-    override fun showMain() {
+    override fun showMainFragment() {
         val tag = MainFragment.TAG
         val fragment = findOrCreateFragment(tag) { MainFragment.newInstance() }
-        replaceFragment(tag, fragment)
+        replaceFragment(R.id.container, tag, fragment)
     }
 
     override fun showArticleDetails(articleId: Int) {
-        Logger.log("showArticleDetails articleId -> $articleId")
+        l.i(TAG, "showArticleDetails($articleId)")
         val tag = ArticleDetailsFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticleDetailsFragment.newInstance(articleId) }
-        Logger.log("showArticleDetails fragment -> $fragment")
-        replaceFragment(tag, fragment, true)
+        replaceFragment(R.id.container, tag, fragment, true)
     }
 
     override fun showArticleComments(articleId: Int) {
         val tag = ArticleCommentsFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticleCommentsFragment.newInstance(articleId) }
-        replaceFragment(tag, fragment, true)
+        replaceFragment(R.id.container, tag, fragment, true)
     }
 
     override fun showSourceArticles(sourceId: String, sourceName: String) {
         val tag = SourceArticlesFragment.TAG
         val fragment = findOrCreateFragment(tag) { SourceArticlesFragment.newInstance(sourceId, sourceName) }
-        replaceFragment(tag, fragment, true)
+        replaceFragment(R.id.container, tag, fragment, true)
+    }
+
+    override fun showArticles() {
+        val tag = ArticlesFragment.TAG
+        val fragment = findOrCreateFragment(tag) { ArticlesFragment.newInstance() }
+        replaceFragment(R.id.mainContainer, tag, fragment)
+    }
+
+    override fun showSourceList() {
+        val tag = SourceListFragment.TAG
+        val fragment = findOrCreateFragment(tag) { SourceListFragment.newInstance() }
+        replaceFragment(R.id.mainContainer, tag, fragment)
+    }
+
+    override fun showUserActivities() {
+        val tag = UserActivitiesFragment.TAG
+        val fragment = findOrCreateFragment(tag) { UserActivitiesFragment.newInstance() }
+        replaceFragment(R.id.mainContainer, tag, fragment)
+    }
+
+    override fun showUserInfo() {
+        val tag = UserInfoFragment.TAG
+        val fragment = findOrCreateFragment(tag) { UserInfoFragment.newInstance() }
+        replaceFragment(R.id.mainContainer, tag, fragment)
+    }
+
+    private fun findOrCreateFragment(tag: String, createFragment: () -> Fragment): Fragment {
+        return fragmentManager.findFragmentByTag(tag) ?: createFragment()
+    }
+
+    private fun replaceFragment(containerId: Int, tag: String, fragment: Fragment, addToBackStack: Boolean = false) {
+        val fragmentTransaction = fragmentManager.beginTransaction()
+            .replace(containerId, fragment, tag)
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(tag)
+        }
+        fragmentTransaction.commitAllowingStateLoss()
     }
 
 }

@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_articledetails.progressbar
 import kotlinx.android.synthetic.main.fragment_articledetails.webview
 import kotlinx.android.synthetic.main.merge_articles_buttons.imageViewComment
@@ -22,13 +23,12 @@ import kotlinx.android.synthetic.main.merge_articles_buttons.layoutButtonShare
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewComment
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewDislike
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewLike
-import ru.merkulyevsasha.core.Logger
-import ru.merkulyevsasha.core.RequireServiceLocator
-import ru.merkulyevsasha.core.ServiceLocator
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import javax.inject.Inject
 
-class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLocator {
+@AndroidEntryPoint
+class ArticleDetailsFragment : Fragment(), ArticleDetailsView {
     companion object {
         private const val ARTICLE_ID = "ARTICLE_ID"
         @JvmStatic
@@ -36,7 +36,6 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
 
         @JvmStatic
         fun newInstance(articleId: Int): Fragment {
-            Logger.log("ArticleDetailsFragment newInstance -> $articleId")
             val fragment = ArticleDetailsFragment()
             val args = Bundle()
             args.putInt(ARTICLE_ID, articleId)
@@ -45,15 +44,12 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
         }
     }
 
-    private lateinit var serviceLocator: ServiceLocator
-    private var presenter: ArticleDetailsPresenterImpl? = null
+    @Inject
+    lateinit var presenter: ArticleDetailsPresenterImpl
+
     private lateinit var colorThemeResolver: ColorThemeResolver
 
     private var articleId = 0
-
-    override fun setServiceLocator(serviceLocator: ServiceLocator) {
-        this.serviceLocator = serviceLocator
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_articledetails, container, false)
@@ -64,33 +60,32 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
         colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
 
         layoutButtonLike.setOnClickListener {
-            presenter?.onArticleLikeClicked(articleId)
+            presenter.onArticleLikeClicked(articleId)
         }
         layoutButtonComment.setOnClickListener {
-            presenter?.onCommentClicked(articleId)
+            presenter.onCommentClicked(articleId)
         }
         layoutButtonDislike.setOnClickListener {
-            presenter?.onArticleDislikeClicked(articleId)
+            presenter.onArticleDislikeClicked(articleId)
         }
         layoutButtonShare.setOnClickListener {
-            presenter?.onShareClicked(articleId)
+            presenter.onShareClicked(articleId)
         }
 
         val bundle = savedInstanceState ?: arguments ?: return
         articleId = bundle.getInt(ARTICLE_ID, 0)
-        presenter = serviceLocator.get(ArticleDetailsPresenterImpl::class.java)
-        presenter?.bindView(this)
-        presenter?.onFirstLoad(articleId)
+        presenter.bindView(this)
+        presenter.onFirstLoad(articleId)
     }
 
     override fun onPause() {
-        presenter?.unbindView()
+        presenter.unbindView()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        presenter?.bindView(this)
+        presenter.bindView(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -99,9 +94,7 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView, RequireServiceLoc
     }
 
     override fun onDestroy() {
-        serviceLocator.release(ArticleDetailsPresenterImpl::class.java)
-        presenter?.onDestroy()
-        presenter = null
+        presenter.onDestroy()
         super.onDestroy()
     }
 

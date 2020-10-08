@@ -14,18 +14,22 @@ import ru.merkulyevsasha.network.data.SetupApi
 class SetupApiRepositoryImpl(
     sharedPreferences: KeyValueStorage,
     baseUrl: String,
-    debugMode: Boolean
+    debugMode: Boolean,
+    private val l: Logger
 ) : BaseApiRepository(sharedPreferences, baseUrl, debugMode), SetupApiRepository {
+    companion object {
+        private const val TAG = "SetupApiRepository"
+    }
 
     private val api: SetupApi = retrofit.create(SetupApi::class.java)
 
     private val rssSourceMapper = RssSourceMapper()
 
     override fun registerSetup(setupId: String): Single<Token> {
-        Logger.log("registerSetup -> $setupId")
+        l.v(TAG,  "registerSetup($setupId)")
         return api.registerSetup(setupId, "")
             .map {
-                Logger.log("registerSetup -> ${it.token}")
+                l.v(TAG, it.token)
                 Token(it.token)
             }
     }

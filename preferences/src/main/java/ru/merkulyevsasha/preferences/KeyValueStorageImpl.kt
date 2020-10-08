@@ -1,6 +1,7 @@
 package ru.merkulyevsasha.preferences
 
 import android.content.Context
+import android.preference.PreferenceManager
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import java.util.*
@@ -8,21 +9,20 @@ import java.util.*
 class KeyValueStorageImpl(context: Context) : KeyValueStorage {
 
     companion object {
-        private val KEY_TOKEN = "KEY_TOKEN"
-        private val KEY_SETUP_ID = "KEY_SETUP_ID"
-        private val KEY_LAST_ARTICLE_READ = "KEY_LAST_ARTICLE_READ"
-        private val KEY_LAST_ARTICLE_COMMENT_READ = "KEY_LAST_ARTICLE_COMMENT_READ"
-        private val KEY_USER_NAME = "KEY_USER_NAME"
-        private val KEY_USER_PHONE = "KEY_USER_PHONE"
-        private val KEY_USER_AVATAR_FILE_NAME = "KEY_USER_AVATAR_FILE_NAME"
-        private val KEY_APPLICATION_RUN_NUMBER = "KEY_APPLICATION_RUN_NUMBER"
-        private val KEY_APPLICATION_RATED_FLAG = "KEY_APPLICATION_RATED_FLAG"
-        private val KEY_LAST_APPLICATION_RUN_DATE = "KEY_LAST_APPLICATION_RUN_DATE"
-        private val KEY_USER_PROFILE_THEME = "KEY_USER_PROFILE_THEME"
+        private const val KEY_TOKEN = "KEY_TOKEN"
+        private const val KEY_SETUP_ID = "KEY_SETUP_ID"
+        private const val KEY_LAST_ARTICLE_READ = "KEY_LAST_ARTICLE_READ"
+        private const val KEY_LAST_ARTICLE_COMMENT_READ = "KEY_LAST_ARTICLE_COMMENT_READ"
+        private const val KEY_USER_NAME = "KEY_USER_NAME"
+        private const val KEY_USER_PHONE = "KEY_USER_PHONE"
+        private const val KEY_USER_AVATAR_FILE_NAME = "KEY_USER_AVATAR_FILE_NAME"
+        private const val KEY_APPLICATION_RUN_NUMBER = "KEY_APPLICATION_RUN_NUMBER"
+        private const val KEY_APPLICATION_RATED_FLAG = "KEY_APPLICATION_RATED_FLAG"
+        private const val KEY_LAST_APPLICATION_RUN_DATE = "KEY_LAST_APPLICATION_RUN_DATE"
+        private const val KEY_USER_PROFILE_THEME = "KEY_USER_PROFILE_THEME"
     }
 
-    private val prefs: android.content.SharedPreferences =
-        context.getSharedPreferences("keyvalue", Context.MODE_PRIVATE)
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     override fun getAccessToken(): String {
         return prefs.getString(KEY_TOKEN, "") ?: ""

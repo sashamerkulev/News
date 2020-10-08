@@ -1,24 +1,37 @@
 package ru.merkulyevsasha.main
 
-import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.Logger
 import ru.merkulyevsasha.core.domain.SetupInteractor
+import ru.merkulyevsasha.core.preferences.KeyValueStorage
+import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainPresenterImpl(private val setupInteractor: SetupInteractor) : BasePresenterImpl<MainView>() {
+class MainPresenterImpl @Inject constructor(
+    private val setupInteractor: SetupInteractor,
+    private val keyValueStorage: KeyValueStorage,
+    private val mainActivityRouter: MainActivityRouter,
+    private val l: Logger
+) : BasePresenterImpl<MainView>() {
+    companion object {
+        private const val TAG = "MainPresenter"
+    }
+
     fun onSetup() {
         compositeDisposable.add(
             setupInteractor.registerSetup()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        addCommand { view?.showMainScreen() }
+                        addCommand {
+                            view?.changeTheme(keyValueStorage.getUserProfileTheme())
+                        }
+                        mainActivityRouter.showMainFragment()
                     },
                     {
-                        Logger.log(it.toString())
-                        Logger.logStacktrace(it.stackTrace.toList())
+                        l.e(TAG, it)
                         view?.showFatalError(it.toString())
                     }))
     }

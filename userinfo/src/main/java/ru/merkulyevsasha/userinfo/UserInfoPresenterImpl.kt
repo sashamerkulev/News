@@ -6,8 +6,9 @@ import ru.merkulyevsasha.core.domain.UsersInteractor
 import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
 import timber.log.Timber
+import javax.inject.Inject
 
-class UserInfoPresenterImpl(
+class UserInfoPresenterImpl @Inject constructor(
     private val usersInteractor: UsersInteractor,
     private val sourceInteractor: SourceInteractor
 ) : BasePresenterImpl<UserInfoView>() {
