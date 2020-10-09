@@ -14,6 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_sourcelist.adView
 import kotlinx.android.synthetic.main.fragment_sourcelist.recyclerView
 import kotlinx.android.synthetic.main.fragment_sourcelist.swipeRefreshLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.appbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.collapsingToolbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.toolbar
 import kotlinx.android.synthetic.main.row_sourcelist.view.sourceName
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
@@ -43,9 +46,6 @@ class SourceListFragment : BaseFragment<SourceListViewModel>(R.layout.fragment_s
         }
     }
 
-    private lateinit var toolbar: Toolbar
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appbarLayout: AppBarLayout
     private lateinit var appbarScrollExpander: AppbarScrollExpander
 
     private lateinit var adapter: SourceListAdapter

@@ -7,13 +7,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.include_appbar_layout.appbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.collapsingToolbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.toolbar
 import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
@@ -48,10 +48,6 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>(R.layout.fragment_artic
             return fragment
         }
     }
-
-    private lateinit var toolbar: Toolbar
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appbarLayout: AppBarLayout
 
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager

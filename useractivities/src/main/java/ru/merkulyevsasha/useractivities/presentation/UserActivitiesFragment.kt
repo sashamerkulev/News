@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.include_appbar_layout.appbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.collapsingToolbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.toolbar
 import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
@@ -48,10 +51,6 @@ class UserActivitiesFragment : BaseFragment<UserActivitiesViewModel>(R.layout.fr
         }
     }
 
-    private lateinit var toolbar: Toolbar
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appbarLayout: AppBarLayout
-
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -71,9 +70,6 @@ class UserActivitiesFragment : BaseFragment<UserActivitiesViewModel>(R.layout.fr
             expanded = this.getBoolean(KEY_EXPANDED, true)
             searchText = this.getString(KEY_SEARCH_TEXT, searchText)
         }
-        toolbar = view.findViewById(R.id.toolbar)
-        collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
-        appbarLayout = view.findViewById(R.id.appbarLayout)
         toolbar.setTitle(R.string.fragment_actions_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false

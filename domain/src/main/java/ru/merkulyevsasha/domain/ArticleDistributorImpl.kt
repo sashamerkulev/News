@@ -18,7 +18,8 @@ class ArticleDistributorImpl(
         sb.append(String.format(resourceProvider.getString(R.string.article_info_send), item.sourceName, item.title))
         sb.append(resourceProvider.getString(R.string.application_info_send))
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString())
-        context.startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.article_chooser_title)))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     override fun distribute(item: ArticleComment) {
@@ -28,6 +29,7 @@ class ArticleDistributorImpl(
         sb.append(String.format(resourceProvider.getString(R.string.articlecomment_info_send), item.userName, item.comment))
         sb.append(resourceProvider.getString(R.string.application_info_send))
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString())
-        context.startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.article_chooser_title)))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 }
