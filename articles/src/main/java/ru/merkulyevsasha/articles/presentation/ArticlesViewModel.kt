@@ -1,12 +1,14 @@
-package ru.merkulyevsasha.articles
+package ru.merkulyevsasha.articles.presentation
 
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.articles.R
 import ru.merkulyevsasha.core.ArticleDistributor
-import ru.merkulyevsasha.core.LoggerImpl
+import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.base.BaseViewModel
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleClickCallbackHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentArticleCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
@@ -14,38 +16,41 @@ import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClic
 import ru.merkulyevsasha.coreandroid.common.newsadapter.SourceArticleClickCallbackHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.SearchArticleHandler
-import timber.log.Timber
 import javax.inject.Inject
 
-class ArticlesPresenterImpl @Inject constructor(
+class ArticlesViewModel @Inject constructor(
+    private val resourceProvider: ResourceProvider,
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter
-) : BasePresenterImpl<ArticlesView>(),
+) : BaseViewModel(),
     ArticleClickCallbackHandler, SourceArticleClickCallbackHandler, ArticleLikeCallbackClickHandler,
     ArticleShareCallbackClickHandler, ArticleCommentArticleCallbackClickHandler {
 
+    val addItems = MutableLiveData<List<Article>>()
+    val updateItems = MutableLiveData<List<Article>>()
+    val updateItem = MutableLiveData<Article>()
+
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { addCommand { view?.updateItem(it) } },
-        { addCommand { view?.showError() } })
+        { updateItem.postValue(it) },
+        { messages.postValue(resourceProvider.getString(R.string.article_loading_error_message)) })
 
     private val searchArticleHandler = SearchArticleHandler(articlesInteractor, false,
-        { addCommand { view?.showProgress() } },
-        { addCommand { view?.hideProgress() } },
-        { addCommand { view?.showItems(it) } },
-        { view?.showError() })
+        { progress.postValue(true) },
+        { progress.postValue(false) },
+        { addItems.postValue(it) },
+        { messages.postValue(resourceProvider.getString(R.string.article_loading_error_message)) })
 
     fun onFirstLoad() {
         compositeDisposable.add(
             articlesInteractor.getArticles()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe(
-                    { addCommand { view?.showItems(it) } },
+                    { addItems.postValue(it) },
                     {
-                        Timber.e(it)
-                        view?.showError()
+                        messages.postValue(resourceProvider.getString(R.string.article_loading_error_message))
                     }))
     }
 
@@ -53,13 +58,12 @@ class ArticlesPresenterImpl @Inject constructor(
         compositeDisposable.add(
             articlesInteractor.refreshAndGetArticles()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe(
-                    { addCommand { view?.updateItems(it) } },
+                    { updateItems.postValue(it) },
                     {
-                        Timber.e(it)
-                        view?.showError()
+                        messages.postValue(resourceProvider.getString(R.string.article_loading_error_message))
                     }))
     }
 

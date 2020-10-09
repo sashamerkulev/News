@@ -1,11 +1,8 @@
-package ru.merkulyevsasha.articledetails
+package ru.merkulyevsasha.articledetails.presentation
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -23,14 +20,16 @@ import kotlinx.android.synthetic.main.merge_articles_buttons.layoutButtonShare
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewComment
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewDislike
 import kotlinx.android.synthetic.main.merge_articles_buttons.textViewLike
+import ru.merkulyevsasha.articledetails.R
 import ru.merkulyevsasha.core.models.Article
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
-import javax.inject.Inject
+import ru.merkulyevsasha.coreandroid.common.BaseFragment
+import ru.merkulyevsasha.coreandroid.common.observe
 
 @AndroidEntryPoint
-class ArticleDetailsFragment : Fragment(), ArticleDetailsView {
+class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>(R.layout.fragment_articledetails) {
     companion object {
-        private const val ARTICLE_ID = "ARTICLE_ID"
+        private const val ARGS_ARTICLE_ID = "ARTICLE_ID"
+
         @JvmStatic
         val TAG: String = "ArticleDetailsFragment"
 
@@ -38,54 +37,25 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView {
         fun newInstance(articleId: Int): Fragment {
             val fragment = ArticleDetailsFragment()
             val args = Bundle()
-            args.putInt(ARTICLE_ID, articleId)
+            args.putInt(ARGS_ARTICLE_ID, articleId)
             fragment.arguments = args
             return fragment
         }
     }
 
-    @Inject
-    lateinit var presenter: ArticleDetailsPresenterImpl
-
-    private lateinit var colorThemeResolver: ColorThemeResolver
-
     private var articleId = 0
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_articledetails, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
-
-        layoutButtonLike.setOnClickListener {
-            presenter.onArticleLikeClicked(articleId)
-        }
-        layoutButtonComment.setOnClickListener {
-            presenter.onCommentClicked(articleId)
-        }
-        layoutButtonDislike.setOnClickListener {
-            presenter.onArticleDislikeClicked(articleId)
-        }
-        layoutButtonShare.setOnClickListener {
-            presenter.onShareClicked(articleId)
-        }
-
         val bundle = savedInstanceState ?: arguments ?: return
-        articleId = bundle.getInt(ARTICLE_ID, 0)
-        presenter.bindView(this)
-        presenter.onFirstLoad(articleId)
-    }
-
-    override fun onPause() {
-        presenter.unbindView()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.bindView(this)
+        articleId = bundle.getInt(ARGS_ARTICLE_ID, 0)
+        if (savedInstanceState == null) {
+            model.onFirstLoad(articleId)
+        }
+        initLikeClickListeners()
+        observeOnProgressChanged()
+        observeOnAddItemChanged()
+        observeOnUpdateItemChanged()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -93,27 +63,56 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView {
         saveFragmentState(outState)
     }
 
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
+    private fun initLikeClickListeners() {
+        layoutButtonLike.setOnClickListener {
+            model.onArticleLikeClicked(articleId)
+        }
+        layoutButtonComment.setOnClickListener {
+            model.onCommentClicked(articleId)
+        }
+        layoutButtonDislike.setOnClickListener {
+            model.onArticleDislikeClicked(articleId)
+        }
+        layoutButtonShare.setOnClickListener {
+            model.onShareClicked(articleId)
+        }
     }
 
-    override fun showProgress() {
+    private fun observeOnProgressChanged() {
+        observe(model.progress) { progress ->
+            if (progress) showProgress()
+            else hideProgress()
+        }
+    }
+
+    private fun observeOnAddItemChanged() {
+        observe(model.addItem) { item ->
+            showItem(item)
+        }
+    }
+
+    private fun observeOnUpdateItemChanged() {
+        observe(model.updateItem) { item ->
+            updateItem(item)
+        }
+    }
+
+    private fun showProgress() {
         progressbar?.visibility = View.VISIBLE
     }
 
-    override fun hideProgress() {
+    private fun hideProgress() {
         progressbar?.visibility = View.GONE
     }
 
-    override fun showItem(item: Article) {
+    private fun showItem(item: Article) {
         webview.webViewClient = ArticleDetailsViewClient()
         webview.loadUrl(item.link)
 
         updateItem(item)
     }
 
-    override fun updateItem(item: Article) {
+    private fun updateItem(item: Article) {
         textViewLike.text = item.usersLikeCount.toString()
         textViewDislike.text = item.usersDislikeCount.toString()
         textViewComment.text = item.usersCommentCount.toString()
@@ -123,12 +122,8 @@ class ArticleDetailsFragment : Fragment(), ArticleDetailsView {
         colorThemeResolver.setArticleActivityColor(item.isUserCommented, textViewComment, imageViewComment)
     }
 
-    override fun showError() {
-        Toast.makeText(requireContext(), getString(R.string.article_details_loading_error_message), Toast.LENGTH_LONG).show()
-    }
-
     private fun saveFragmentState(state: Bundle) {
-        state.putInt(ARTICLE_ID, articleId)
+        state.putInt(ARGS_ARTICLE_ID, articleId)
     }
 
     private inner class ArticleDetailsViewClient : WebViewClient() {

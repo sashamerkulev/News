@@ -1,16 +1,11 @@
-package ru.merkulyevsasha.useractivities
+package ru.merkulyevsasha.articles.presentation
 
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -23,29 +18,32 @@ import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
 import kotlinx.android.synthetic.main.merge_articles_layout.swipeRefreshLayout
+import ru.merkulyevsasha.articles.BuildConfig
+import ru.merkulyevsasha.articles.R
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
-import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
+import ru.merkulyevsasha.coreandroid.common.BaseFragment
+import ru.merkulyevsasha.coreandroid.common.ShowActionBarListener
 import ru.merkulyevsasha.coreandroid.common.newsadapter.NewsViewAdapter
-import javax.inject.Inject
+import ru.merkulyevsasha.coreandroid.common.observe
 
 @AndroidEntryPoint
-class UserActivitiesFragment : Fragment(), UserActivitiesView {
+class ArticlesFragment : BaseFragment<ArticlesViewModel>(R.layout.fragment_articles) {
 
     companion object {
+
         private const val MAX_POSITION = 5
         private const val KEY_POSITION = "key_position"
         private const val KEY_EXPANDED = "key_expanded"
         private const val KEY_SEARCH_TEXT = "key_search_text"
 
         @JvmStatic
-        val TAG: String = "UserActivitiesFragment"
+        val TAG: String = "ArticlesFragment"
 
         @JvmStatic
         fun newInstance(): Fragment {
-            val fragment = UserActivitiesFragment()
+            val fragment = ArticlesFragment()
             fragment.arguments = Bundle()
             return fragment
         }
@@ -55,14 +53,8 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
     private lateinit var appbarLayout: AppBarLayout
 
-    @Inject
-    lateinit var presenter: UserActivitiesPresenterImpl
-    private var combinator: ToolbarCombinator? = null
-
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager
-
-    private lateinit var colorThemeResolver: ColorThemeResolver
 
     private lateinit var appbarScrollExpander: AppbarScrollExpander
     private var expanded = true
@@ -72,98 +64,71 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
     private lateinit var searchView: SearchView
     private var searchText: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is ToolbarCombinator) {
-            combinator = context
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_useractivities, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val savedState = savedInstanceState ?: arguments
         savedState?.apply {
             position = this.getInt(KEY_POSITION, 0)
             expanded = this.getBoolean(KEY_EXPANDED, true)
             searchText = this.getString(KEY_SEARCH_TEXT, searchText)
         }
-
-        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
-
-        toolbar = view.findViewById(R.id.toolbar)
-        collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
-        appbarLayout = view.findViewById(R.id.appbarLayout)
-
-        toolbar.setTitle(R.string.fragment_actions_title)
+        toolbar.setTitle(R.string.fragment_articles_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false
-        combinator?.bindToolbar(toolbar)
-
-        appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ru.merkulyevsasha.coreandroid.common.ShowActionBarListener {
+        combinator.bindToolbar(toolbar)
+        appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
             override fun onShowActionBar(show: Boolean) {
                 appbarLayout.setExpanded(show)
             }
         })
-        AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
-
-        swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
+        swipeRefreshLayout.setOnRefreshListener { model.onRefresh() }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
-
-        presenter?.bindView(this)
-
+        AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
         initRecyclerView()
         initBottomUp()
-
         if (searchText.isNullOrEmpty()) {
-            presenter?.onFirstLoad()
+            model.onFirstLoad()
         }
+        observeOnProgressChanged()
+        observeOnAddItemsChanged()
+        observeOnUpdateItemsChanged()
+        observeOnUpdateItemChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.articles_menu, menu)
-        menu?.let {
-            searchItem = it.findItem(R.id.action_search)
-            searchView = searchItem.actionView as SearchView
-            val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
-            searchEditText.setTextColor(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
-            if (!searchText.isNullOrEmpty()) {
-                searchItem.expandActionView()
-                searchView.setQuery(searchText, false)
-                searchView.clearFocus()
-                presenter?.onSearch(searchText)
-            }
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    searchText = query
-                    presenter?.onSearch(query)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText.isNullOrEmpty()) {
-                        searchText = ""
-                        presenter?.onSearch(newText)
-                    }
-                    return true
-                }
-            })
+        inflater.inflate(R.menu.articles_menu, menu)
+        searchItem = menu.findItem(R.id.action_search)
+        searchView = searchItem.actionView as SearchView
+        val searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text) as EditText
+        searchEditText.setTextColor(colorThemeResolver.getThemeAttrColor(R.attr.colorControlNormal))
+        if (!searchText.isNullOrEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(searchText, false)
+            searchView.clearFocus()
+            model.onSearch(searchText)
         }
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchText = query
+                model.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    searchText = ""
+                    model.onSearch(newText)
+                }
+                return true
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item?.itemId == R.id.action_refresh) {
-            presenter?.onRefresh()
+        if (item.itemId == R.id.action_refresh) {
+            model.onRefresh()
             return true
-        } else if (item?.itemId == R.id.action_search) {
+        } else if (item.itemId == R.id.action_search) {
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -171,14 +136,12 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     override fun onPause() {
         adView?.pause()
-        presenter?.unbindView()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         adView?.resume()
-        presenter?.bindView(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -193,51 +156,44 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
 
     override fun onDestroy() {
         adView?.destroy()
-        combinator?.unbindToolbar()
-        presenter?.onDestroy()
         super.onDestroy()
     }
 
-    override fun showError() {
-        Toast.makeText(requireContext(), getString(R.string.articles_activities_loading_error_message), Toast.LENGTH_LONG).show()
+    private fun observeOnProgressChanged() {
+        observe(model.progress) {
+            swipeRefreshLayout?.isRefreshing = it
+        }
     }
 
-    override fun showProgress() {
-        swipeRefreshLayout?.isRefreshing = true
+    private fun observeOnAddItemsChanged() {
+        observe(model.addItems) {
+            showItems(it)
+        }
     }
 
-    override fun hideProgress() {
-        swipeRefreshLayout?.isRefreshing = false
+    private fun observeOnUpdateItemsChanged() {
+        observe(model.updateItems) {
+            updateItems(it)
+        }
     }
 
-    override fun showItems(items: List<Article>) {
+    private fun observeOnUpdateItemChanged() {
+        observe(model.updateItem) {
+            updateItem(it)
+        }
+    }
+
+    private fun showItems(items: List<Article>) {
         adapter.setItems(items)
         layoutManager.scrollToPosition(position)
     }
 
-    override fun updateItems(items: List<Article>) {
+    private fun updateItems(items: List<Article>) {
         adapter.updateItems(items)
     }
 
-    override fun updateItem(item: Article) {
+    private fun updateItem(item: Article) {
         adapter.updateItem(item)
-    }
-
-    private fun initRecyclerView() {
-        layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
-        adapter = NewsViewAdapter(
-            requireContext(),
-            presenter,
-            presenter,
-            presenter,
-            presenter,
-            presenter,
-            colorThemeResolver,
-            ArrayList()
-        )
-        recyclerView.adapter = adapter
     }
 
     private fun initBottomUp() {
@@ -262,6 +218,23 @@ class UserActivitiesFragment : Fragment(), UserActivitiesView {
             buttonUp.visibility = View.GONE
             appbarLayout.setExpanded(true)
         }
+    }
+
+    private fun initRecyclerView() {
+        layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        recyclerView.setHasFixedSize(true)
+        adapter = NewsViewAdapter(
+            requireContext(),
+            model,
+            model,
+            model,
+            model,
+            model,
+            colorThemeResolver,
+            ArrayList()
+        )
+        recyclerView.adapter = adapter
     }
 
     private fun saveFragmentState(state: Bundle) {

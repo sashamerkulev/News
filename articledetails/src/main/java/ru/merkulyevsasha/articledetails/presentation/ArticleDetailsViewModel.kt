@@ -1,35 +1,42 @@
-package ru.merkulyevsasha.articledetails
+package ru.merkulyevsasha.articledetails.presentation
 
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.articledetails.R
 import ru.merkulyevsasha.core.ArticleDistributor
+import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
+import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.base.BaseViewModel
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
-import timber.log.Timber
 import javax.inject.Inject
 
-class ArticleDetailsPresenterImpl @Inject constructor(
+class ArticleDetailsViewModel @Inject constructor(
+    private val resourceProvider: ResourceProvider,
     private val articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor,
     private val applicationRouter: MainActivityRouter
-) : BasePresenterImpl<ArticleDetailsView>() {
+) : BaseViewModel() {
+
+    val addItem = MutableLiveData<Article>()
+    val updateItem = MutableLiveData<Article>()
 
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { addCommand { view?.updateItem(it) } },
-        { view?.showError() })
+        { updateItem.postValue(it) },
+        { messages.postValue(resourceProvider.getString(R.string.article_details_loading_error_message)) })
 
     fun onFirstLoad(articleId: Int) {
         compositeDisposable.add(
             articlesInteractor.getArticle(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view?.showProgress() }
-                .doAfterTerminate { view?.hideProgress() }
-                .subscribe(
-                    { addCommand { view?.showItem(it) } },
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
+                .subscribe({
+                    addItem.postValue(it)
+                },
                     {
-                        Timber.e(it)
-                        view?.showError()
+                        messages.postValue(it.message)
                     }))
     }
 
@@ -49,15 +56,14 @@ class ArticleDetailsPresenterImpl @Inject constructor(
         compositeDisposable.add(
             articlesInteractor.getArticle(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view?.showProgress() }
-                .doAfterTerminate { view?.hideProgress() }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe(
                     {
-                        addCommand { newsDistributor.distribute(it) }
+                        newsDistributor.distribute(it)
                     },
                     {
-                        Timber.e(it)
-                        view?.showError()
+                        messages.postValue(it.message)
                     }))
     }
 }

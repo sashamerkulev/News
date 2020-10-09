@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.articles
+package ru.merkulyevsasha.articles.domain
 
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers

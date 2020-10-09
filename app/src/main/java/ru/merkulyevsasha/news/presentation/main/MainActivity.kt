@@ -1,82 +1,34 @@
 package ru.merkulyevsasha.news.presentation.main
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
 import dagger.hilt.android.AndroidEntryPoint
 import ru.merkulyevsasha.core.models.ThemeEnum
-import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.presentation.OnThemeChangedCallback
 import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
-import ru.merkulyevsasha.main.MainPresenterImpl
-import ru.merkulyevsasha.main.MainView
+import ru.merkulyevsasha.coreandroid.common.observe
+import ru.merkulyevsasha.main.presentation.MainActivityViewModel
 import ru.merkulyevsasha.news.R
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(),
-    MainView, ToolbarCombinator, OnThemeChangedCallback {
-
-    companion object {
-        @JvmStatic
-        fun show(context: Context) {
-            val intent = Intent(context, MainActivity::class.java)
-            context.startActivity(intent)
-        }
-    }
+class MainActivity : AppCompatActivity(), ToolbarCombinator, OnThemeChangedCallback {
 
     @Inject
-    lateinit var presenter: MainPresenterImpl
-    @Inject
-    lateinit var keyValueStorage: KeyValueStorage
+    lateinit var model: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
-
-        //AppRateRequester.run(this, BuildConfig.APPLICATION_ID)
-
         if (savedInstanceState == null) {
-            presenter.bindView(this)
-            presenter.onSetup()
-
-//            FirebaseInstanceId.getInstance().instanceId
-//                .addOnCompleteListener(OnCompleteListener { task ->
-//                    if (!task.isSuccessful) {
-//                        return@OnCompleteListener
-//                    }
-//                    // Get new Instance ID token
-//                    val token = task.result?.token
-//                    // Log and toast
-//                    token?.let {
-//                        presenter.onUpdateFirebaseId(it)
-//                    }
-//                })
+            model.onSetup()
         }
-    }
-
-    override fun onPause() {
-        presenter.unbindView()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.bindView(this)
-    }
-
-    override fun onDestroy() {
-        presenter.unbindView()
-        presenter.onDestroy()
-        super.onDestroy()
+        observeOnThemeChanged()
+        observeOnErrorsChanged()
     }
 
     override fun onBackPressed() {
@@ -87,16 +39,6 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    override fun changeTheme(theme: ThemeEnum) {
-        onThemeChanged(theme)
-    }
-
-    override fun showFatalError(err: String) {
-        Toast.makeText(this, err, Toast.LENGTH_LONG).show()
-        //Toast.makeText(this, getString(R.string.first_loading_error_message), Toast.LENGTH_LONG).show()
-        finish()
-    }
-
     override fun bindToolbar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
     }
@@ -105,19 +47,36 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(null)
     }
 
+    override fun onThemeChanged(theme: ThemeEnum) {
+        when (theme) {
+            ThemeEnum.ClassicNight -> delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+            ThemeEnum.Classic -> delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+        }
+    }
+
+    private fun observeOnThemeChanged() {
+        observe(model.themes) { theme ->
+            onThemeChanged(theme)
+        }
+    }
+
+    private fun observeOnErrorsChanged() {
+        observe(model.messages) { error ->
+            showFatalError(error)
+        }
+    }
+
+    private fun showFatalError(err: String) {
+        Toast.makeText(this, err, Toast.LENGTH_LONG).show()
+        finish()
+    }
+
     private fun isMainFragmentActive(): Boolean {
-        for (fff in supportFragmentManager.fragments) {
-            if (fff is MainFragment && fff.isVisible) {
+        for (fragment in supportFragmentManager.fragments) {
+            if (fragment is MainFragment && fragment.isVisible) {
                 return true
             }
         }
         return false
-    }
-
-    override fun onThemeChanged(theme: ThemeEnum) {
-        when (theme) {
-            ThemeEnum.ClassicNight -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            ThemeEnum.Classic -> delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
     }
 }

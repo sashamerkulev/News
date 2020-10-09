@@ -1,46 +1,50 @@
-package ru.merkulyevsasha.articlecomments
+package ru.merkulyevsasha.articlecomments.presentation
 
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.merkulyevsasha.articlecomments.R
 import ru.merkulyevsasha.core.ArticleDistributor
+import ru.merkulyevsasha.core.ResourceProvider
 import ru.merkulyevsasha.core.domain.ArticleCommentsInteractor
 import ru.merkulyevsasha.core.domain.ArticlesInteractor
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment
-import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
+import ru.merkulyevsasha.coreandroid.base.BaseViewModel
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleCommentShareCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleLikeCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.common.newsadapter.ArticleShareCallbackClickHandler
 import ru.merkulyevsasha.coreandroid.presentation.ArticleLikeClickHandler
-import timber.log.Timber
 import javax.inject.Inject
 
-class ArticleCommentsPresenterImpl @Inject constructor(
+class ArticleCommentsViewModel @Inject constructor(
+    private val resourceProvider: ResourceProvider,
     private val articleCommentsInteractor: ArticleCommentsInteractor,
     articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor
-) : BasePresenterImpl<ArticleCommentsView>(),
+) : BaseViewModel(),
     ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentLikeCallbackClickHandler, ArticleCommentShareCallbackClickHandler {
 
+    val article = MutableLiveData<Article>()
+    val updateArticleComment = MutableLiveData<ArticleComment>()
+    val items = MutableLiveData<List<ArticleOrComment>>()
+
     private val articleLikeClickHandler = ArticleLikeClickHandler(articlesInteractor,
-        { addCommand { view?.updateItem(it) } },
-        { view?.showError() })
+        { article.postValue(it) },
+        { messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message)) })
 
     fun onFirstLoad(articleId: Int) {
         compositeDisposable.add(
             articleCommentsInteractor.getArticleComments(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe({
-                    addCommand {
-                        val result = listOf<ArticleOrComment>(it.first) + it.second
-                        view?.showComments(result)
-                    }
+                    val result = listOf<ArticleOrComment>(it.first) + it.second
+                    items.postValue(result)
                 }, {
-                    Timber.e(it)
-                    view?.showError()
+                    messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message))
                 }))
     }
 
@@ -48,34 +52,30 @@ class ArticleCommentsPresenterImpl @Inject constructor(
         compositeDisposable.add(
             articleCommentsInteractor.refreshAndGetArticleComments(articleId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe({
-                    addCommand {
-                        val aaa = listOf<ArticleOrComment>(it.first) + it.second
-                        view?.showComments(aaa)
-                    }
+                    val result = listOf<ArticleOrComment>(it.first) + it.second
+                    items.postValue(result)
                 }, {
-                    Timber.e(it)
-                    view?.showError()
+                    messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message))
                 }))
     }
 
     fun onAddCommentClicked(articleId: Int, comment: String) {
         if (comment.isEmpty()) {
-            view?.showError()
+            messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message))
             return
         }
         compositeDisposable.add(
             articleCommentsInteractor.addArticleComment(articleId, comment)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe({
-                    addCommand { view?.updateCommentItem(it) }
+                    updateArticleComment.postValue(it)
                 }, {
-                    Timber.e(it)
-                    view?.showError()
+                    messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message))
                 }))
     }
 
@@ -94,13 +94,12 @@ class ArticleCommentsPresenterImpl @Inject constructor(
         compositeDisposable.add(
             articleCommentsInteractor.likeArticleComment(item.commentId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe({
-                    addCommand { view?.updateCommentItem(it) }
+                    updateArticleComment.postValue(it)
                 }, {
-                    Timber.e(it)
-                    view?.showError()
+                    messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message))
                 }))
     }
 
@@ -108,13 +107,12 @@ class ArticleCommentsPresenterImpl @Inject constructor(
         compositeDisposable.add(
             articleCommentsInteractor.dislikeArticleComment(item.commentId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { addCommand { view?.showProgress() } }
-                .doAfterTerminate { addCommand { view?.hideProgress() } }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe({
-                    addCommand { view?.updateCommentItem(it) }
+                    updateArticleComment.postValue(it)
                 }, {
-                    Timber.e(it)
-                    view?.showError()
+                    messages.postValue(resourceProvider.getString(R.string.comment_loading_error_message))
                 }))
     }
 

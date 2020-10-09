@@ -1,12 +1,9 @@
-package ru.merkulyevsasha.sourcelist
+package ru.merkulyevsasha.sourcelist.presentation
 
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,13 +18,14 @@ import kotlinx.android.synthetic.main.row_sourcelist.view.sourceName
 import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.coreandroid.common.AdViewHelper
 import ru.merkulyevsasha.coreandroid.common.AppbarScrollExpander
-import ru.merkulyevsasha.coreandroid.common.ColorThemeResolver
+import ru.merkulyevsasha.coreandroid.common.BaseFragment
 import ru.merkulyevsasha.coreandroid.common.ShowActionBarListener
-import ru.merkulyevsasha.coreandroid.common.ToolbarCombinator
-import javax.inject.Inject
+import ru.merkulyevsasha.coreandroid.common.observe
+import ru.merkulyevsasha.sourcelist.BuildConfig
+import ru.merkulyevsasha.sourcelist.R
 
 @AndroidEntryPoint
-class SourceListFragment : Fragment(), SourceListView {
+class SourceListFragment : BaseFragment<SourceListViewModel>(R.layout.fragment_sourcelist) {
 
     companion object {
         private const val KEY_POSITION = "key_position"
@@ -50,73 +48,42 @@ class SourceListFragment : Fragment(), SourceListView {
     private lateinit var appbarLayout: AppBarLayout
     private lateinit var appbarScrollExpander: AppbarScrollExpander
 
-    @Inject
-    lateinit var presenter: SourceListPresenterImpl
-    private lateinit var colorThemeResolver: ColorThemeResolver
-    private var combinator: ToolbarCombinator? = null
-
     private lateinit var adapter: SourceListAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
     private var expanded = true
     private var position = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is ToolbarCombinator) {
-            combinator = context
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_sourcelist, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        colorThemeResolver = ColorThemeResolver(TypedValue(), requireContext().theme)
-
-        toolbar = view.findViewById(R.id.toolbar)
-        collapsingToolbarLayout = view.findViewById(R.id.collapsinngToolbarLayout)
-        appbarLayout = view.findViewById(R.id.appbarLayout)
-
+        initRecyclerView()
         toolbar.setTitle(R.string.fragment_sourcelist_title)
         toolbar.setTitleTextColor(colorThemeResolver.getThemeAttrColor(R.attr.actionBarTextColor))
         collapsingToolbarLayout.isTitleEnabled = false
-        combinator?.bindToolbar(toolbar)
-
+        combinator.bindToolbar(toolbar)
         appbarScrollExpander = AppbarScrollExpander(recyclerView, object : ShowActionBarListener {
             override fun onShowActionBar(show: Boolean) {
                 appbarLayout.setExpanded(show)
             }
         })
-
-        swipeRefreshLayout.setOnRefreshListener { presenter?.onRefresh() }
+        swipeRefreshLayout.setOnRefreshListener { model.onRefresh() }
         colorThemeResolver.initSwipeRefreshColorScheme(swipeRefreshLayout)
-
         AdViewHelper.loadBannerAd(adView, BuildConfig.DEBUG_MODE)
-
-        presenter.bindView(this)
-
-        initRecyclerView()
-
-        presenter?.onFirstLoad()
+        if (savedInstanceState == null) {
+            model.onFirstLoad()
+        }
+        observeOnProgressChanged()
+        observeOnItemsChanged()
     }
 
     override fun onPause() {
         adView?.pause()
-        presenter?.unbindView()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         adView?.resume()
-        presenter?.bindView(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -131,24 +98,22 @@ class SourceListFragment : Fragment(), SourceListView {
 
     override fun onDestroy() {
         adView?.destroy()
-        combinator?.unbindToolbar()
-        presenter?.onDestroy()
         super.onDestroy()
     }
 
-    override fun showError() {
-        Toast.makeText(requireContext(), getString(R.string.source_list_loading_error_message), Toast.LENGTH_LONG).show()
+    private fun observeOnProgressChanged() {
+        observe(model.progress) { progress ->
+            swipeRefreshLayout?.isRefreshing = progress
+        }
     }
 
-    override fun showProgress() {
-        swipeRefreshLayout?.isRefreshing = true
+    private fun observeOnItemsChanged() {
+        observe(model.items) { items ->
+            showItems(items)
+        }
     }
 
-    override fun hideProgress() {
-        swipeRefreshLayout?.isRefreshing = false
-    }
-
-    override fun showItems(items: List<RssSource>) {
+    private fun showItems(items: List<RssSource>) {
         adapter.setItems(items)
         layoutManager.scrollToPosition(position)
     }
@@ -158,8 +123,6 @@ class SourceListFragment : Fragment(), SourceListView {
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
         adapter = SourceListAdapter(
-            requireContext(),
-            colorThemeResolver,
             ArrayList()
         )
         recyclerView.adapter = adapter
@@ -172,8 +135,6 @@ class SourceListFragment : Fragment(), SourceListView {
     }
 
     inner class SourceListAdapter(
-        private val context: Context,
-        private val colorThemeResolver: ColorThemeResolver,
         private val items: MutableList<RssSource>
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -201,7 +162,7 @@ class SourceListFragment : Fragment(), SourceListView {
                 val item = items[position]
                 itemView.sourceName.text = item.sourceName
                 itemView.setOnClickListener {
-                    presenter?.onSourceClicked(item.sourceId, item.sourceName)
+                    model.onSourceClicked(item.sourceId, item.sourceName)
                 }
             }
         }

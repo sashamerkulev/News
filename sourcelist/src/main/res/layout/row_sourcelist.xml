@@ -14,10 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_60dp"
         android:layout_marginStart="@dimen/margin_16dp"
-        android:layout_marginLeft="@dimen/margin_16dp"
-        android:textColor="@color/textColor"
-        tools:text="@string/APPLICATION_ID"
+        android:layout_marginEnd="@dimen/margin_16dp"
         android:gravity="center_vertical"
-        />
+        android:textColor="@color/textColor"
+        tools:text="@string/APPLICATION_ID" />
 
 </androidx.cardview.widget.CardView>

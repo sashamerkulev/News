@@ -1,29 +1,31 @@
-package ru.merkulyevsasha.sourcelist
+package ru.merkulyevsasha.sourcelist.presentation
 
+import androidx.lifecycle.MutableLiveData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import ru.merkulyevsasha.core.domain.SourceInteractor
+import ru.merkulyevsasha.core.models.RssSource
 import ru.merkulyevsasha.core.routers.MainActivityRouter
-import ru.merkulyevsasha.coreandroid.base.BasePresenterImpl
-import timber.log.Timber
+import ru.merkulyevsasha.coreandroid.base.BaseViewModel
 import javax.inject.Inject
 
-class SourceListPresenterImpl @Inject constructor(
+class SourceListViewModel @Inject constructor(
     private val sourceInteractor: SourceInteractor,
     private val mainActivityRouter: MainActivityRouter
-) : BasePresenterImpl<SourceListView>() {
+) : BaseViewModel() {
+
+    val items = MutableLiveData<List<RssSource>>()
 
     fun onFirstLoad() {
         compositeDisposable.add(
             sourceInteractor.getRssSources()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view?.showProgress() }
-                .doAfterTerminate { view?.hideProgress() }
+                .doOnSubscribe { progress.postValue(true) }
+                .doAfterTerminate { progress.postValue(false) }
                 .subscribe({
-                    addCommand { view?.showItems(it) }
+                    items.postValue(it)
                 },
                     {
-                        Timber.e(it)
-                        view?.showError()
+                        messages.postValue(it.message)
                     })
         )
     }

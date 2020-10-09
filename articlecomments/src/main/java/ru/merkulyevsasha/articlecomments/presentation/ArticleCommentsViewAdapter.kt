@@ -1,4 +1,4 @@
-package ru.merkulyevsasha.articlecomments
+package ru.merkulyevsasha.articlecomments.presentation
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.row_articlecomment.view.layoutCommentButto
 import kotlinx.android.synthetic.main.row_articlecomment.view.layoutCommentButtonShare
 import kotlinx.android.synthetic.main.row_articlecomment.view.textViewComment
 import kotlinx.android.synthetic.main.row_articlecomment.view.textViewCommentDate
+import ru.merkulyevsasha.articlecomments.R
 import ru.merkulyevsasha.core.models.Article
 import ru.merkulyevsasha.core.models.ArticleComment
 import ru.merkulyevsasha.core.models.ArticleOrComment

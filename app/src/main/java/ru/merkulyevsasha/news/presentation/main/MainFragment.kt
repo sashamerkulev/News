@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_main.bottomNav
-import ru.merkulyevsasha.articles.ArticlesFragment
+import ru.merkulyevsasha.articles.presentation.ArticlesFragment
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.news.R
-import ru.merkulyevsasha.sourcelist.SourceListFragment
-import ru.merkulyevsasha.useractivities.UserActivitiesFragment
-import ru.merkulyevsasha.userinfo.UserInfoFragment
+import ru.merkulyevsasha.sourcelist.presentation.SourceListFragment
+import ru.merkulyevsasha.useractivities.presentation.UserActivitiesFragment
+import ru.merkulyevsasha.userinfo.presentation.UserInfoFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
