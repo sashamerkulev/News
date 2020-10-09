@@ -74,14 +74,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providesOkHttpClient(KeyValueStorage: KeyValueStorage): OkHttpClient {
+    fun providesOkHttpClient(keyValueStorage: KeyValueStorage): OkHttpClient {
         val builder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG_MODE) {
 
             builder.addNetworkInterceptor(StethoInterceptor())
         }
         builder.addNetworkInterceptor(LoggingInterceptor())
-        builder.addInterceptor(TokenInterceptor(KeyValueStorage))
+        builder.addInterceptor(TokenInterceptor(keyValueStorage))
         return builder.build()
     }
 

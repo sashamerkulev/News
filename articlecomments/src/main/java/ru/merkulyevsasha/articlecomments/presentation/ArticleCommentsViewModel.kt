@@ -24,7 +24,8 @@ class ArticleCommentsViewModel @Inject constructor(
     articlesInteractor: ArticlesInteractor,
     private val newsDistributor: ArticleDistributor
 ) : BaseViewModel(),
-    ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler, ArticleCommentLikeCallbackClickHandler, ArticleCommentShareCallbackClickHandler {
+    ArticleLikeCallbackClickHandler, ArticleShareCallbackClickHandler,
+    ArticleCommentLikeCallbackClickHandler, ArticleCommentShareCallbackClickHandler {
 
     val article = MutableLiveData<Article>()
     val updateArticleComment = MutableLiveData<ArticleComment>()

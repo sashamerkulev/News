@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.coreandroid.common.newsadapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -86,6 +87,7 @@ class NewsViewAdapter constructor(
         this.notifyItemChanged(index)
     }
 
+    @SuppressLint("SetTextI18n")
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(position: Int) {
 
@@ -97,7 +99,7 @@ class NewsViewAdapter constructor(
             val url = item.pictureUrl
 
             val pubDate = item.pubDate
-            itemView.newsDateSource.text = String.format("%s %s", format.format(pubDate), source)
+            itemView.newsDateSource.text = "${format.format(pubDate)} $source"
 
             initDescription(title, description)
 

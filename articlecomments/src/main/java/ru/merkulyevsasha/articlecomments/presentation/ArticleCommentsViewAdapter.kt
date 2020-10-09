@@ -1,5 +1,6 @@
 package ru.merkulyevsasha.articlecomments.presentation
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -102,6 +103,7 @@ class CommentsViewAdapter constructor(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     inner class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(position: Int) {
             val item = items[position] as Article
@@ -111,7 +113,7 @@ class CommentsViewAdapter constructor(
             val url = item.pictureUrl
 
             val pubDate = item.pubDate
-            itemView.newsDateSource.text = String.format("%s %s", format.format(pubDate), source)
+            itemView.newsDateSource.text = "${format.format(pubDate)} $source"
 
             itemView.imageViewThumb.setImageResource(0)
             if (url.isNullOrEmpty()) {

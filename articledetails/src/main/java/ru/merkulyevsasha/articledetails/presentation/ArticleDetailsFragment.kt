@@ -30,10 +30,8 @@ class ArticleDetailsFragment : BaseFragment<ArticleDetailsViewModel>(R.layout.fr
     companion object {
         private const val ARGS_ARTICLE_ID = "ARTICLE_ID"
 
-        @JvmStatic
         val TAG: String = "ArticleDetailsFragment"
 
-        @JvmStatic
         fun newInstance(articleId: Int): Fragment {
             val fragment = ArticleDetailsFragment()
             val args = Bundle()
