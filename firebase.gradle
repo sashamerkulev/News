@@ -1,7 +1,7 @@
 dependencies {
-    implementation "com.google.firebase:firebase-core:17.5.0"
+    implementation "com.google.firebase:firebase-core:18.0.0"
     implementation "com.google.firebase:firebase-crash:16.2.1"
-    implementation "com.google.firebase:firebase-ads:19.4.0"
-    implementation "com.google.firebase:firebase-messaging:20.3.0"
+    implementation "com.google.firebase:firebase-ads:19.6.0"
+    implementation "com.google.firebase:firebase-messaging:21.0.1"
 }
 

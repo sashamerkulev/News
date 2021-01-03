@@ -8,7 +8,6 @@ import ru.merkulyevsasha.core.models.ThemeEnum
 import ru.merkulyevsasha.core.preferences.KeyValueStorage
 import ru.merkulyevsasha.core.routers.MainActivityRouter
 import ru.merkulyevsasha.coreandroid.base.BaseViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject constructor(
@@ -45,7 +44,7 @@ class MainActivityViewModel @Inject constructor(
                 .subscribe(
                     { },
                     {
-                        Timber.e(it)
+                        l.e(TAG, it)
                     }))
     }
 }

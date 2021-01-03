@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.include_appbar_layout.appbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.collapsingToolbarLayout
+import kotlinx.android.synthetic.main.include_appbar_layout.toolbar
 import kotlinx.android.synthetic.main.merge_articles_layout.adView
 import kotlinx.android.synthetic.main.merge_articles_layout.buttonUp
 import kotlinx.android.synthetic.main.merge_articles_layout.recyclerView
@@ -52,10 +55,6 @@ class SourceArticlesFragment : BaseFragment<SourceArticlesViewModel>(R.layout.fr
             return fragment
         }
     }
-
-    private lateinit var toolbar: Toolbar
-    private lateinit var collapsingToolbarLayout: CollapsingToolbarLayout
-    private lateinit var appbarLayout: AppBarLayout
 
     private lateinit var adapter: NewsViewAdapter
     private lateinit var layoutManager: LinearLayoutManager

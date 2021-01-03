@@ -23,49 +23,56 @@ class MainActivityRouterImpl(
     }
 
     override fun showMainFragment() {
+        l.v(TAG, "showMainFragment()")
         val tag = MainFragment.TAG
         val fragment = findOrCreateFragment(tag) { MainFragment.newInstance() }
-        replaceFragment(R.id.container, tag, fragment)
+        replaceFragment(R.id.container, tag, fragment, true)
     }
 
     override fun showArticleDetails(articleId: Int) {
-        l.i(TAG, "showArticleDetails($articleId)")
+        l.v(TAG, "showArticleDetails($articleId)")
         val tag = ArticleDetailsFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticleDetailsFragment.newInstance(articleId) }
         replaceFragment(R.id.container, tag, fragment, true)
     }
 
     override fun showArticleComments(articleId: Int) {
+        l.v(TAG, "showArticleComments($articleId)")
         val tag = ArticleCommentsFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticleCommentsFragment.newInstance(articleId) }
         replaceFragment(R.id.container, tag, fragment, true)
     }
 
     override fun showSourceArticles(sourceId: String, sourceName: String) {
+        l.v(TAG, "showSourceArticles($sourceId, $sourceName)")
         val tag = SourceArticlesFragment.TAG
         val fragment = findOrCreateFragment(tag) { SourceArticlesFragment.newInstance(sourceId, sourceName) }
         replaceFragment(R.id.container, tag, fragment, true)
     }
 
     override fun showArticles() {
+        l.v(TAG, "showArticles()")
         val tag = ArticlesFragment.TAG
         val fragment = findOrCreateFragment(tag) { ArticlesFragment.newInstance() }
         replaceFragment(R.id.mainContainer, tag, fragment)
     }
 
     override fun showSourceList() {
+        l.v(TAG, "showSourceList()")
         val tag = SourceListFragment.TAG
         val fragment = findOrCreateFragment(tag) { SourceListFragment.newInstance() }
         replaceFragment(R.id.mainContainer, tag, fragment)
     }
 
     override fun showUserActivities() {
+        l.v(TAG, "showUserActivities()")
         val tag = UserActivitiesFragment.TAG
         val fragment = findOrCreateFragment(tag) { UserActivitiesFragment.newInstance() }
         replaceFragment(R.id.mainContainer, tag, fragment)
     }
 
     override fun showUserInfo() {
+        l.v(TAG, "showUserInfo()")
         val tag = UserInfoFragment.TAG
         val fragment = findOrCreateFragment(tag) { UserInfoFragment.newInstance() }
         replaceFragment(R.id.mainContainer, tag, fragment)
@@ -75,7 +82,7 @@ class MainActivityRouterImpl(
         return fragmentManager.findFragmentByTag(tag) ?: createFragment()
     }
 
-    private fun replaceFragment(containerId: Int, tag: String, fragment: Fragment, addToBackStack: Boolean = false) {
+    private fun replaceFragment(containerId: Int, tag: String, fragment: Fragment, addToBackStack: Boolean = true) {
         val fragmentTransaction = fragmentManager.beginTransaction()
             .replace(containerId, fragment, tag)
         if (addToBackStack) {

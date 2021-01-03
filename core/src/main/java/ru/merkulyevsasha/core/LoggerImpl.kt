@@ -1,9 +1,7 @@
 package ru.merkulyevsasha.core
 
-import android.annotation.SuppressLint
 import android.util.Log
 
-@SuppressLint("LogNotTimber")
 class LoggerImpl : Logger {
     override fun i(tag: String, message: String) {
         Log.i(tag, message)
@@ -14,7 +12,7 @@ class LoggerImpl : Logger {
     }
 
     override fun e(tag: String, e: Throwable) {
-        Log.e(tag, e.message)
+        Log.e(tag, e.message ?: e.javaClass.simpleName)
     }
 
 }

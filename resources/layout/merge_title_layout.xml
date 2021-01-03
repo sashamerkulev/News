@@ -50,7 +50,6 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="@dimen/margin_8dp"
             android:layout_marginEnd="@dimen/margin_4dp"
-            android:layout_marginRight="@dimen/margin_4dp"
             android:scaleType="centerCrop"
             tools:ignore="ContentDescription" />
 
@@ -61,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/imageViewThumb"
-            android:layout_toRightOf="@+id/imageViewThumb"
             tools:text="title" />
 
     </RelativeLayout>
